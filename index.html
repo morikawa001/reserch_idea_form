@@ -471,6 +471,109 @@
       cursor: pointer; transition: background .2s;
     }
     .btn-restart:hover { background: var(--primary-dark); }
+
+    /* ── キーワードタグ選択 ── */
+    .kw-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 6px 0;
+    }
+    .kw-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #f8f9fc;
+      font-size: 0.83rem;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      transition: all .15s;
+      font-family: inherit;
+    }
+    .kw-tag:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .kw-tag.selected {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+    .kw-tag.selected::before { content: "✓ "; }
+    .kw-hint {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .kw-selected-count {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 6px 0 0;
+    }
+
+    /* ── データベースボタン（検索付き） ── */
+    .db-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fafbfc;
+      margin-bottom: 6px;
+      transition: all .15s;
+    }
+    .db-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .db-label { font-size: 0.8rem; color: var(--text-sub); min-width: 72px; font-weight: 600; }
+    .db-link {
+      flex: 1;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .db-link:hover { text-decoration: underline; }
+    .db-desc { font-size: 0.78rem; color: var(--text-sub); }
+    .db-search-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1.5px solid var(--primary);
+      background: #fff;
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .15s;
+    }
+    .db-search-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .db-search-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--border);
+      color: var(--text-sub);
+    }
+    .kw-search-tip {
+      font-size: 0.78rem;
+      color: var(--warn);
+      margin: 8px 0 4px;
+      display: none;
+    }
+    .kw-search-tip.show { display: block; }
   </style>
 </head>
 <body>
@@ -842,43 +945,8 @@
       <div id="novelty-keywords-area"></div>
 
       <h3 style="margin-top:18px;">🔍 推奨検索データベース</h3>
-      <div class="doc-list">
-        <div class="doc-item">
-          <span class="doc-num">英文文献</span>
-          <span>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" style="color:var(--primary);">PubMed / MEDLINE</a>
-            ─ 国際医学文献の主要データベース
-          </span>
-        </div>
-        <div class="doc-item">
-          <span class="doc-num">日本語文献</span>
-          <span>
-            <a href="https://search.jamas.or.jp/" target="_blank" style="color:var(--primary);">医中誌Web</a>
-            ─ 国内医学文献の総合データベース
-          </span>
-        </div>
-        <div class="doc-item">
-          <span class="doc-num">系統的レビュー</span>
-          <span>
-            <a href="https://www.cochranelibrary.com/" target="_blank" style="color:var(--primary);">Cochrane Library</a>
-            ─ 系統的レビュー・メタアナリシス
-          </span>
-        </div>
-        <div class="doc-item">
-          <span class="doc-num">試験登録</span>
-          <span>
-            <a href="https://jrct.niph.go.jp/" target="_blank" style="color:var(--primary);">jRCT（日本臨床試験登録システム）</a>
-            ─ 国内臨床試験登録
-          </span>
-        </div>
-        <div class="doc-item">
-          <span class="doc-num">AI検索</span>
-          <span>
-            <a href="https://www.semanticscholar.org/" target="_blank" style="color:var(--primary);">Semantic Scholar</a>
-            ─ AI支援論文検索
-          </span>
-        </div>
-      </div>
+      <p class="kw-search-tip" id="kw-search-tip">↑ キーワードを選択すると、各データベースで直接検索できます</p>
+      <div id="db-list-area"></div>
 
       <div id="novelty-assessment" style="margin-top:18px;"></div>
 
@@ -1161,32 +1229,47 @@ function runClassification() {
   desc.classList.remove('hidden');
 }
 
+// ============================================================
 // ── Novelty / keywords ──
+// ============================================================
+
+// 選択中キーワードを保持するグローバル
+window._selectedKwEn = new Set();
+window._selectedKwJa = new Set();
+
 function renderNovelty() {
   const theme   = getVal('theme');
   const disease = getVal('disease');
   const purpose = getVal('purpose');
   const keywords = generateKeywords(theme, disease, purpose);
 
+  // 前回選択をリセット
+  window._selectedKwEn = new Set();
+  window._selectedKwJa = new Set();
+
   const area = document.getElementById('novelty-keywords-area');
   area.innerHTML = `
     <h3>🔑 推奨検索キーワード</h3>
+    <p class="kw-hint">キーワードをクリックして選択 → 下のデータベースボタンで検索できます</p>
     <div class="doc-section">
       <h4>英語キーワード（PubMed用）</h4>
-      <div class="doc-list">
-        ${keywords.en.map(k => `<div class="doc-item"><span>${k}</span></div>`).join('')}
+      <div class="kw-tag-list" id="kw-en-list">
+        ${keywords.en.map((k, i) =>
+          `<button class="kw-tag" data-lang="en" data-kw="${k.replace(/"/g,'&quot;')}"
+            onclick="toggleKwTag(this,'en')">${k}</button>`
+        ).join('')}
       </div>
     </div>
     <div class="doc-section">
       <h4>日本語キーワード（医中誌Web用）</h4>
-      <div class="doc-list">
-        ${keywords.ja.map(k => `<div class="doc-item"><span>${k}</span></div>`).join('')}
+      <div class="kw-tag-list" id="kw-ja-list">
+        ${keywords.ja.map((k, i) =>
+          `<button class="kw-tag" data-lang="ja" data-kw="${k.replace(/"/g,'&quot;')}"
+            onclick="toggleKwTag(this,'ja')">${k}</button>`
+        ).join('')}
       </div>
     </div>
-    <div class="success-box" style="margin-top:10px;">
-      💡 PubMed検索式の例：<br>
-      <code style="font-family:monospace;font-size:0.82rem;">"${keywords.en[0]}"[Title/Abstract] AND "${keywords.en[1]}"[Title/Abstract] AND "clinical trial"[Publication Type]</code>
-    </div>
+    <div id="kw-selected-count" class="kw-selected-count" style="display:none;"></div>
   `;
 
   // Novelty assessment
@@ -1200,6 +1283,194 @@ function renderNovelty() {
       <div class="doc-item"><span class="doc-num">研究種別</span><span>${window._researchType || '（要判定）'}</span></div>
     </div>
   `;
+
+  // データベースリストを描画
+  renderDbList();
+}
+
+// キーワードタグのトグル
+function toggleKwTag(btn, lang) {
+  const kw = btn.dataset.kw;
+  const set = lang === 'en' ? window._selectedKwEn : window._selectedKwJa;
+  if (set.has(kw)) {
+    set.delete(kw);
+    btn.classList.remove('selected');
+  } else {
+    set.add(kw);
+    btn.classList.add('selected');
+  }
+  updateKwCount();
+  renderDbList();
+}
+
+// 選択数カウント更新
+function updateKwCount() {
+  const total = window._selectedKwEn.size + window._selectedKwJa.size;
+  const el = document.getElementById('kw-selected-count');
+  const tip = document.getElementById('kw-search-tip');
+  if (!el) return;
+  if (total > 0) {
+    el.style.display = 'block';
+    el.textContent = `✓ ${total}件のキーワードを選択中（英語：${window._selectedKwEn.size}件、日本語：${window._selectedKwJa.size}件）`;
+    if (tip) tip.classList.add('show');
+  } else {
+    el.style.display = 'none';
+    if (tip) tip.classList.remove('show');
+  }
+}
+
+// 検索URL生成関数
+function buildSearchUrl(db) {
+  const enArr = Array.from(window._selectedKwEn);
+  const jaArr = Array.from(window._selectedKwJa);
+  const allArr = [...enArr, ...jaArr];
+  const hasEn = enArr.length > 0;
+  const hasJa = jaArr.length > 0;
+  const hasAny = allArr.length > 0;
+
+  switch (db) {
+    case 'pubmed': {
+      // PubMed: "kw1"[Title/Abstract] AND "kw2"[Title/Abstract]
+      if (!hasEn && !hasAny) return 'https://pubmed.ncbi.nlm.nih.gov/';
+      const terms = (hasEn ? enArr : allArr)
+        .map(k => `"${k}"[Title/Abstract]`).join(' AND ');
+      return `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(terms)}`;
+    }
+    case 'jamas': {
+      // 医中誌Web: 日本語キーワードをAND検索
+      if (!hasJa && !hasAny) return 'https://search.jamas.or.jp/';
+      const q = (hasJa ? jaArr : allArr).join(' AND ');
+      return `https://search.jamas.or.jp/default/link?usageId=GL&url=${encodeURIComponent('https://search.jamas.or.jp/?q=' + encodeURIComponent(q))}`;
+    }
+    case 'cochrane': {
+      // Cochrane: 英語 OR 結合
+      if (!hasEn && !hasAny) return 'https://www.cochranelibrary.com/';
+      const q = (hasEn ? enArr : allArr).join(' AND ');
+      return `https://www.cochranelibrary.com/search?q=${encodeURIComponent(q)}&t=1`;
+    }
+    case 'jrct': {
+      // jRCT: 日本語 OR 英語
+      if (!hasAny) return 'https://jrct.niph.go.jp/';
+      const q = (hasJa ? jaArr : enArr.length ? enArr : allArr).join(' ');
+      return `https://jrct.niph.go.jp/search?query=${encodeURIComponent(q)}`;
+    }
+    case 'semantic': {
+      // Semantic Scholar: 英語スペース区切り
+      if (!hasEn && !hasAny) return 'https://www.semanticscholar.org/';
+      const q = (hasEn ? enArr : allArr).join(' ');
+      return `https://www.semanticscholar.org/search?q=${encodeURIComponent(q)}&sort=Relevance`;
+    }
+    default: return '#';
+  }
+}
+
+// データベースリストを動的描画
+function renderDbList() {
+  const hasAny = window._selectedKwEn.size + window._selectedKwJa.size > 0;
+
+  const DBS = [
+    {
+      id: 'pubmed', label: '英文文献',
+      name: 'PubMed / MEDLINE', desc: '国際医学文献の主要データベース',
+      baseUrl: 'https://pubmed.ncbi.nlm.nih.gov/',
+      kwType: 'en',
+      formula: () => {
+        const arr = Array.from(window._selectedKwEn);
+        if (!arr.length) return null;
+        return arr.map(k => `"${k}"[Title/Abstract]`).join(' AND ');
+      }
+    },
+    {
+      id: 'jamas', label: '日本語文献',
+      name: '医中誌Web', desc: '国内医学文献の総合データベース',
+      baseUrl: 'https://search.jamas.or.jp/',
+      kwType: 'ja',
+      formula: () => {
+        const arr = Array.from(window._selectedKwJa);
+        if (!arr.length) return null;
+        return arr.join(' AND ');
+      }
+    },
+    {
+      id: 'cochrane', label: '系統的レビュー',
+      name: 'Cochrane Library', desc: '系統的レビュー・メタアナリシス',
+      baseUrl: 'https://www.cochranelibrary.com/',
+      kwType: 'en',
+      formula: () => {
+        const arr = Array.from(window._selectedKwEn);
+        if (!arr.length) return null;
+        return arr.join(' AND ');
+      }
+    },
+    {
+      id: 'jrct', label: '試験登録',
+      name: 'jRCT（日本臨床試験登録システム）', desc: '国内臨床試験登録',
+      baseUrl: 'https://jrct.niph.go.jp/',
+      kwType: 'ja',
+      formula: () => {
+        const arr = [...Array.from(window._selectedKwJa), ...Array.from(window._selectedKwEn)];
+        if (!arr.length) return null;
+        return arr.join(' ');
+      }
+    },
+    {
+      id: 'semantic', label: 'AI検索',
+      name: 'Semantic Scholar', desc: 'AI支援論文検索',
+      baseUrl: 'https://www.semanticscholar.org/',
+      kwType: 'en',
+      formula: () => {
+        const arr = Array.from(window._selectedKwEn);
+        if (!arr.length) return null;
+        return arr.join(' ');
+      }
+    },
+  ];
+
+  const container = document.getElementById('db-list-area');
+  if (!container) return;
+
+  container.innerHTML = DBS.map(db => {
+    const formula = db.formula();
+    const url = buildSearchUrl(db.id);
+    const canSearch = hasAny;
+    // どのキーワード種別が使われるか
+    const useEn = ['pubmed','cochrane','semantic'].includes(db.id);
+    const useJa = ['jamas','jrct'].includes(db.id);
+    const langHas = useEn ? window._selectedKwEn.size > 0
+                  : useJa ? window._selectedKwJa.size > 0
+                  : hasAny;
+    const btnActive = canSearch;
+    const formulaHtml = formula
+      ? `<div style="margin-top:4px;font-size:0.75rem;font-family:monospace;
+           background:#f0f4ff;padding:3px 7px;border-radius:4px;color:var(--primary);
+           word-break:break-all;">
+           ${formula.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+         </div>`
+      : '';
+
+    return `
+    <div class="db-item" id="db-${db.id}">
+      <span class="db-label">${db.label}</span>
+      <div style="flex:1;min-width:0;">
+        <a class="db-link" href="${db.baseUrl}" target="_blank">${db.name}</a>
+        <div class="db-desc">${db.desc}</div>
+        ${formulaHtml}
+      </div>
+      <button class="db-search-btn"
+        ${btnActive ? '' : 'disabled'}
+        onclick="openDbSearch('${db.id}', event)"
+        title="${canSearch ? '選択したキーワードで検索' : 'キーワードを選択してください'}">
+        🔍 検索
+      </button>
+    </div>`;
+  }).join('');
+}
+
+// データベース検索ボタン押下
+function openDbSearch(dbId, event) {
+  event.preventDefault();
+  const url = buildSearchUrl(dbId);
+  window.open(url, '_blank');
 }
 
 function generateKeywords(theme, disease, purpose) {
@@ -1810,6 +2081,10 @@ function resetAllInputs() {
 window.addEventListener('DOMContentLoaded', () => {
   // Auto-run schedule with blank date to show default
   generateSchedule();
+  // DB一覧を初期表示（キーワード未選択状態）
+  window._selectedKwEn = new Set();
+  window._selectedKwJa = new Set();
+  renderDbList();
 });
 </script>
 </body>
