@@ -1160,16 +1160,25 @@ function runClassification() {
       }
     } else {
       flowSteps.push({ text: 'いいえ（承認済み薬剤のみ）→ 承認済みの介入', type: 'answer-no' });
-      flowSteps.push({ text: '臨床研究法の対象（特定臨床研究）に該当しますか？', type: 'question' });
+      flowSteps.push({ text: '企業（製薬・医療機器）からの資金提供はありますか？', type: 'question' });
 
-      if (clinicalTrial === 'yes') {
-        flowSteps.push({ text: 'はい → 特定臨床研究', type: 'answer-yes' });
+      if (funding === 'yes') {
+        // 臨床研究法第2条2項：承認済み医薬品等の研究で企業から資金提供を受ける場合 → 特定臨床研究
+        flowSteps.push({ text: 'はい → 特定臨床研究（臨床研究法 第2条2項該当）', type: 'answer-yes' });
         type = '特定臨床研究'; badgeClass = 'badge-spec';
-        description = '臨床研究法が適用される特定臨床研究です。認定臨床研究審査委員会（CRB）の審査、jRCTへの登録、モニタリングが必須です。';
+        description = '企業（製薬・医療機器）からの資金提供を受けた承認済み医薬品・機器を用いた介入研究です。臨床研究法第2条2項により特定臨床研究に該当します。認定臨床研究審査委員会（CRB）の審査、jRCTへの登録、モニタリングが必須です。';
       } else {
-        flowSteps.push({ text: 'いいえ → 介入研究（非特定臨床研究）', type: 'answer-no' });
-        type = '介入研究（非特定臨床研究）'; badgeClass = 'badge-inv';
-        description = '承認済み医薬品・機器を用いた介入研究で、臨床研究法の規制対象外です。「人を対象とする生命科学・医学系研究に関する倫理指針」が適用され、倫理審査委員会（IRB）の承認が必要です。侵襲の程度により審査区分が変わります。';
+        flowSteps.push({ text: 'いいえ（自己資金・公的資金のみ）', type: 'answer-no' });
+        flowSteps.push({ text: '臨床研究法の対象（特定臨床研究）に該当しますか？', type: 'question' });
+        if (clinicalTrial === 'yes') {
+          flowSteps.push({ text: 'はい → 特定臨床研究', type: 'answer-yes' });
+          type = '特定臨床研究'; badgeClass = 'badge-spec';
+          description = '臨床研究法が適用される特定臨床研究です。認定臨床研究審査委員会（CRB）の審査、jRCTへの登録、モニタリングが必須です。';
+        } else {
+          flowSteps.push({ text: 'いいえ → 介入研究（非特定臨床研究）', type: 'answer-no' });
+          type = '介入研究（非特定臨床研究）'; badgeClass = 'badge-inv';
+          description = '承認済み医薬品・機器を用いた介入研究で、臨床研究法の規制対象外です。「人を対象とする生命科学・医学系研究に関する倫理指針」が適用され、倫理審査委員会（IRB）の承認が必要です。侵襲の程度により審査区分が変わります。';
+        }
       }
     }
   } else if (intervention === 'no') {
@@ -1184,6 +1193,11 @@ function runClassification() {
       flowSteps.push({ text: 'いいえ（前向き収集あり）→ 前向き観察研究', type: 'answer-no' });
       type = '前向き観察研究'; badgeClass = 'badge-obs';
       description = '前向きにデータを収集する観察研究（コホート研究・横断研究等）です。「人を対象とする生命科学・医学系研究に関する倫理指針」が適用されます。研究参加者への十分なインフォームド・コンセントが必要です。';
+    }
+    // 観察研究でも企業資金提供があれば特定臨床研究の可能性を警告
+    if (funding === 'yes') {
+      flowSteps.push({ text: '⚠️ 企業からの資金提供あり → 特定臨床研究（介入研究の場合）に該当する可能性があります', type: 'answer-yes' });
+      description += ' ⚠️ 企業（製薬・医療機器）からの資金提供がある場合、介入研究では臨床研究法上の特定臨床研究に該当する可能性があります。研究内容を改めて確認し、必要に応じて臨床研究支援室に相談してください。';
     }
   } else {
     // Unset
@@ -1340,7 +1354,7 @@ function buildSearchUrl(db) {
       // 医中誌Web: 日本語キーワードをAND検索
       if (!hasJa && !hasAny) return 'https://search.jamas.or.jp/';
       const q = (hasJa ? jaArr : allArr).join(' AND ');
-      return `https://search.jamas.or.jp/default/link?usageId=GL&url=${encodeURIComponent('https://search.jamas.or.jp/?q=' + encodeURIComponent(q))}`;
+      return `https://search.jamas.or.jp/api/opensearch?q=${encodeURIComponent(q)}`;
     }
     case 'cochrane': {
       // Cochrane: 英語 OR 結合
@@ -1349,10 +1363,8 @@ function buildSearchUrl(db) {
       return `https://www.cochranelibrary.com/search?q=${encodeURIComponent(q)}&t=1`;
     }
     case 'jrct': {
-      // jRCT: 日本語 OR 英語
-      if (!hasAny) return 'https://jrct.niph.go.jp/';
-      const q = (hasJa ? jaArr : enArr.length ? enArr : allArr).join(' ');
-      return `https://jrct.niph.go.jp/search?query=${encodeURIComponent(q)}`;
+      // jRCT は SPA のため URL パラメータ検索不可 → 検索ページのみ返す
+      return 'https://jrct.mhlw.go.jp/search';
     }
     case 'semantic': {
       // Semantic Scholar: 英語スペース区切り
@@ -1404,8 +1416,8 @@ function renderDbList() {
     },
     {
       id: 'jrct', label: '試験登録',
-      name: 'jRCT（日本臨床試験登録システム）', desc: '国内臨床試験登録',
-      baseUrl: 'https://jrct.niph.go.jp/',
+      name: 'jRCT（日本臨床試験登録システム）', desc: '国内臨床試験登録（※ キーワードをコピーして検索欄に貼り付けてください）',
+      baseUrl: 'https://jrct.mhlw.go.jp/search',
       kwType: 'ja',
       formula: () => {
         const arr = [...Array.from(window._selectedKwJa), ...Array.from(window._selectedKwEn)];
@@ -1470,6 +1482,24 @@ function renderDbList() {
 function openDbSearch(dbId, event) {
   event.preventDefault();
   const url = buildSearchUrl(dbId);
+
+  // jRCT は SPA のためキーワード直接渡し不可 → クリップボードにコピーしてから検索ページを開く
+  if (dbId === 'jrct') {
+    const jaArr = Array.from(window._selectedKwJa);
+    const enArr = Array.from(window._selectedKwEn);
+    const kwText = [...jaArr, ...enArr].join(' ');
+    if (kwText) {
+      navigator.clipboard.writeText(kwText).then(() => {
+        alert('キーワードをクリップボードにコピーしました。\njRCT の検索欄に貼り付けてください。\n\n' + kwText);
+      }).catch(() => {
+        // clipboard API が使えない場合はプロンプトで表示
+        window.prompt('以下のキーワードをコピーして jRCT 検索欄に貼り付けてください:', kwText);
+      });
+    }
+    window.open(url, '_blank');
+    return;
+  }
+
   window.open(url, '_blank');
 }
 
