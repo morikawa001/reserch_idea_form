@@ -685,7 +685,7 @@
 
       <label class="field-label">臨床研究法の対象（特定臨床研究）に該当する可能性がありますか？</label>
       <div class="radio-group">
-        <label><input type="radio" name="clinicalTrial" value="yes"> はい（医薬品等を用いた研究で未承認または適応外）</label>
+        <label><input type="radio" name="clinicalTrial" value="yes"> はい（臨床研究法上の特定臨床研究に該当する）</label>
         <label><input type="radio" name="clinicalTrial" value="no"> いいえ・不明</label>
       </div>
 
@@ -1140,6 +1140,14 @@ function runClassification() {
   let type = '', badgeClass = '', description = '', flowSteps = [];
 
   // Flowchart decision tree
+  // clinicalTrial=yes は介入/資金の状況によらず即「特定臨床研究」
+  if (clinicalTrial === 'yes') {
+    flowSteps.push({ text: '臨床研究法の対象（特定臨床研究）に該当しますか？', type: 'question' });
+    flowSteps.push({ text: 'はい → 特定臨床研究', type: 'answer-yes' });
+    type = '特定臨床研究'; badgeClass = 'badge-spec';
+    description = '臨床研究法が適用される特定臨床研究です。認定臨床研究審査委員会（CRB）の審査、jRCTへの登録、モニタリングが必須です。';
+  } else {
+
   flowSteps.push({ text: '研究に「介入」を行いますか？', type: 'question' });
 
   if (intervention === 'yes') {
@@ -1169,16 +1177,9 @@ function runClassification() {
         description = '企業（製薬・医療機器）からの資金提供を受けた承認済み医薬品・機器を用いた介入研究です。臨床研究法第2条2項により特定臨床研究に該当します。認定臨床研究審査委員会（CRB）の審査、jRCTへの登録、モニタリングが必須です。';
       } else {
         flowSteps.push({ text: 'いいえ（自己資金・公的資金のみ）', type: 'answer-no' });
-        flowSteps.push({ text: '臨床研究法の対象（特定臨床研究）に該当しますか？', type: 'question' });
-        if (clinicalTrial === 'yes') {
-          flowSteps.push({ text: 'はい → 特定臨床研究', type: 'answer-yes' });
-          type = '特定臨床研究'; badgeClass = 'badge-spec';
-          description = '臨床研究法が適用される特定臨床研究です。認定臨床研究審査委員会（CRB）の審査、jRCTへの登録、モニタリングが必須です。';
-        } else {
-          flowSteps.push({ text: 'いいえ → 介入研究（非特定臨床研究）', type: 'answer-no' });
-          type = '介入研究（非特定臨床研究）'; badgeClass = 'badge-inv';
-          description = '承認済み医薬品・機器を用いた介入研究で、臨床研究法の規制対象外です。「人を対象とする生命科学・医学系研究に関する倫理指針」が適用され、倫理審査委員会（IRB）の承認が必要です。侵襲の程度により審査区分が変わります。';
-        }
+        flowSteps.push({ text: 'いいえ → 介入研究（非特定臨床研究）', type: 'answer-no' });
+        type = '介入研究（非特定臨床研究）'; badgeClass = 'badge-inv';
+        description = '承認済み医薬品・機器を用いた介入研究で、臨床研究法の規制対象外です。「人を対象とする生命科学・医学系研究に関する倫理指針」が適用され、倫理審査委員会（IRB）の承認が必要です。侵襲の程度により審査区分が変わります。';
       }
     }
   } else if (intervention === 'no') {
@@ -1205,6 +1206,8 @@ function runClassification() {
     description = 'ステップ1に戻り、「介入を行いますか？」を選択してください。';
     flowSteps = [{ text: '介入の有無が選択されていません。ステップ1に戻ってください。', type: 'question' }];
   }
+
+  } // end else (clinicalTrial !== 'yes')
 
   // Store globally
   window._researchType = type;
