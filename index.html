@@ -399,6 +399,78 @@
       body { background: #fff; }
       .card { box-shadow: none; }
     }
+
+    /* ── 新規性チェックリスト ── */
+    .novelty-check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fafbfc;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+    }
+    .novelty-check-item:hover {
+      border-color: var(--secondary);
+      background: var(--secondary-light);
+    }
+    .novelty-check-item input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .novelty-check-text {
+      font-size: 0.87rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .novelty-check-item:has(input:checked) {
+      border-color: var(--secondary);
+      background: var(--secondary-light);
+    }
+    .novelty-check-item:has(input:checked) .novelty-check-text {
+      color: var(--secondary);
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+
+    /* ── 終了ボタン ── */
+    .btn-danger {
+      background: #dc2626; color: #fff;
+    }
+    .btn-danger:hover { background: #b91c1c; transform: translateY(-1px); }
+
+    /* ── 終了画面 ── */
+    .end-screen {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(255,255,255,0.97);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .end-screen.active { display: flex; }
+    .end-inner {
+      text-align: center;
+      padding: 40px 32px;
+      max-width: 400px;
+    }
+    .end-icon { font-size: 3rem; margin-bottom: 16px; }
+    .end-title { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+    .end-body { font-size: 0.92rem; color: var(--text-sub); line-height: 1.8; margin-bottom: 24px; }
+    .btn-restart {
+      background: var(--primary); color: #fff;
+      border: none; border-radius: 10px;
+      padding: 13px 28px; font-size: 1rem;
+      font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-restart:hover { background: var(--primary-dark); }
   </style>
 </head>
 <body>
@@ -811,12 +883,33 @@
       <div id="novelty-assessment" style="margin-top:18px;"></div>
 
       <h3 style="margin-top:18px;">📋 研究の新規性チェックリスト</h3>
-      <div class="doc-list" id="novelty-checklist">
-        <div class="doc-item"><span>□ 既存レビュー論文を3件以上確認した</span></div>
-        <div class="doc-item"><span>□ 国内外の類似研究との差異を明確にした</span></div>
-        <div class="doc-item"><span>□ 研究の独自性（対象・方法・アウトカム）を整理した</span></div>
-        <div class="doc-item"><span>□ 実施可能性（施設・症例数・期間）を検討した</span></div>
-        <div class="doc-item"><span>□ 臨床的意義・社会的意義を言語化した</span></div>
+      <div id="novelty-checklist">
+        <label class="novelty-check-item">
+          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
+          <span class="novelty-check-text">既存レビュー論文を3件以上確認した</span>
+        </label>
+        <label class="novelty-check-item">
+          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
+          <span class="novelty-check-text">国内外の類似研究との差異を明確にした</span>
+        </label>
+        <label class="novelty-check-item">
+          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
+          <span class="novelty-check-text">研究の独自性（対象・方法・アウトカム）を整理した</span>
+        </label>
+        <label class="novelty-check-item">
+          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
+          <span class="novelty-check-text">実施可能性（施設・症例数・期間）を検討した</span>
+        </label>
+        <label class="novelty-check-item">
+          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
+          <span class="novelty-check-text">臨床的意義・社会的意義を言語化した</span>
+        </label>
+        <div id="novelty-progress-bar" style="margin-top:10px;display:none;">
+          <div style="height:6px;background:var(--border);border-radius:4px;overflow:hidden;">
+            <div id="novelty-progress-fill" style="height:100%;background:var(--secondary);width:0%;transition:width .3s;border-radius:4px;"></div>
+          </div>
+          <div id="novelty-progress-label" style="font-size:0.78rem;color:var(--text-sub);margin-top:4px;text-align:right;"></div>
+        </div>
       </div>
     </div>
 
@@ -854,7 +947,8 @@
       </div>
 
       <label class="field-label">様式5提出予定日</label>
-      <input type="text" id="start-date" placeholder="例：2026年5月1日" style="max-width:220px;" oninput="generateSchedule()" />
+      <input type="date" id="start-date" style="max-width:220px;" onchange="generateSchedule()" />
+      <div style="font-size:0.78rem;color:var(--text-sub);margin-top:4px;">日付を選択すると、各マイルストーンの目安日が自動計算されます。</div>
 
       <div id="schedule-area" style="margin-top:20px;"></div>
     </div>
@@ -908,10 +1002,26 @@
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
       <button class="btn btn-primary" onclick="printAll()">🖨 全体をPDFで出力</button>
+      <button class="btn btn-danger" onclick="showEndScreen()">🔚 終了・リセット</button>
     </div>
   </div>
 
 </div><!-- /main -->
+
+<!-- ===== 終了画面 ===== -->
+<div class="end-screen" id="endScreen">
+  <div class="end-inner">
+    <div class="end-icon">✅</div>
+    <h2 class="end-title">お疲れさまでした</h2>
+    <p class="end-body">
+      入力内容はリセットされました。<br>
+      新しい研究アイデアの整理を始めるには<br>下のボタンを押してください。
+    </p>
+    <button type="button" class="btn-restart" onclick="restartFromEnd()">
+      🔬 新しい研究アイデアを入力する
+    </button>
+  </div>
+</div>
 
 <script>
 // ── GAS URL（nurse_test_2 と同じエンドポイントを使用） ──
@@ -1248,43 +1358,62 @@ function renderDocuments() {
 // ── Schedule ──
 function generateSchedule() {
   const type = window._researchType || '観察研究';
-  const startDate = getVal('start-date') || '様式5提出日';
+  const rawDate = document.getElementById('start-date').value; // YYYY-MM-DD
   const isTrial = type.includes('治験');
   const isSpecific = type.includes('特定臨床研究');
+
+  // 日付計算ヘルパー: 起点日から weeks 週後の日付文字列を返す
+  function addWeeks(baseDate, weeks) {
+    if (!baseDate) return null;
+    const d = new Date(baseDate);
+    d.setDate(d.getDate() + weeks * 7);
+    return d.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  // 週数ラベル + 日付を組み合わせた表示
+  function weekLabel(label, weeksMin, weeksMax) {
+    if (!rawDate) return label;
+    const from = addWeeks(rawDate, weeksMin);
+    const to   = weeksMax != null ? addWeeks(rawDate, weeksMax) : null;
+    return to ? `${label}<br><small style="font-weight:400;color:var(--secondary);">📅 ${from}〜${to} 頃</small>`
+              : `${label}<br><small style="font-weight:400;color:var(--secondary);">📅 ${from} 頃</small>`;
+  }
+
+  const startDateLabel = rawDate
+    ? new Date(rawDate).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '様式5提出日（未入力）';
 
   let items = [];
 
   if (isTrial) {
     items = [
-      { week: '様式5提出', title: '事前相談・予備審査', desc: '研究計画概略書（様式5）を倫理審査委員会事務局へ提出し、事前相談を実施', milestone: true },
-      { week: '2〜4週後', title: '予備審査委員会', desc: '予備審査による論点整理・修正依頼への対応', milestone: false },
-      { week: '4〜8週後', title: '本審査申請', desc: '治験統一書式・治験計画届・各種書類の整備と倫理審査委員会への正式申請', milestone: true },
-      { week: '8〜12週後', title: '倫理審査委員会審査', desc: 'IRB本審査（月次開催が多い）。修正・条件付き承認の場合は追加対応が必要', milestone: false },
-      { week: '12〜16週後', title: '薬事届出・契約締結', desc: '治験計画届提出（薬機法）、契約書・費用算定', milestone: false },
-      { week: '16〜20週後', title: '研究開始', desc: '全書類承認確認後、研究・治験開始', milestone: true },
+      { week: weekLabel('【Day 0】様式5提出', 0, null),      title: '事前相談・予備審査', desc: '研究計画概略書（様式5）を倫理審査委員会事務局へ提出し、事前相談を実施', milestone: true },
+      { week: weekLabel('2〜4週後', 2, 4),                  title: '予備審査委員会', desc: '予備審査による論点整理・修正依頼への対応', milestone: false },
+      { week: weekLabel('4〜8週後', 4, 8),                  title: '本審査申請', desc: '治験統一書式・治験計画届・各種書類の整備と倫理審査委員会への正式申請', milestone: true },
+      { week: weekLabel('8〜12週後', 8, 12),                title: '倫理審査委員会審査', desc: 'IRB本審査（月次開催が多い）。修正・条件付き承認の場合は追加対応が必要', milestone: false },
+      { week: weekLabel('12〜16週後', 12, 16),              title: '薬事届出・契約締結', desc: '治験計画届提出（薬機法）、契約書・費用算定', milestone: false },
+      { week: weekLabel('16〜20週後', 16, 20),              title: '研究開始', desc: '全書類承認確認後、研究・治験開始', milestone: true },
     ];
   } else if (isSpecific) {
     items = [
-      { week: '様式5提出', title: '事前相談', desc: '様式5提出、CRB相談・事務局との事前確認', milestone: true },
-      { week: '2〜4週後', title: 'CRB申請準備', desc: 'jRCT事前登録、利益相反審査、モニタリング計画書作成', milestone: false },
-      { week: '4〜8週後', title: 'CRB本審査', desc: '認定臨床研究審査委員会（CRB）への申請・審査', milestone: true },
-      { week: '8〜10週後', title: '院内手続き', desc: '院長許可、倫理審査結果通知受領', milestone: false },
-      { week: '10〜14週後', title: '研究開始', desc: '全承認確認・jRCT公開確認後、研究開始', milestone: true },
+      { week: weekLabel('【Day 0】様式5提出', 0, null),      title: '事前相談', desc: '様式5提出、CRB相談・事務局との事前確認', milestone: true },
+      { week: weekLabel('2〜4週後', 2, 4),                  title: 'CRB申請準備', desc: 'jRCT事前登録、利益相反審査、モニタリング計画書作成', milestone: false },
+      { week: weekLabel('4〜8週後', 4, 8),                  title: 'CRB本審査', desc: '認定臨床研究審査委員会（CRB）への申請・審査', milestone: true },
+      { week: weekLabel('8〜10週後', 8, 10),                title: '院内手続き', desc: '院長許可、倫理審査結果通知受領', milestone: false },
+      { week: weekLabel('10〜14週後', 10, 14),              title: '研究開始', desc: '全承認確認・jRCT公開確認後、研究開始', milestone: true },
     ];
   } else {
-    // Observational / general intervention
     const isObs = type.includes('観察研究');
     items = [
-      { week: '様式5提出', title: '事前相談（必須）', desc: `様式5（研究計画概略書）を倫理審査委員会事務局に提出。${isObs ? '後ろ向き研究の場合は簡略審査の可能性あり。' : '侵襲ありの場合は予備審査を経ることが多い。'}`, milestone: true },
-      { week: '1〜2週後', title: '事務局との打ち合わせ', desc: '不備確認・修正・追加書類の指示', milestone: false },
-      { week: '2〜4週後', title: '本審査申請', desc: '全書類（様式8・研究計画書・IC文書等）を提出して正式申請', milestone: true },
-      { week: '4〜6週後', title: '倫理審査委員会', desc: '月次開催のIRBで審査。修正依頼があれば追加対応', milestone: false },
-      { week: '6〜8週後', title: '承認通知・院長許可', desc: '審査結果通知（様式12・14）の受領、院長許可', milestone: false },
-      { week: '8〜10週後', title: '研究開始', desc: '全承認確認後に研究開始。研究開始日をjRCT（必要時）に登録', milestone: true },
+      { week: weekLabel('【Day 0】様式5提出', 0, null),      title: '事前相談（必須）', desc: `様式5（研究計画概略書）を倫理審査委員会事務局に提出。${isObs ? '後ろ向き研究の場合は簡略審査の可能性あり。' : '侵襲ありの場合は予備審査を経ることが多い。'}`, milestone: true },
+      { week: weekLabel('1〜2週後', 1, 2),                  title: '事務局との打ち合わせ', desc: '不備確認・修正・追加書類の指示', milestone: false },
+      { week: weekLabel('2〜4週後', 2, 4),                  title: '本審査申請', desc: '全書類（様式8・研究計画書・IC文書等）を提出して正式申請', milestone: true },
+      { week: weekLabel('4〜6週後', 4, 6),                  title: '倫理審査委員会', desc: '月次開催のIRBで審査。修正依頼があれば追加対応', milestone: false },
+      { week: weekLabel('6〜8週後', 6, 8),                  title: '承認通知・院長許可', desc: '審査結果通知（様式12・14）の受領、院長許可', milestone: false },
+      { week: weekLabel('8〜10週後', 8, 10),                title: '研究開始', desc: '全承認確認後に研究開始。研究開始日をjRCT（必要時）に登録', milestone: true },
     ];
   }
 
-  let html = `<p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:12px;">起点：<strong>${startDate}</strong>（${type}の場合）</p>`;
+  let html = `<p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:12px;">起点：<strong>${startDateLabel}</strong>（${type}の場合）</p>`;
   html += '<div class="timeline">';
   items.forEach(item => {
     html += `
@@ -1618,6 +1747,63 @@ function resetAi() {
 
 function printAll() {
   window.print();
+}
+
+// ── 新規性チェックリスト プログレス ──
+function updateNoveltyProgress() {
+  const all     = document.querySelectorAll('.novelty-chk');
+  const checked = document.querySelectorAll('.novelty-chk:checked');
+  const bar  = document.getElementById('novelty-progress-bar');
+  const fill = document.getElementById('novelty-progress-fill');
+  const lbl  = document.getElementById('novelty-progress-label');
+  if (!bar) return;
+  const pct = Math.round(checked.length / all.length * 100);
+  bar.style.display = 'block';
+  fill.style.width  = pct + '%';
+  lbl.textContent   = `${checked.length} / ${all.length} 項目確認済み`;
+  lbl.style.color   = pct === 100 ? 'var(--secondary)' : 'var(--text-sub)';
+}
+
+// ── 終了画面 ──
+function showEndScreen() {
+  if (!confirm('入力内容をリセットして終了しますか？')) return;
+  resetAllInputs();
+  document.getElementById('endScreen').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function restartFromEnd() {
+  document.getElementById('endScreen').classList.remove('active');
+  goToStep(1);
+}
+function resetAllInputs() {
+  // テキスト・select・radio・checkbox をリセット
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else el.value = '';
+  });
+  // 判定・症例数結果をクリア
+  window._researchType = null;
+  document.getElementById('flowchart-visual').innerHTML = '';
+  document.getElementById('classification-badge-area').innerHTML = '';
+  const desc = document.getElementById('classification-desc');
+  if (desc) { desc.innerHTML = ''; desc.classList.add('hidden'); }
+  ['c1-result','c2-result','c3-result','c4-result','c5-result'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  const noveltyKw = document.getElementById('novelty-keywords-area');
+  if (noveltyKw) noveltyKw.innerHTML = '';
+  const noveltyAs = document.getElementById('novelty-assessment');
+  if (noveltyAs) noveltyAs.innerHTML = '';
+  const docs = document.getElementById('documents-list-area');
+  if (docs) docs.innerHTML = '';
+  const sched = document.getElementById('schedule-area');
+  if (sched) sched.innerHTML = '';
+  const aiRes = document.getElementById('ai-result');
+  if (aiRes) { aiRes.innerHTML = ''; aiRes.style.display = 'none'; }
+  const aibtns = document.getElementById('ai-btns');
+  if (aibtns) aibtns.style.display = 'none';
+  updateNoveltyProgress();
 }
 
 // ── Init ──
