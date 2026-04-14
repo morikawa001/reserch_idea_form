@@ -567,3 +567,77 @@ textarea { resize: vertical; min-height: 70px; }
   display: none;
 }
 .kw-search-tip.show { display: block; }
+/* ===== 統計解析計画（SAP）ページ ===== */
+
+/* SAP ナビゲーションボタン */
+.sap-nav-btn {
+  padding: 6px 13px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: #f8f9fc;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.sap-nav-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.sap-nav-btn.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+.sap-nav-btn.done {
+  border-color: var(--secondary);
+  background: var(--secondary-light);
+  color: var(--secondary);
+}
+
+/* SAP サブパネル */
+.sap-panel { display: block; }
+.sap-panel.hidden { display: none !important; }
+
+/* SAP 質問ボックス */
+.sap-question-box {
+  background: linear-gradient(135deg, var(--primary-light), #f0f7ff);
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.sap-q-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.sap-q-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.sap-q-hint {
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
+
+/* SAP ドラフトエリア */
+#sap-draft-content {
+  background: #f8fffe;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--text);
+}
