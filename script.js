@@ -958,3 +958,146 @@ window.addEventListener('DOMContentLoaded', () => {
   window._selectedKwJa = new Set();
   renderDbList();
 });
+
+// ============================================================
+// ── Step navigation 更新（Step 4 追加対応）──
+// ============================================================
+// goToStep に SAP 初期化を追加
+const _origGoToStep = goToStep;
+// goToStep を上書きして step 4 に入ったとき SAP を初期化
+const goToStepOrig = window.goToStep;
+window.goToStep = function(n) {
+  if (n === 4) { initSAPPage(); }
+  if (n === 5) { renderNovelty(); }
+  if (n === 6) { renderDocuments(); }
+  if (n === 7) { generateSchedule(); }
+
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-item').forEach((s, i) => {
+    s.classList.remove('active');
+    if (i + 1 < n) s.classList.add('done');
+    else s.classList.remove('done');
+  });
+  const panel = document.getElementById('panel-' + n);
+  if (panel) panel.classList.add('active');
+  const nav = document.getElementById('step-nav-' + n);
+  if (nav) nav.classList.add('active');
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// ============================================================
+// ── SAP（統計解析計画）機能 ──
+// ============================================================
+
+let sapCurrentStep = 1;
+const SAP_TOTAL = 7;
+
+function initSAPPage() {
+  sapGoTo(1);
+  sapUpdateSampleSizeLink();
+}
+
+function sapGoTo(n) {
+  sapCurrentStep = n;
+  // パネル切替
+  for (let i = 1; i <= SAP_TOTAL; i++) {
+    const p = document.getElementById('sap-panel-' + i);
+    if (p) p.classList.toggle('hidden', i !== n);
+    const nb = document.getElementById('sap-nav-' + i);
+    if (nb) {
+      nb.classList.remove('active', 'done');
+      if (i === n) nb.classList.add('active');
+      else if (i < n) nb.classList.add('done');
+    }
+  }
+  // プログレスバー更新
+  const pct = Math.round((n / SAP_TOTAL) * 100);
+  const bar = document.getElementById('sap-progress-bar');
+  const label = document.getElementById('sap-progress-label');
+  if (bar) bar.style.width = pct + '%';
+  if (label) label.textContent = 'Step ' + n + ' / ' + SAP_TOTAL;
+
+  // Step 4: データ型推奨を反映
+  if (n === 4) sapRecommendMethod();
+  // Step 7: 症例数リンク更新
+  if (n === 7) sapUpdateSampleSizeLink();
+}
+
+function sapUpdateDatatype() {
+  const val = document.querySelector('input[name="sap-datatype"]:checked');
+  if (!val) return;
+  const tips = {
+    continuous: '💡 <strong>連続変数</strong>：平均±SDで要約します。正規性が確認できればt検定・ANCOVA、確認できない場合はMann-Whitney U検定を検討してください。',
+    binary: '💡 <strong>二値変数</strong>：割合（%）で要約します。カイ二乗検定またはFisher検定が基本です。RR（リスク比）・OR（オッズ比）も報告してください。',
+    ordinal: '💡 <strong>順序変数</strong>：中央値と四分位範囲で要約します。Kruskal-Wallis検定や順序ロジスティック回帰が適切です。',
+    survival: '💡 <strong>生存時間データ</strong>：Kaplan-Meier法で生存曲線を描き、log-rank検定で群間比較します。共変量調整にはCox比例ハザードモデルを使用します。',
+    count: '💡 <strong>カウントデータ</strong>：平均発生回数や発生率（incidence rate）で要約します。ポアソン回帰または負の二項回帰が適切です。'
+  };
+  const box = document.getElementById('sap-datatype-tip');
+  if (box) {
+    box.innerHTML = tips[val.value] || '';
+    box.classList.remove('hidden');
+  }
+}
+
+function sapRecommendMethod() {
+  const dt = document.querySelector('input[name="sap-datatype"]:checked');
+  const timing = document.getElementById('sap-timing') ? document.getElementById('sap-timing').value : '';
+  const box = document.getElementById('sap-method-recommend');
+  const sel = document.getElementById('sap-primary-method');
+  if (!box || !dt) return;
+
+  const recs = {
+    continuous: {
+      single: { label: '対応なしt検定 または ANCOVA', val: 'ttest_2' },
+      change: { label: 'ANCOVA（ベースライン値を共変量として調整）', val: 'ancova' },
+      repeated: { label: '混合効果反復測定モデル（MMRM）', val: 'mixed_model' },
+      event: { label: '混合効果モデル（MMRM）', val: 'mixed_model' },
+      '': { label: '対応なしt検定 または ANCOVA', val: 'ttest_2' }
+    },
+    binary: {
+      single: { label: 'カイ二乗検定 / ロジスティック回帰', val: 'chisq' },
+      change: { label: 'McNemar検定（前後比較）', val: 'chisq' },
+      repeated: { label: 'GEE（一般化推定方程式）', val: 'logistic' },
+      event: { label: 'カイ二乗検定 / ロジスティック回帰', val: 'chisq' },
+      '': { label: 'カイ二乗検定 / ロジスティック回帰', val: 'chisq' }
+    },
+    ordinal: {
+      '': { label: 'Kruskal-Wallis検定 / 順序ロジスティック回帰', val: 'kruskal' }
+    },
+    survival: {
+      '': { label: 'Kaplan-Meier法 ＋ log-rank検定', val: 'km_logrank' },
+      event: { label: 'Kaplan-Meier法 ＋ log-rank検定 ＋ Cox回帰', val: 'km_logrank' }
+    },
+    count: {
+      '': { label: 'ポアソン回帰 / 負の二項回帰', val: 'poisson' }
+    }
+  };
+
+  const dtRecs = recs[dt.value] || {};
+  const rec = dtRecs[timing] || dtRecs[''] || null;
+
+  if (rec) {
+    box.innerHTML = '✅ <strong>推奨手法：' + rec.label + '</strong><br><span style="font-size:0.8rem;">データ型と測定タイミングに基づく推奨です。研究の特性に応じて調整してください。</span>';
+    if (sel) sel.value = rec.val;
+    sapShowMethodDetail();
+  } else {
+    box.innerHTML = '← Step 1 でデータ型を選択すると、ここに推奨手法が表示されます';
+  }
+}
+
+function sapShowMethodDetail() {
+  const sel = document.getElementById('sap-primary-method');
+  if (!sel) return;
+  const methodDetails = {
+    ttest_2: '【対応なしt検定】2群の平均値を比較します。正規性の仮定が必要です（Shapiro-Wilk検定等で確認）。正規性が怪しい場合はMann-Whitney U検定も検討してください。効果量はCohen\'s d（0.2=小、0.5=中、0.8=大）で報告します。',
+    ttest_paired: '【対応ありt検定】同一対象の前後比較です。差の正規性を確認します。報告にはベースライン平均・変化量・95%CIを含めます。',
+    ancova: '【ANCOVA（共分散分析）】ベースライン値を共変量として調整した2群比較。ランダム化試験での前後変化量の解析に推奨されます（Vickers & Altman, BMJ 2001）。',
+    mixed_model: '【MMRM（混合効果反復測定モデル）】複数時点での反復測定データに対応。欠損値をMARのもとで扱える利点があります。ICH E9(R1)でも推奨されています。',
+    chisq: '【カイ二乗検定】2つの二値変数の独立性検定。期待度数が5未満のセルが20%超の場合はFisher検定を使用します。RR・RD・NNTも報告してください。',
+    logistic: '【ロジスティック回帰】二値アウトカムに対して共変量を調整したOR（オッズ比）と95%CIを推定します。サンプルサイズが小さい場合は単純集計も重要です。',
+    km_logrank: '【Kaplan-Meier + log-rank検定】群間の生存曲線を視覚化し、log-rank検定で比較します。打ち切りの扱い（打ち切り日の定義）を明記してください。中央値生存時間と95%CIを報告します。',
+    cox: '【Cox比例ハザードモデル】共変量を調整したHR（ハザード比）と95%CIを推定します。比例ハザード仮定の確認（log-log plot、Schoenfeld残差等）が必要です。',
+    mw: '【Mann-Whitney U検定（Wilcoxon順位和検',
+    mw: '【Mann-Whitney U検定（Wilcoxon順位和検
