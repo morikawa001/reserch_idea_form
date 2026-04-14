@@ -824,7 +824,9 @@
       <div class="info-box">
         研究種別に応じた標準的なスケジュールを表示します。あくまで目安です。
       </div>
-      <div id="schedule-area"></div>
+      <label class="field-label">様式5提出予定日</label>
+      <input type="date" id="start-date" oninput="generateSchedule()" style="max-width:200px;" />
+      <div id="schedule-area" style="margin-top:16px;"></div>
     </div>
 
     <div class="btn-row">

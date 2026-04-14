@@ -6,9 +6,9 @@ let currentStep = 1;
 // ── Step navigation ──
 function goToStep(n) {
   if (n === 2) { runClassification(); }
-  if (n === 4) { renderNovelty(); }
-  if (n === 5) { renderDocuments(); }
-  if (n === 6) { generateSchedule(); }
+  if (n === 5) { renderNovelty(); }
+  if (n === 6) { renderDocuments(); }
+  if (n === 7) { generateSchedule(); }
 
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.step-item').forEach((s, i) => {
@@ -34,6 +34,7 @@ function goToStep4() { goToStep(4); }
 function goToStep5() { goToStep(5); }
 function goToStep6() { goToStep(6); }
 function goToStep7() { goToStep(7); }
+function goToStep8() { goToStep(8); }
 
 // ── Get form values ──
 function getVal(id) {
@@ -879,7 +880,9 @@ ${focus}
 `;
 }
 
-async function doBrushup() {
+// doBrushupは後方互換のためrunAIへ委譲
+async function doBrushup() { return runAI(); }
+async function _doBrushup_legacy() {
   const theme = getVal('theme');
   if (!theme) {
     alert('研究テーマ（ステップ1）を入力してください。');
@@ -1074,3 +1077,490 @@ window.addEventListener('DOMContentLoaded', () => {
   window._selectedKwJa = new Set();
   renderDbList();
 });
+
+// ============================================================
+// ── SAP（統計解析計画）関連関数 ──
+// ============================================================
+
+let currentSapStep = 1;
+const SAP_TOTAL = 7;
+
+function sapGoTo(n) {
+  // 現在のパネルをhiddenに
+  for (let i = 1; i <= SAP_TOTAL; i++) {
+    const panel = document.getElementById('sap-panel-' + i);
+    if (panel) panel.classList.toggle('hidden', i !== n);
+
+    const nav = document.getElementById('sap-nav-' + i);
+    if (nav) {
+      nav.classList.remove('active', 'done');
+      if (i === n) nav.classList.add('active');
+      else if (i < n) nav.classList.add('done');
+    }
+  }
+
+  currentSapStep = n;
+
+  // プログレスバー更新
+  const pct = Math.round((n / SAP_TOTAL) * 100);
+  const bar = document.getElementById('sap-progress-bar');
+  const label = document.getElementById('sap-progress-label');
+  if (bar) bar.style.width = pct + '%';
+  if (label) label.textContent = 'Step ' + n + ' / ' + SAP_TOTAL;
+
+  // Step 4 に来たときに推奨手法を表示
+  if (n === 4) sapUpdateMethodRecommend();
+
+  // Step 7 に来たときに症例数サマリーを更新
+  if (n === 7) sapUpdateSampleSizeSummary();
+}
+
+function sapUpdateDatatype() {
+  const val = getRadio('sap-datatype');
+  const tip = document.getElementById('sap-datatype-tip');
+  if (!tip) return;
+
+  const tips = {
+    continuous: '✅ 平均・標準偏差で要約します。正規性の確認（Shapiro-Wilk検定等）を忘れずに。t検定 or Mann-Whitney U検定が候補です。',
+    binary: '✅ 割合・率で要約します。χ²検定 or Fisherの正確確率検定、ロジスティック回帰が候補です。',
+    ordinal: '✅ 中央値（IQR）で要約します。Kruskal-Wallis検定 or 順序ロジスティック回帰が候補です。',
+    survival: '✅ Kaplan-Meier曲線で可視化し、log-rank検定 or Cox回帰を使用します。打ち切りの定義を明確に。',
+    count: '✅ 発生数・発生率で要約します。ポアソン回帰 or 負の二項回帰が候補です。過分散に注意。'
+  };
+
+  if (val && tips[val]) {
+    tip.textContent = tips[val];
+    tip.classList.remove('hidden');
+  } else {
+    tip.classList.add('hidden');
+  }
+
+  sapUpdateMethodRecommend();
+}
+
+function sapUpdateMethodRecommend() {
+  const datatype = getRadio('sap-datatype');
+  const el = document.getElementById('sap-method-recommend');
+  const sel = document.getElementById('sap-primary-method');
+  if (!el) return;
+
+  const recommends = {
+    continuous: { text: '📊 連続変数 → 推奨：対応なしt検定 / ANCOVA（共変量調整あり） / MMRM（反復測定）', value: 'ttest_2' },
+    binary:     { text: '📊 二値変数 → 推奨：χ²検定 / Fisherの正確確率検定 / ロジスティック回帰', value: 'chisq' },
+    ordinal:    { text: '📊 順序変数 → 推奨：Kruskal-Wallis検定 / 順序ロジスティック回帰', value: 'kruskal' },
+    survival:   { text: '📊 生存時間 → 推奨：Kaplan-Meier + log-rank検定 / Cox比例ハザードモデル', value: 'km_logrank' },
+    count:      { text: '📊 カウントデータ → 推奨：ポアソン回帰 / 負の二項回帰', value: 'poisson' }
+  };
+
+  if (datatype && recommends[datatype]) {
+    const r = recommends[datatype];
+    el.textContent = r.text;
+    if (sel && !sel.value) sel.value = r.value;
+    sapShowMethodDetail();
+  } else {
+    el.textContent = '← Step 1 でデータ型を選択すると、ここに推奨手法が表示されます';
+  }
+}
+
+function sapShowMethodDetail() {
+  const method = document.getElementById('sap-primary-method')?.value;
+  const detail = document.getElementById('sap-method-detail');
+  if (!detail) return;
+
+  const details = {
+    ttest_2:         '対応なしt検定：2群の平均値を比較。正規性と等分散性を確認。R: t.test(), EZR: Student t-test',
+    ttest_paired:    '対応ありt検定：前後の平均差を検定。差の正規性を確認。R: t.test(paired=TRUE)',
+    ancova:          'ANCOVA：ベースライン値等の共変量を調整した2群比較。R: lm()でベースラインを共変量に指定',
+    mixed_model:     'MMRM：反復測定データに対する混合効果モデル。欠損値に強い。R: nlme::lme(), mmrm::mmrm()',
+    anova:           '一元配置分散分析：3群以上の平均比較。多重比較（Tukey, Bonferroni）も計画する。R: aov()',
+    mw:              'Mann-Whitney U検定：非正規・順序データの2群比較。R: wilcox.test()',
+    wilcoxon:        'Wilcoxon符号付き順位検定：前後比較の非パラメトリック版。R: wilcox.test(paired=TRUE)',
+    chisq:           'カイ二乗検定：2×2以上の分割表で割合を比較。期待度数が5未満のセルがある場合はFisherを使用。R: chisq.test()',
+    fisher:          'Fisherの正確確率検定：小標本や期待度数が小さい場合に使用。R: fisher.test()',
+    logistic:        'ロジスティック回帰：共変量調整済みのオッズ比（OR）と95%CIを推定。R: glm(family=binomial)',
+    rr:              'リスク比（RR）・リスク差（RD）：絶対リスクの比較。R: epitools::riskratio()',
+    km_logrank:      'Kaplan-Meier + log-rank：生存曲線の推定と2群比較。R: survival::survfit(), survdiff()',
+    cox:             'Cox比例ハザードモデル：共変量調整済みのハザード比（HR）。比例ハザード仮定の検証も行う。R: survival::coxph()',
+    kruskal:         'Kruskal-Wallis検定：3群以上の順序・非正規データ比較。R: kruskal.test()',
+    ordinal_logistic:'順序ロジスティック回帰：順序変数への回帰モデル。R: MASS::polr()',
+    cmh:             'Cochran-Mantel-Haenszel検定：層別した分割表の解析。R: mantelhaen.test()',
+    poisson:         'ポアソン回帰：カウントデータの回帰モデル。過分散の場合は負の二項回帰へ。R: glm(family=poisson)',
+    negbinom:        '負の二項回帰：過分散のカウントデータに対応。R: MASS::glm.nb()'
+  };
+
+  if (method && details[method]) {
+    detail.textContent = details[method];
+    detail.classList.remove('hidden');
+  } else {
+    detail.classList.add('hidden');
+  }
+}
+
+function sapAddSecondary() {
+  const list = document.getElementById('sap-secondary-list');
+  if (!list) return;
+
+  const row = document.createElement('div');
+  row.className = 'sap-endpoint-row';
+  row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
+  row.innerHTML = `
+    <input type="text" class="sap-secondary-ep" placeholder="副次評価項目" style="flex:1;" />
+    <select class="sap-secondary-type" style="width:140px;">
+      <option value="">データ型</option>
+      <option value="continuous">連続変数</option>
+      <option value="binary">二値変数</option>
+      <option value="survival">生存時間</option>
+      <option value="ordinal">順序変数</option>
+    </select>
+    <button class="btn btn-secondary" onclick="this.parentElement.remove()" style="padding:6px 10px;font-size:0.8rem;">✕</button>
+  `;
+  list.appendChild(row);
+}
+
+function sapCalcAdjusted() {
+  const rate = parseFloat(document.getElementById('sap-dropout-rate')?.value) || 10;
+  const el = document.getElementById('sap-adjusted-n');
+  if (!el) return;
+
+  // 直近の症例数計算結果から総症例数を取得（c1〜c5の最後の計算結果を探す）
+  let baseN = null;
+  for (let i = 1; i <= 5; i++) {
+    const res = document.getElementById('c' + i + '-result');
+    if (res && !res.classList.contains('hidden')) {
+      const vals = res.querySelectorAll('.val');
+      // 総症例数は通常3番目または最大値
+      vals.forEach(v => {
+        const n = parseInt(v.textContent);
+        if (!isNaN(n) && (baseN === null || n > baseN)) baseN = n;
+      });
+    }
+  }
+
+  if (baseN === null) {
+    el.textContent = '症例数計算を先に実行してください';
+    return;
+  }
+
+  const adjusted = Math.ceil(baseN / (1 - rate / 100));
+  el.textContent = adjusted + ' 人（' + baseN + ' ÷ (1 − ' + rate + '%)）';
+}
+
+function sapUpdateSampleSizeSummary() {
+  const el = document.getElementById('sap-samplesize-summary');
+  if (!el) return;
+
+  let found = false;
+  for (let i = 1; i <= 5; i++) {
+    const res = document.getElementById('c' + i + '-result');
+    if (res && !res.classList.contains('hidden')) {
+      const items = res.querySelectorAll('.calc-num');
+      let text = '';
+      items.forEach(item => {
+        const val = item.querySelector('.val')?.textContent || '';
+        const lbl = item.querySelector('.lbl')?.textContent || '';
+        text += lbl + ': ' + val + '　';
+      });
+      el.textContent = text.trim() || '症例数が計算されていません。Step 3（症例数計算）を先に実行してください。';
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    el.textContent = '症例数が計算されていません。Step 3（症例数計算）を先に実行してください。';
+  }
+}
+
+function generateSAPDraft() {
+  const primaryEp   = document.getElementById('sap-primary-endpoint')?.value || '（未入力）';
+  const datatype    = getRadio('sap-datatype') || '（未選択）';
+  const timing      = document.getElementById('sap-timing')?.value || '（未選択）';
+  const analysisSet = getRadio('sap-analysisset') || '（未選択）';
+  const method      = document.getElementById('sap-primary-method')?.value || '（未選択）';
+  const covariate   = getRadio('sap-covariate') || '（未選択）';
+  const covariates  = document.getElementById('sap-covariates')?.value || 'なし';
+  const alpha       = document.getElementById('sap-alpha')?.value || '0.05';
+  const sided       = document.getElementById('sap-sided')?.value || 'two';
+  const software    = document.getElementById('sap-software')?.value || '（未選択）';
+  const missing     = getRadio('sap-missing') || '（未選択）';
+  const exclusion   = document.getElementById('sap-exclusion-plan')?.value || '（未入力）';
+  const dropout     = document.getElementById('sap-dropout-plan')?.value || '（未入力）';
+  const dropoutRate = document.getElementById('sap-dropout-rate')?.value || '10';
+
+  const sensChecks = Array.from(document.querySelectorAll('.sap-sensitivity-chk:checked')).map(c => c.value);
+  const sensitivityOther = document.getElementById('sap-sensitivity-other')?.value || '';
+
+  const secondaryEps = Array.from(document.querySelectorAll('.sap-secondary-ep'))
+    .map((el, i) => {
+      const type = el.parentElement?.querySelector('.sap-secondary-type')?.value || '';
+      return el.value ? `  ${i + 1}. ${el.value}（${type || 'データ型未選択'}）` : null;
+    }).filter(Boolean).join('\n') || '  （未入力）';
+
+  const sidedLabel  = sided === 'two' ? '両側' : '片側';
+  const datatypeLabel = {
+    continuous: '連続変数', binary: '二値変数', ordinal: '順序変数',
+    survival: '生存時間（時間-イベント）', count: 'カウントデータ'
+  }[datatype] || datatype;
+
+  const sensList = sensChecks.map(v => ({
+    pp: 'PP（Per-Protocol）解析',
+    imputation: '欠損値補完法の変更',
+    outlier: '外れ値の影響確認',
+    covariate: '共変量の変更',
+    subgroup: '事前規定サブグループ解析',
+    competing: '競合リスクの考慮'
+  })[v]).filter(Boolean).join('、') || 'なし';
+
+  const draft = `統計解析計画書（ひな型）
+作成日：${new Date().toLocaleDateString('ja-JP')}
+研究テーマ：${document.getElementById('theme')?.value || '（未入力）'}
+研究種別：${window._researchType || '（未判定）'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. 主要評価項目
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【主要評価項目】
+${primaryEp}
+
+【データの型】${datatypeLabel}
+【測定タイミング】${timing}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. 副次評価項目
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${secondaryEps}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. 解析対象集団
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+主要解析対象集団：${analysisSet}
+除外・中断の対処：
+${exclusion}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. 主要解析方法
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+主要解析手法：${method}
+調整変数設定：${covariate}
+共変量・層別因子：${covariates}
+有意水準：α = ${alpha}（${sidedLabel}検定）
+統計ソフト：${software}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. 感度分析
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+実施する感度分析：${sensList}
+その他：${sensitivityOther || 'なし'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. 欠損データ・中止例の取り扱い
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+欠損値の対処法：${missing}
+中途中止・逸脱例の扱い：
+${dropout}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. 症例数との整合
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+想定ドロップアウト率：${dropoutRate}%
+※ Step 3の症例数計算結果と有意水準・検定手法が一致していることを確認してください。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+本ひな型は自動生成されたものです。内容は生物統計家・臨床研究支援センターと相談のうえ確認してください。
+`;
+
+  const area = document.getElementById('sap-draft-area');
+  const content = document.getElementById('sap-draft-content');
+  if (area) area.classList.remove('hidden');
+  if (content) content.textContent = draft;
+
+  // グローバルに保存しておく（AIへの受け渡し用）
+  window._sapDraft = draft;
+
+  area?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copySAPDraft() {
+  const content = document.getElementById('sap-draft-content');
+  if (!content) return;
+
+  const text = content.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('統計解析計画書ひな型をクリップボードにコピーしました。');
+  }).catch(() => {
+    window.prompt('以下のテキストをコピーしてください:', text);
+  });
+}
+
+function goToAIWithSAP() {
+  goToStep(8);
+  // SAP ドラフトを追加指示欄に設定
+  const extra = document.getElementById('ai-extra-instruction');
+  if (extra && window._sapDraft) {
+    extra.value = '以下の統計解析計画書ひな型をもとに、より完成度の高い計画書に仕上げてください。\n\n' + window._sapDraft;
+  }
+}
+
+// ============================================================
+// ── AIブラッシュアップ（新バージョン：出力形式・SAP対応）──
+// ============================================================
+
+function buildAIPrompt() {
+  const theme       = getVal('theme');
+  const background  = getVal('background');
+  const purpose     = getVal('purpose');
+  const design      = getVal('design');
+  const disease     = getVal('disease');
+  const subjects    = getVal('subjects');
+  const setting     = getVal('setting');
+  const type        = window._researchType || '未判定';
+  const intervention = getRadio('intervention');
+  const invasiveness = getRadio('invasiveness');
+  const outputType  = getRadio('ai-output-type') || 'protocol';
+  const extraInst   = document.getElementById('ai-extra-instruction')?.value || '';
+
+  const includeBasic      = document.getElementById('ai-include-basic')?.checked;
+  const includeDesign     = document.getElementById('ai-include-design')?.checked;
+  const includeSamplesize = document.getElementById('ai-include-samplesize')?.checked;
+  const includeSAP        = document.getElementById('ai-include-sap')?.checked;
+
+  // 症例数サマリー
+  let sampleSizeSummary = '';
+  if (includeSamplesize) {
+    for (let i = 1; i <= 5; i++) {
+      const res = document.getElementById('c' + i + '-result');
+      if (res && !res.classList.contains('hidden')) {
+        const items = res.querySelectorAll('.calc-num');
+        items.forEach(item => {
+          const val = item.querySelector('.val')?.textContent || '';
+          const lbl = item.querySelector('.lbl')?.textContent || '';
+          sampleSizeSummary += lbl + ': ' + val + '\n';
+        });
+        break;
+      }
+    }
+    if (!sampleSizeSummary) sampleSizeSummary = '（症例数計算は実行されていません）';
+  }
+
+  const outputInstructions = {
+    protocol: '研究計画書ひな型（全体）を作成してください。背景・目的・方法・統計解析・倫理的配慮・参考文献リストの構成でお願いします。',
+    sap_only: '統計解析計画書（SAP）のみを作成してください。主要評価項目・副次評価項目・解析対象集団・解析手法・感度分析・欠損値の扱いを含む詳細な計画書にしてください。',
+    summary:  '研究概要サマリー（A4 1ページ相当）を作成してください。PICO/PECO・研究デザイン・主要評価項目・統計解析の概要を簡潔にまとめてください。'
+  };
+
+  let prompt = `あなたは静岡県立静岡がんセンター臨床研究支援センターの方針に精通した臨床研究専門家AIです。
+以下の研究情報をもとに、日本語で研究計画書のひな型を作成してください。
+
+${outputInstructions[outputType] || outputInstructions['protocol']}
+
+`;
+
+  if (includeBasic) {
+    prompt += `【基本情報】
+研究テーマ：${theme || '未入力'}
+研究背景・動機：${background || '未入力'}
+研究目的：${purpose || '未入力'}
+対象疾患・領域：${disease || '未入力'}
+研究対象者：${subjects || '未入力'}
+研究対象施設・部署：${setting || '未入力'}
+
+`;
+  }
+
+  if (includeDesign) {
+    prompt += `【研究デザイン・種別】
+研究デザイン：${design || '未選択'}
+研究種別（システム判定）：${type}
+介入の有無：${intervention === 'yes' ? 'あり' : intervention === 'no' ? 'なし' : '未選択'}
+侵襲の程度：${invasiveness === 'none' ? 'なし' : invasiveness === 'minor' ? '軽微' : invasiveness === 'major' ? 'あり' : '未選択'}
+
+`;
+  }
+
+  if (includeSamplesize && sampleSizeSummary) {
+    prompt += `【症例数計算結果】
+${sampleSizeSummary}
+`;
+  }
+
+  if (includeSAP && window._sapDraft) {
+    prompt += `【統計解析計画（Step 4 入力内容）】
+${window._sapDraft}
+`;
+  }
+
+  if (extraInst) {
+    prompt += `【追加の指示・要望】
+${extraInst}
+
+`;
+  }
+
+  prompt += `
+出力はMarkdown形式で、見出し・表・箇条書きを活用して読みやすく作成してください。
+倫理的配慮は静岡がんセンターの倫理審査委員会（IRB）を想定して記載してください。
+`;
+
+  return prompt;
+}
+
+async function runAI() {
+  const theme = getVal('theme');
+  if (!theme) {
+    alert('研究テーマ（ステップ1）を入力してください。');
+    return;
+  }
+
+  const btn     = document.getElementById('brushup-btn') || document.querySelector('#panel-8 .btn-warn');
+  const loading = document.getElementById('ai-loading');
+  const result  = document.getElementById('ai-result');
+  const aibtns  = document.getElementById('ai-btns');
+
+  if (!loading || !result || !aibtns) return;
+
+  if (btn) btn.disabled = true;
+  loading.style.display = 'flex';
+  result.style.display = 'none';
+  aibtns.style.display = 'none';
+
+  const prompt = buildAIPrompt();
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.5, topP: 0.9, maxOutputTokens: 8192 }
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'APIエラー ' + res.status);
+    }
+
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) throw new Error('レスポンスが空です。');
+
+    result.innerHTML = markdownToHtml(text);
+    result.style.display = 'block';
+    aibtns.style.display = 'flex';
+  } catch (e) {
+    result.innerHTML = `<div style="color:#f87171;">エラー: ${e.message}</div>`;
+    result.style.display = 'block';
+  } finally {
+    if (btn) btn.disabled = false;
+    loading.style.display = 'none';
+  }
+}
+
+function copyAiPrompt() {
+  const prompt = buildAIPrompt();
+  navigator.clipboard.writeText(prompt).then(() => {
+    alert('プロンプトをクリップボードにコピーしました。\nChatGPT・Claude等に貼り付けてご利用ください。');
+  }).catch(() => {
+    window.prompt('以下のプロンプトをコピーしてください:', prompt);
+  });
+}
