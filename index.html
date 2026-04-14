@@ -33,18 +33,22 @@
     </div>
     <div class="step-item" id="step-nav-4" onclick="goToStep(4)">
       <div class="step-num">4</div>
-      <div class="step-label">新規性・先行研究</div>
+      <div class="step-label">統計解析計画</div>
     </div>
     <div class="step-item" id="step-nav-5" onclick="goToStep(5)">
       <div class="step-num">5</div>
-      <div class="step-label">必要書類</div>
+      <div class="step-label">新規性・先行研究</div>
     </div>
     <div class="step-item" id="step-nav-6" onclick="goToStep(6)">
       <div class="step-num">6</div>
-      <div class="step-label">スケジュール</div>
+      <div class="step-label">必要書類</div>
     </div>
     <div class="step-item" id="step-nav-7" onclick="goToStep(7)">
       <div class="step-num">7</div>
+      <div class="step-label">スケジュール</div>
+    </div>
+    <div class="step-item" id="step-nav-8" onclick="goToStep(8)">
+      <div class="step-num">8</div>
       <div class="step-label">AIブラッシュアップ</div>
     </div>
   </div>
@@ -359,12 +363,412 @@
 
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="goToStep(2)">← 戻る</button>
-      <button class="btn btn-primary btn-lg" onclick="goToStep(4)">次へ：新規性・先行研究 →</button>
+      <button class="btn btn-primary btn-lg" onclick="goToStep(4)">次へ：統計解析計画 →</button>
     </div>
   </div>
 
-  <!-- ===== STEP 4: 新規性・先行研究 ===== -->
+  <!-- ===== STEP 4: 統計解析計画 ===== -->
   <div class="tab-panel" id="panel-4">
+    <div class="card">
+      <h2>📐 統計解析計画書 作成ガイド</h2>
+      <div class="info-box">
+        対話形式で一つずつ確認しながら進めることで、統計解析計画書のひな型が完成します。
+        最後にAIブラッシュアップへデータを渡して計画書の形に仕上げます。
+      </div>
+
+      <!-- SAP Progress -->
+      <div id="sap-progress-wrap" style="margin:16px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:0.8rem;font-weight:600;color:var(--text-sub);">進捗</span>
+          <span id="sap-progress-label" style="font-size:0.8rem;color:var(--primary);font-weight:600;">Step 1 / 7</span>
+        </div>
+        <div style="background:var(--border);border-radius:6px;height:8px;overflow:hidden;">
+          <div id="sap-progress-bar" style="background:var(--primary);height:100%;width:14%;transition:width 0.4s;border-radius:6px;"></div>
+        </div>
+      </div>
+
+      <!-- SAP Step Navigator -->
+      <div id="sap-steps-nav" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="sap-nav-btn active" id="sap-nav-1" onclick="sapGoTo(1)">①主要評価項目</button>
+        <button class="sap-nav-btn" id="sap-nav-2" onclick="sapGoTo(2)">②副次評価項目</button>
+        <button class="sap-nav-btn" id="sap-nav-3" onclick="sapGoTo(3)">③解析対象集団</button>
+        <button class="sap-nav-btn" id="sap-nav-4" onclick="sapGoTo(4)">④主要解析方法</button>
+        <button class="sap-nav-btn" id="sap-nav-5" onclick="sapGoTo(5)">⑤感度分析</button>
+        <button class="sap-nav-btn" id="sap-nav-6" onclick="sapGoTo(6)">⑥欠損・中止</button>
+        <button class="sap-nav-btn" id="sap-nav-7" onclick="sapGoTo(7)">⑦症例数との整合</button>
+      </div>
+
+      <!-- SAP Sub-panel 1 -->
+      <div id="sap-panel-1" class="sap-panel">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 1</div>
+          <div class="sap-q-title">主要評価項目（Primary Endpoint）とデータの型を決める</div>
+          <div class="sap-q-hint">主要評価項目は研究の核心です。1つだけ選ぶのが原則です。</div>
+        </div>
+
+        <label class="field-label">主要評価項目の名称</label>
+        <input type="text" id="sap-primary-endpoint" placeholder="例：術後30日以内の有害事象発生率、VASスコア変化量、無病生存期間（DFS）" />
+
+        <label class="field-label">データの型（変数の種類）</label>
+        <div class="radio-group" id="sap-datatype-group">
+          <label><input type="radio" name="sap-datatype" value="continuous" onchange="sapUpdateDatatype()">
+            <span><strong>連続変数</strong> — 平均や標準偏差で要約できる数値<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">例：VASスコア、BMI、血液検査値</span></span></label>
+          <label><input type="radio" name="sap-datatype" value="binary" onchange="sapUpdateDatatype()">
+            <span><strong>二値変数（二項分類）</strong> — はい/いいえ、発生/非発生<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">例：有害事象発生率、奏効率、30日再入院率</span></span></label>
+          <label><input type="radio" name="sap-datatype" value="ordinal" onchange="sapUpdateDatatype()">
+            <span><strong>順序変数</strong> — 順番に意味があるカテゴリ<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">例：PS（0-4）、重症度グレード（Ⅰ/Ⅱ/Ⅲ）</span></span></label>
+          <label><input type="radio" name="sap-datatype" value="survival" onchange="sapUpdateDatatype()">
+            <span><strong>時間-イベントデータ（生存時間）</strong> — 何日後にイベントが起きたか<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">例：全生存期間（OS）、無増悪生存期間（PFS）、DFS</span></span></label>
+          <label><input type="radio" name="sap-datatype" value="count" onchange="sapUpdateDatatype()">
+            <span><strong>カウントデータ</strong> — 回数・頻度<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">例：入院回数、有害事象の発現件数</span></span></label>
+        </div>
+
+        <div id="sap-datatype-tip" class="info-box hidden" style="margin-top:12px;"></div>
+
+        <label class="field-label" style="margin-top:16px;">測定タイミング</label>
+        <select id="sap-timing">
+          <option value="">─ 選択してください ─</option>
+          <option value="single">1時点のみ（介入後〇週/月）</option>
+          <option value="change">前後比較（ベースラインからの変化量）</option>
+          <option value="repeated">反復測定（複数時点）</option>
+          <option value="event">イベント発生まで（時間-イベント）</option>
+        </select>
+
+        <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
+          <button class="btn btn-primary" onclick="sapGoTo(2)">次へ：副次評価項目 →</button>
+        </div>
+      </div>
+
+      <!-- SAP Sub-panel 2 -->
+      <div id="sap-panel-2" class="sap-panel hidden">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 2</div>
+          <div class="sap-q-title">副次評価項目（Secondary Endpoints）を設定する</div>
+          <div class="sap-q-hint">副次評価項目は探索的な位置付けです。2〜4項目程度が一般的です。多すぎると多重比較の問題が生じます。</div>
+        </div>
+
+        <label class="field-label">副次評価項目（複数可）</label>
+        <div id="sap-secondary-list">
+          <div class="sap-endpoint-row" style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+            <input type="text" class="sap-secondary-ep" placeholder="例：副作用発生率、QOLスコア（SF-36）変化量" style="flex:1;" />
+            <select class="sap-secondary-type" style="width:140px;">
+              <option value="">データ型</option>
+              <option value="continuous">連続変数</option>
+              <option value="binary">二値変数</option>
+              <option value="survival">生存時間</option>
+              <option value="ordinal">順序変数</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="sapAddSecondary()" style="font-size:0.82rem;padding:6px 14px;margin-top:4px;">＋ 副次項目を追加</button>
+
+        <div class="warn-box" style="margin-top:14px;">
+          <strong>⚠️ 多重比較について：</strong>副次評価項目が多い場合、p値の解釈には注意が必要です。
+          探索的解析として位置づけ、必要に応じてBonferroni補正やFDRを検討してください。
+        </div>
+
+        <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+          <button class="btn btn-secondary" onclick="sapGoTo(1)">← 戻る</button>
+          <button class="btn btn-primary" onclick="sapGoTo(3)">次へ：解析対象集団 →</button>
+        </div>
+      </div>
+
+      <!-- SAP Sub-panel 3 -->
+      <div id="sap-panel-3" class="sap-panel hidden">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 3</div>
+          <div class="sap-q-title">解析対象集団（Analysis Set）を定義する</div>
+          <div class="sap-q-hint">RCTでは通常、ITT（Intent-to-Treat）が主解析の原則です。集団の定義を事前に明確にしておくことが重要です。</div>
+        </div>
+
+        <label class="field-label">主要解析で使用する集団</label>
+        <div class="radio-group">
+          <label><input type="radio" name="sap-analysisset" value="ITT">
+            <span><strong>ITT（Intent-to-Treat）集団</strong> — 無作為割付された全例<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">✅ RCTの標準。バイアスが少なく、保守的な推定。</span></span></label>
+          <label><input type="radio" name="sap-analysisset" value="mITT">
+            <span><strong>mITT（modified ITT）集団</strong> — ITTの一部除外<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">除外基準を事前に明確に規定することが条件。</span></span></label>
+          <label><input type="radio" name="sap-analysisset" value="PP">
+            <span><strong>PP（Per-Protocol）集団</strong> — プロトコル遵守例のみ<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">感度分析として使用。ITTと比較して評価するのが一般的。</span></span></label>
+          <label><input type="radio" name="sap-analysisset" value="safety">
+            <span><strong>安全性解析対象集団</strong> — 介入を1回以上受けた全例<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">有害事象・安全性評価に使用。</span></span></label>
+        </div>
+
+        <label class="field-label" style="margin-top:14px;">除外・中断の想定と対処方針</label>
+        <textarea id="sap-exclusion-plan" placeholder="例：同意撤回例は解析から除外し、欠損として扱う。プロトコル逸脱（規定の介入が50%未満）はPP解析から除外するが、ITT解析には含める。"></textarea>
+
+        <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+          <button class="btn btn-secondary" onclick="sapGoTo(2)">← 戻る</button>
+          <button class="btn btn-primary" onclick="sapGoTo(4)">次へ：主要解析方法 →</button>
+        </div>
+      </div>
+
+      <!-- SAP Sub-panel 4 -->
+      <div id="sap-panel-4" class="sap-panel hidden">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 4</div>
+          <div class="sap-q-title">主要解析方法を選択する</div>
+          <div class="sap-q-hint">Step 1で選んだデータ型に基づいて、適切な統計手法が提案されます。</div>
+        </div>
+
+        <div id="sap-method-recommend" class="success-box" style="margin-bottom:14px;">
+          ← Step 1 でデータ型を選択すると、ここに推奨手法が表示されます
+        </div>
+
+        <label class="field-label">主要解析手法（確認・修正可）</label>
+        <select id="sap-primary-method" onchange="sapShowMethodDetail()">
+          <option value="">─ 解析手法を選択してください ─</option>
+          <optgroup label="【連続変数】">
+            <option value="ttest_2">対応なしt検定（2群比較）</option>
+            <option value="ttest_paired">対応ありt検定（前後比較）</option>
+            <option value="ancova">ANCOVA（共変量調整付き2群比較）</option>
+            <option value="mixed_model">混合効果モデル（MMRM）</option>
+            <option value="anova">一元配置分散分析（3群以上）</option>
+            <option value="mw">Mann-Whitney U検定（非正規分布時）</option>
+            <option value="wilcoxon">Wilcoxon符号付き順位検定（前後）</option>
+          </optgroup>
+          <optgroup label="【二値変数・比率】">
+            <option value="chisq">カイ二乗検定</option>
+            <option value="fisher">Fisherの正確確率検定</option>
+            <option value="logistic">ロジスティック回帰（調整済みOR）</option>
+            <option value="rr">リスク比（RR）・リスク差（RD）</option>
+          </optgroup>
+          <optgroup label="【生存時間解析】">
+            <option value="km_logrank">Kaplan-Meier法 ＋ log-rank検定</option>
+            <option value="cox">Cox比例ハザードモデル</option>
+          </optgroup>
+          <optgroup label="【順序変数】">
+            <option value="kruskal">Kruskal-Wallis検定</option>
+            <option value="ordinal_logistic">順序ロジスティック回帰</option>
+            <option value="cmh">Cochran-Mantel-Haenszel検定</option>
+          </optgroup>
+          <optgroup label="【カウントデータ】">
+            <option value="poisson">ポアソン回帰</option>
+            <option value="negbinom">負の二項回帰</option>
+          </optgroup>
+        </select>
+
+        <div id="sap-method-detail" class="info-box hidden" style="margin-top:10px;"></div>
+
+        <label class="field-label" style="margin-top:14px;">調整変数（共変量）の設定</label>
+        <div class="radio-group">
+          <label><input type="radio" name="sap-covariate" value="none"> 調整なし（粗の解析のみ）</label>
+          <label><input type="radio" name="sap-covariate" value="stratified"> 層別因子による層別解析</label>
+          <label><input type="radio" name="sap-covariate" value="adjusted"> 共変量調整（回帰モデル）</label>
+        </div>
+
+        <label class="field-label" style="margin-top:10px;">調整する共変量・層別因子</label>
+        <input type="text" id="sap-covariates" placeholder="例：年齢、性別、PS、ベースライン値、施設（多施設の場合）" />
+
+        <label class="field-label" style="margin-top:14px;">有意水準・検定方針</label>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;">
+          <div class="calc-field">
+            <label style="font-size:0.8rem;color:var(--text-sub);">有意水準（α）</label>
+            <select id="sap-alpha">
+              <option value="0.05">0.05（両側）</option>
+              <option value="0.025">0.025（片側）</option>
+              <option value="0.01">0.01（厳格）</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label style="font-size:0.8rem;color:var(--text-sub);">検定の方向性</label>
+            <select id="sap-sided">
+              <option value="two">両側検定</option>
+              <option value="one">片側検定（非劣性・優越性試験）</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label style="font-size:0.8rem;color:var(--text-sub);">統計ソフト</label>
+            <select id="sap-software">
+              <option value="R">R（無料）</option>
+              <option value="SAS">SAS</option>
+              <option value="SPSS">SPSS</option>
+              <option value="Stata">Stata</option>
+              <option value="JMP">JMP</option>
+              <option value="EZR">EZR（無料・日本語）</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+          <button class="btn btn-secondary" onclick="sapGoTo(3)">← 戻る</button>
+          <button class="btn btn-primary" onclick="sapGoTo(5)">次へ：感度分析 →</button>
+        </div>
+      </div>
+
+      <!-- SAP Sub-panel 5 -->
+      <div id="sap-panel-5" class="sap-panel hidden">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 5</div>
+          <div class="sap-q-title">感度分析（Sensitivity Analysis）を計画する</div>
+          <div class="sap-q-hint">主解析の頑健性を確認するための追加解析です。ICH E9(R1)ガイドラインでは感度分析の事前規定が推奨されています。</div>
+        </div>
+
+        <label class="field-label">実施する感度分析（チェックして選択）</label>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+          <label class="novelty-check-item">
+            <input type="checkbox" class="novelty-chk sap-sensitivity-chk" value="pp">
+            <span class="novelty-check-text"><strong>PP（Per-Protocol）解析</strong> — ITT主解析と比較して結果の一致を確認</span>
+          </label>
+          <label class="novelty-check-item">
+            <input type="checkbox" class="novelty-chk sap-sensitivity-chk" value="imputation">
+            <span class="novelty-check-text"><strong>欠損値補完法の変更</strong> — 完全ケース解析 vs 多重代入法（MI）</span>
+          </label>
+          <label class="novelty-check-item">
+            <input type="checkbox" class="novelty-chk sap-sensitivity-chk" value="outlier">
+            <span class="novelty-check-text"><strong>外れ値の影響確認</strong> — 外れ値を除外した場合の結果</span>
+          </label>
+          <label class="novelty-check-item">
+            <input type="checkbox" class="novelty-chk sap-sensitivity-chk" value="covariate">
+            <span class="novelty-check-text"><strong>共変量の変更</strong> — 調整変数を変えた場合の結果</span>
+          </label>
+          <label class="novelty-check-item">
+            <input type="checkbox" class="novelty-chk sap-sensitivity-chk" value="subgroup">
+            <span class="novelty-check-text"><strong>事前規定サブグループ解析</strong> — 年齢・性別・病期等による層別</span>
+          </label>
+          <label class="novelty-check-item">
+            <input type="checkbox" class="novelty-chk sap-sensitivity-chk" value="competing">
+            <span class="novelty-check-text"><strong>競合リスクの考慮</strong> — 生存時間解析での競合イベント</span>
+          </label>
+        </div>
+
+        <label class="field-label" style="margin-top:14px;">その他の感度分析（自由記載）</label>
+        <textarea id="sap-sensitivity-other" placeholder="例：中間解析を第◯例登録時点で実施し、O'Brien-Fleming境界を使用する。"></textarea>
+
+        <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+          <button class="btn btn-secondary" onclick="sapGoTo(4)">← 戻る</button>
+          <button class="btn btn-primary" onclick="sapGoTo(6)">次へ：欠損・中止 →</button>
+        </div>
+      </div>
+
+      <!-- SAP Sub-panel 6 -->
+      <div id="sap-panel-6" class="sap-panel hidden">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 6</div>
+          <div class="sap-q-title">欠損データ・中止例の取り扱いを決める</div>
+          <div class="sap-q-hint">ICH E9(R1)では「estimand（推定目標）」の概念が導入されています。欠損・中止の扱いを事前に規定することが重要です。</div>
+        </div>
+
+        <label class="field-label">欠損値の対処法</label>
+        <div class="radio-group">
+          <label><input type="radio" name="sap-missing" value="cca">
+            <span><strong>完全ケース解析（CCA）</strong> — 欠損のある症例を除外<br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">⚠️ MCAR（完全ランダム欠損）を仮定。バイアスリスクあり。</span></span></label>
+          <label><input type="radio" name="sap-missing" value="locf">
+            <span><strong>最終観察値の繰り越し（LOCF）</strong><br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">⚠️ 現在は推奨されない手法。規制当局からの指摘を受けやすい。</span></span></label>
+          <label><input type="radio" name="sap-missing" value="mi">
+            <span><strong>多重代入法（Multiple Imputation）</strong><br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">✅ MAR（ランダム欠損）を仮定。現在の標準的アプローチ。</span></span></label>
+          <label><input type="radio" name="sap-missing" value="mmrm">
+            <span><strong>MMRM（混合効果反復測定モデル）</strong><br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">✅ 反復測定データの場合に推奨。MARを仮定しモデルが欠損を扱う。</span></span></label>
+          <label><input type="radio" name="sap-missing" value="tipping">
+            <span><strong>Tipping Point 分析</strong><br>
+            <span style="font-size:0.78rem;color:var(--text-sub);">MNAR（非ランダム欠損）の仮定のもとで結論が変わる閾値を探索。</span></span></label>
+        </div>
+
+        <label class="field-label" style="margin-top:14px;">中途中止・プロトコル逸脱例の扱い</label>
+        <textarea id="sap-dropout-plan" placeholder="例：&#10;・同意撤回例：ITT集団に含めるが、撤回時点以降のデータは収集しない&#10;・有害事象による中止：有害事象発生日をイベント日/打ち切り日とする&#10;・プロトコル逸脱：副解析（PP解析）では除外し、主解析（ITT）には含める&#10;・追跡不能例：最終確認日を打ち切り日とする（生存時間解析の場合）"></textarea>
+
+        <div class="info-box" style="margin-top:10px;">
+          <strong>💡 Estimand の考え方（ICH E9 R1）</strong><br>
+          推定目標（estimand）＝「何を推定したいか」を明確にすること。
+          Treatment Policy（中止後も割付け通りの群として扱う）とComposite（中止自体をイベントとして扱う）が代表的な戦略です。
+        </div>
+
+        <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+          <button class="btn btn-secondary" onclick="sapGoTo(5)">← 戻る</button>
+          <button class="btn btn-primary" onclick="sapGoTo(7)">次へ：症例数との整合 →</button>
+        </div>
+      </div>
+
+      <!-- SAP Sub-panel 7 -->
+      <div id="sap-panel-7" class="sap-panel hidden">
+        <div class="sap-question-box">
+          <div class="sap-q-num">Step 7</div>
+          <div class="sap-q-title">症例数計算と解析方法の整合性を確認する</div>
+          <div class="sap-q-hint">Step 3（症例数計算）で使用した検定と主要解析の手法が一致しているか確認します。</div>
+        </div>
+
+        <div id="sap-samplesize-link-area" class="success-box">
+          <strong>📊 Step 3 で計算した症例数との整合確認</strong>
+          <div id="sap-samplesize-summary" style="margin-top:8px;font-size:0.85rem;"></div>
+        </div>
+
+        <div class="warn-box" style="margin-top:12px;">
+          <strong>✅ 整合性チェックリスト</strong>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:8px;">
+            <label style="border:none;background:none;padding:0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" style="accent-color:var(--secondary);width:16px;height:16px;"> 症例数計算に使用した検定と主要解析の手法が一致している</label>
+            <label style="border:none;background:none;padding:0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" style="accent-color:var(--secondary);width:16px;height:16px;"> 主要評価項目のデータ型と解析手法が整合している</label>
+            <label style="border:none;background:none;padding:0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" style="accent-color:var(--secondary);width:16px;height:16px;"> 有意水準αが症例数計算と解析計画で一致している</label>
+            <label style="border:none;background:none;padding:0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" style="accent-color:var(--secondary);width:16px;height:16px;"> ドロップアウト率を考慮した登録予定症例数を記載している</label>
+            <label style="border:none;background:none;padding:0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" style="accent-color:var(--secondary);width:16px;height:16px;"> 主要解析の解析対象集団（ITT/PP等）が明記されている</label>
+          </div>
+        </div>
+
+        <label class="field-label" style="margin-top:14px;">ドロップアウト率の想定</label>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;">
+          <div class="calc-field">
+            <label style="font-size:0.8rem;color:var(--text-sub);">想定ドロップアウト率（%）</label>
+            <input type="number" id="sap-dropout-rate" value="10" min="0" max="50" step="1" oninput="sapCalcAdjusted()">
+          </div>
+          <div class="calc-field">
+            <label style="font-size:0.8rem;color:var(--text-sub);">補正後の登録必要症例数</label>
+            <div id="sap-adjusted-n" style="padding:9px 12px;background:var(--primary-light);border-radius:8px;font-weight:700;color:var(--primary);font-size:1rem;">─</div>
+          </div>
+        </div>
+
+        <!-- Generate SAP Draft -->
+        <div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#e8f0fb,#f0f7ff);border-radius:10px;border:1.5px solid var(--primary);">
+          <h3 style="color:var(--primary);margin:0 0 8px;">📄 統計解析計画書ひな型を生成</h3>
+          <p style="font-size:0.85rem;color:var(--text-sub);margin-bottom:12px;">これまでの入力内容をもとに統計解析計画書のひな型テキストを生成します。AIブラッシュアップへ渡して仕上げることができます。</p>
+          <button class="btn btn-success btn-lg" onclick="generateSAPDraft()">📐 解析計画書ひな型を生成する</button>
+        </div>
+
+        <div id="sap-draft-area" class="hidden" style="margin-top:16px;">
+          <div style="background:#f8fffe;border:1.5px solid var(--secondary);border-radius:10px;padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h3 style="color:var(--secondary);margin:0;">📄 統計解析計画書ひな型</h3>
+              <button class="btn btn-secondary" onclick="copySAPDraft()" style="font-size:0.8rem;padding:6px 12px;">📋 コピー</button>
+            </div>
+            <div id="sap-draft-content" style="white-space:pre-wrap;font-size:0.83rem;line-height:1.8;color:var(--text);font-family:monospace;max-height:400px;overflow-y:auto;"></div>
+          </div>
+          <div style="margin-top:12px;text-align:right;">
+            <button class="btn btn-warn btn-lg" onclick="goToAIWithSAP()">✨ AIブラッシュアップで仕上げる →</button>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+          <button class="btn btn-secondary" onclick="sapGoTo(6)">← 戻る</button>
+          <button class="btn btn-primary btn-lg" onclick="goToStep(5)">次へ：新規性・先行研究 →</button>
+        </div>
+      </div>
+
+    </div><!-- /card -->
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(3)">← 戻る（症例数計算）</button>
+      <button class="btn btn-primary btn-lg" onclick="goToStep(5)">次へ：新規性・先行研究 →</button>
+    </div>
+  </div>
+  <!-- ===== END STEP 4 ===== -->
+
+  <!-- ===== STEP 5: 新規性・先行研究 ===== -->
+  <div class="tab-panel" id="panel-5">
     <div class="card">
       <h2>📚 新規性・先行研究・関連論文</h2>
       <div class="info-box">
@@ -380,117 +784,108 @@
 
       <div id="novelty-assessment" style="margin-top:18px;"></div>
 
-      <h3 style="margin-top:18px;">📋 研究の新規性チェックリスト</h3>
-      <div id="novelty-checklist">
-        <label class="novelty-check-item">
-          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
-          <span class="novelty-check-text">既存レビュー論文を3件以上確認した</span>
-        </label>
-        <label class="novelty-check-item">
-          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
-          <span class="novelty-check-text">国内外の類似研究との差異を明確にした</span>
-        </label>
-        <label class="novelty-check-item">
-          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
-          <span class="novelty-check-text">研究の独自性（対象・方法・アウトカム）を整理した</span>
-        </label>
-        <label class="novelty-check-item">
-          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
-          <span class="novelty-check-text">実施可能性（施設・症例数・期間）を検討した</span>
-        </label>
-        <label class="novelty-check-item">
-          <input type="checkbox" class="novelty-chk" onchange="updateNoveltyProgress()">
-          <span class="novelty-check-text">臨床的意義・社会的意義を言語化した</span>
-        </label>
-        <div id="novelty-progress-bar" style="margin-top:10px;display:none;">
-          <div style="height:6px;background:var(--border);border-radius:4px;overflow:hidden;">
-            <div id="novelty-progress-fill" style="height:100%;background:var(--secondary);width:0%;transition:width .3s;border-radius:4px;"></div>
-          </div>
-          <div id="novelty-progress-label" style="font-size:0.78rem;color:var(--text-sub);margin-top:4px;text-align:right;"></div>
+      <div id="novelty-progress-bar" style="display:none;margin-top:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <span style="font-size:0.8rem;font-weight:600;color:var(--text-sub);">チェック進捗</span>
+          <span id="novelty-progress-label" style="font-size:0.8rem;color:var(--secondary);font-weight:600;"></span>
+        </div>
+        <div style="background:var(--border);border-radius:6px;height:8px;overflow:hidden;">
+          <div id="novelty-progress-fill" style="background:var(--secondary);height:100%;width:0%;transition:width 0.3s;border-radius:6px;"></div>
         </div>
       </div>
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goToStep(3)">← 戻る</button>
-      <button class="btn btn-primary btn-lg" onclick="goToStep(5)">次へ：必要書類 →</button>
+      <button class="btn btn-secondary" onclick="goToStep(4)">← 戻る</button>
+      <button class="btn btn-primary btn-lg" onclick="goToStep(6)">次へ：必要書類 →</button>
     </div>
   </div>
 
-  <!-- ===== STEP 5: 必要書類 ===== -->
-  <div class="tab-panel" id="panel-5">
+  <!-- ===== STEP 6: 必要書類 ===== -->
+  <div class="tab-panel" id="panel-6">
     <div class="card">
-      <h2>📂 必要書類リスト（静岡がんセンター準拠）</h2>
+      <h2>📋 必要書類・倫理審査チェックリスト</h2>
       <div class="info-box">
-        研究種別の判定結果に基づいて、必要な書類を案内します。
-        詳細は <a href="https://www.scchr.jp/clinicaltrial/organization/office_management/procedures.html" target="_blank" style="color:var(--primary);">静岡がんセンター 標準業務手順書一覧</a> でご確認ください。
+        研究種別に応じた必要書類を表示します。各書類の様式は臨床研究支援センターより入手してください。
       </div>
-
       <div id="documents-list-area"></div>
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goToStep(4)">← 戻る</button>
-      <button class="btn btn-primary btn-lg" onclick="goToStep(6)">次へ：スケジュール →</button>
+      <button class="btn btn-secondary" onclick="goToStep(5)">← 戻る</button>
+      <button class="btn btn-primary btn-lg" onclick="goToStep(7)">次へ：スケジュール →</button>
     </div>
   </div>
 
-  <!-- ===== STEP 6: スケジュール ===== -->
-  <div class="tab-panel" id="panel-6">
+  <!-- ===== STEP 7: スケジュール ===== -->
+  <div class="tab-panel" id="panel-7">
     <div class="card">
       <h2>📅 倫理審査から研究開始までのスケジュール</h2>
       <div class="info-box">
-        様式5（研究計画概略書）を倫理審査委員会に提出した日を起点としたスケジュール案です。
-        実際の期間は研究内容・審査結果により変動します。
+        研究種別に応じた標準的なスケジュールを表示します。あくまで目安です。
       </div>
-
-      <label class="field-label">様式5提出予定日</label>
-      <input type="date" id="start-date" style="max-width:220px;" onchange="generateSchedule()" />
-      <div style="font-size:0.78rem;color:var(--text-sub);margin-top:4px;">日付を選択すると、各マイルストーンの目安日が自動計算されます。</div>
-
-      <div id="schedule-area" style="margin-top:20px;"></div>
+      <div id="schedule-area"></div>
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goToStep(5)">← 戻る</button>
-      <button class="btn btn-warn btn-lg" onclick="goToStep(7)">✨ AIブラッシュアップへ →</button>
+      <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
+      <button class="btn btn-warn btn-lg" onclick="goToStep(8)">✨ AIブラッシュアップへ →</button>
     </div>
   </div>
 
-  <!-- ===== STEP 7: AIブラッシュアップ ===== -->
-  <div class="tab-panel" id="panel-7">
+  <!-- ===== STEP 8: AIブラッシュアップ ===== -->
+  <div class="tab-panel" id="panel-8">
     <div class="ai-panel">
-      <h2 style="color:#7dd3fc;border-bottom:1px solid rgba(125,211,252,0.2);padding-bottom:10px;margin-bottom:14px;">
-        🤖 AIブラッシュアップ（Gemini）
-      </h2>
-      <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:14px;">
-        入力した研究情報をGemini AIが分析し、PICO/PECOの整理・研究デザインの提案・倫理的配慮・文献キーワードなどを提案します。
-      </p>
-
-      <label style="display:block;font-size:0.82rem;color:#94a3b8;margin-bottom:4px;">重点的に改善してほしい点（複数選択可）</label>
-      <div class="checkbox-group" style="margin-bottom:14px;">
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="PICO/PECOの整理"> PICO/PECOの整理</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="研究目的の明確化"> 研究目的の明確化</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="アウトカム指標の提案"> アウトカム指標の提案</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="倫理的配慮"> 倫理的配慮（静岡がんセンター基準を考慮）</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="研究デザインの適切性"> 研究デザインの適切性</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="先行研究との差別化"> 先行研究との差別化</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="統計解析方法の提案"> 統計解析方法の提案</label>
-        <label style="color:#e2e8f0;border-color:rgba(255,255,255,0.15);"><input type="checkbox" value="倫理審査書類の準備"> 倫理審査書類の準備（静岡がんセンター）</label>
+      <h2 style="color:#7dd3fc;border-bottom:1px solid rgba(125,211,252,0.2);padding-bottom:10px;margin-bottom:16px;">✨ AIブラッシュアップ</h2>
+      <div class="info-box" style="background:rgba(125,211,252,0.1);border-color:#7dd3fc;color:#e2e8f0;">
+        入力した研究情報をAIが整理し、研究計画書・統計解析計画書の形に仕上げます。
+        生成されたテキストは参考用です。最終的な内容は専門家と相談のうえ確認してください。
       </div>
 
-      <button class="btn btn-warn btn-lg" id="brushup-btn" onclick="doBrushup()" style="width:100%;justify-content:center;">
-        ✨ ブラッシュアップする
-      </button>
+      <div style="margin-top:14px;">
+        <label style="font-size:0.85rem;font-weight:600;color:#7dd3fc;display:block;margin-bottom:6px;">AIに渡す情報の選択</label>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#e2e8f0;cursor:pointer;">
+            <input type="checkbox" id="ai-include-basic" checked style="accent-color:#7dd3fc;"> 基本情報（テーマ・目的・対象）</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#e2e8f0;cursor:pointer;">
+            <input type="checkbox" id="ai-include-design" checked style="accent-color:#7dd3fc;"> 研究種別・研究デザイン</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#e2e8f0;cursor:pointer;">
+            <input type="checkbox" id="ai-include-samplesize" checked style="accent-color:#7dd3fc;"> 症例数計算結果</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#e2e8f0;cursor:pointer;">
+            <input type="checkbox" id="ai-include-sap" checked style="accent-color:#7dd3fc;"> 統計解析計画（Step 4）</label>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label style="font-size:0.85rem;font-weight:600;color:#7dd3fc;display:block;margin-bottom:6px;">出力形式</label>
+        <div class="radio-group" style="gap:6px;">
+          <label style="border-color:rgba(125,211,252,0.3);color:#e2e8f0;background:rgba(255,255,255,0.05);">
+            <input type="radio" name="ai-output-type" value="protocol" checked style="accent-color:#7dd3fc;"> 研究計画書ひな型（全体）</label>
+          <label style="border-color:rgba(125,211,252,0.3);color:#e2e8f0;background:rgba(255,255,255,0.05);">
+            <input type="radio" name="ai-output-type" value="sap_only" style="accent-color:#7dd3fc;"> 統計解析計画書のみ</label>
+          <label style="border-color:rgba(125,211,252,0.3);color:#e2e8f0;background:rgba(255,255,255,0.05);">
+            <input type="radio" name="ai-output-type" value="summary" style="accent-color:#7dd3fc;"> 研究概要サマリー（1ページ）</label>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label style="font-size:0.85rem;font-weight:600;color:#7dd3fc;display:block;margin-bottom:6px;">追加の指示・要望（任意）</label>
+        <textarea id="ai-extra-instruction" placeholder="例：RCTのCONSORT準拠で記載してください。日本語の計画書形式でお願いします。" style="background:rgba(255,255,255,0.07);border-color:rgba(125,211,252,0.3);color:#e2e8f0;"></textarea>
+      </div>
+
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-warn btn-lg" onclick="runAI()">✨ AIブラッシュアップを実行</button>
+        <button class="btn btn-secondary" onclick="copyAiPrompt()" style="color:#7dd3fc;border-color:#7dd3fc;">📋 プロンプトをコピー（ChatGPT等へ）</button>
+      </div>
 
       <div class="loading-spinner" id="ai-loading">
         <div class="spinner"></div>
-        Gemini AIが分析中です...（しばらくお待ちください）
+        <span>AIが解析計画を作成中...</span>
       </div>
 
       <div class="ai-result-content" id="ai-result"></div>
 
-      <div id="ai-btns" style="display:none;margin-top:12px;display:none;gap:8px;flex-wrap:wrap;">
+      <div id="ai-btns" style="display:none;margin-top:12px;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-secondary" onclick="copyAiResult()" style="color:#7dd3fc;border-color:#7dd3fc;">📋 結果をコピー</button>
         <button class="btn btn-secondary" onclick="printAiResult()" style="color:#7dd3fc;border-color:#7dd3fc;">🖨 PDFで出力</button>
         <button class="btn btn-secondary" onclick="resetAi()" style="color:#94a3b8;border-color:#94a3b8;">🔄 リセット</button>
@@ -498,7 +893,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
+      <button class="btn btn-secondary" onclick="goToStep(7)">← 戻る</button>
       <button class="btn btn-primary" onclick="printAll()">🖨 全体をPDFで出力</button>
       <button class="btn btn-danger" onclick="showEndScreen()">🔚 終了・リセット</button>
     </div>
