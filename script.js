@@ -1208,6 +1208,7 @@ function sapAddSecondary() {
     <select class="sap-secondary-type" style="width:140px;">
       <option value="">データ型</option>
       <option value="continuous">連続変数</option>
+      <option value="count">カウント変数</option>
       <option value="binary">二値変数</option>
       <option value="survival">生存時間</option>
       <option value="ordinal">順序変数</option>
