@@ -745,6 +745,7 @@ function switchCalcTab(n) {
 }
 
 // ── Schedule（IRB開催日を基準に前後を表示）──
+// ── Schedule（IRB開催日を基準に前後を表示）──
 function generateSchedule() {
   const input = document.getElementById('start-date');
   const container = document.getElementById('schedule-area');
@@ -778,16 +779,11 @@ function generateSchedule() {
     return `${y}-${m}-${day}`;
   }
 
-  // ── 1) IRB 前のスケジュール（倫理委員会用の締切）──
-  // ・研究計画書提出期限：IRB開催日の2か月前
-  // ・新規申請書類提出期限（様式5等）：IRB開催日の7週間前
-  // ・事前確認完了目標：IRB開催日の5週間前
-  // ・予備審査完了目標：IRB開催日の3週間前
-
-  const rpDeadline     = addMonths(irbDate, -2);        // 2か月前
-  const docsDeadline   = addDays(irbDate, -7 * 7);      // 7週間前
-  const preCheckDone   = addDays(irbDate, -5 * 7);      // 5週間前
-  const preReviewDone  = addDays(irbDate, -3 * 7);      // 3週間前
+  // ── 1) IRB 前のスケジュール ──
+  const rpDeadline    = addMonths(irbDate, -2);      // 2か月前
+  const docsDeadline  = addDays(irbDate, -7 * 7);    // 7週間前
+  const preCheckDone  = addDays(irbDate, -5 * 7);    // 5週間前
+  const preReviewDone = addDays(irbDate, -3 * 7);    // 3週間前
 
   const beforeMilestones = [
     {
@@ -817,13 +813,7 @@ function generateSchedule() {
     }
   ];
 
-  // ── 2) IRB 後のスケジュール（旧バージョンの Week 0〜10 を IRB後に合わせる）──
-  // 旧仕様では「様式5提出日」を基準に Week 0〜10 を置いていました。[file:2]
-  // ここでは IRB開催日を Week 4 に相当させるイメージで、相対位置を保ちます。
-  // 旧: Week0=様式5, Week2=+14d, Week4=+28d(IRB), Week6=+42d, Week8=+56d, Week10=+70d
-  // 今回: IRB(日0) を旧Week4(+28d)とみなし、
-  //       旧Week6(+42)=IRB+14d, 旧Week8(+56)=IRB+28d, 旧Week10(+70)=IRB+42d と読み替える。
-
+  // ── 2) IRB 後のスケジュール（旧Week0〜10アレンジ）──
   const afterMilestones = [
     {
       week: 'Week 0',
@@ -851,16 +841,15 @@ function generateSchedule() {
     }
   ];
 
-  // HTML生成
   const beforeHtml = `
     <h3>① 倫理審査委員会【前】のスケジュール</h3>
     <div class="timeline">
       ${beforeMilestones
         .sort((a, b) => a.date - b.date)
-        .map((m, i, arr) => {
-          const isLast = (m.date.getTime() === irbDate.getTime()); // IRB当日をマーク
+        .map((m) => {
+          const isIRB = (m.date.getTime() === irbDate.getTime());
           return `
-          <div class="tl-item ${isLast ? 'milestone' : ''}">
+          <div class="tl-item ${isIRB ? 'milestone' : ''}">
             <div class="tl-week">${fmt(m.date)}</div>
             <div class="tl-title">${m.title}</div>
             <div class="tl-desc">${m.desc}</div>
