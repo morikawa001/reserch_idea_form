@@ -745,22 +745,30 @@ function switchCalcTab(n) {
 }
 
 // ── Schedule ──
+// Schedule
 function generateSchedule() {
   const input = document.getElementById('start-date');
   const container = document.getElementById('schedule-area');
   if (!container) return;
 
-  let baseDate = null;
+  let form5Date = null; // 新規様式5提出予定日
   if (input && input.value) {
-    baseDate = new Date(input.value);
+    form5Date = new Date(input.value);
   } else {
-    container.innerHTML = '<div class="info-box">様式5提出予定日を入力するとスケジュールが表示されます。</div>';
+    container.innerHTML = '<div class="info-box">まず「新規様式５提出予定日」を入力してください。</div>';
     return;
   }
 
+  // 日付ヘルパー
   function addDays(d, days) {
     const nd = new Date(d);
     nd.setDate(nd.getDate() + days);
+    return nd;
+  }
+
+  function addMonths(d, months) {
+    const nd = new Date(d);
+    nd.setMonth(nd.getMonth() + months);
     return nd;
   }
 
@@ -768,29 +776,68 @@ function generateSchedule() {
     const y = d.getFullYear();
     const m = ('0' + (d.getMonth() + 1)).slice(-2);
     const day = ('0' + d.getDate()).slice(-2);
-    return `${y}/${m}/${day}`;
+    return `${y}-${m}-${day}`;
   }
 
+  // IRB スケジュールロジック
+  // ・様式5提出日：form5Date
+  // ・委員会開催日：様式5提出日の 7 週間後（49日後）
+  // ・研究計画書提出期限：委員会開催日の 2 ヶ月前
+  // ・新規申請書類提出期限：委員会開催日の 7 週間前（= form5Date）
+  // ・事前確認完了目標：委員会開催日の 5 週間前
+  // ・予備審査完了目標：委員会開催日の 3 週間前
+
+  const irbDate = addDays(form5Date, 7 * 7);       // 49日後
+  const rpDeadline = addMonths(irbDate, -2);       // 2ヶ月前
+  const docsDeadline = form5Date;                  // 7週間前 = 様式5
+  const preCheckDone = addDays(irbDate, -5 * 7);   // 5週間前
+  const preReviewDone = addDays(irbDate, -3 * 7);  // 3週間前
+
   const milestones = [
-    { week: 'Week 0', offset: 0, title: '様式5提出', desc: '研究計画概略書を倫理審査委員会事務局へ提出' },
-    { week: 'Week 2', offset: 14, title: '事前審査・修正', desc: '事務局からの指摘に対応し、書類修正・補足' },
-    { week: 'Week 4', offset: 28, title: '倫理審査委員会 本審査', desc: 'IRBにて研究計画の審査' },
-    { week: 'Week 6', offset: 42, title: 'IRB結果通知・条件対応', desc: '承認・条件付き承認に対する対応' },
-    { week: 'Week 8', offset: 56, title: '研究開始準備', desc: '同意説明文書印刷、CRF作成、スタッフ説明' },
-    { week: 'Week 10', offset: 70, title: '研究開始（登録開始）', desc: '対象者リクルート、データ収集開始' }
+    {
+      title: '研究計画書提出期限',
+      desc: '委員会開催日の 2 か月前まで。研究計画書ドラフトを完成させ、事務局へ提出。',
+      date: rpDeadline
+    },
+    {
+      title: '新規申請書類提出期限（様式5等）',
+      desc: '委員会開催日の 7 週間前まで。新規申請書類一式（様式5 を含む）を提出。',
+      date: docsDeadline
+    },
+    {
+      title: '事前確認完了目標',
+      desc: '委員会開催日の 5 週間前までに、事務局による形式的・内容的な事前確認を完了。',
+      date: preCheckDone
+    },
+    {
+      title: '予備審査（委員事前レビュー）完了目標',
+      desc: '委員会開催日の 3 週間前までに、予備審査（主担当委員レビュー）を完了。',
+      date: preReviewDone
+    },
+    {
+      title: '倫理審査委員会 開催予定日',
+      desc: '本審査。委員会の開催日。承認取得後に研究開始可能。',
+      date: irbDate
+    }
   ];
 
   container.innerHTML = `
     <div class="timeline">
-      ${milestones.map((m, i) => {
-        const d = addDays(baseDate, m.offset);
-        return `
-          <div class="tl-item ${i === milestones.length - 1 ? 'milestone' : ''}">
-            <div class="tl-week">${m.week} 目安日：${fmt(d)}</div>
+      ${milestones
+        .sort((a, b) => a.date - b.date)
+        .map((m, i, arr) => {
+          const isLast = i === arr.length - 1;
+          return `
+          <div class="tl-item ${isLast ? 'milestone' : ''}">
+            <div class="tl-week">${fmt(m.date)}</div>
             <div class="tl-title">${m.title}</div>
             <div class="tl-desc">${m.desc}</div>
           </div>`;
-      }).join('')}
+        })
+        .join('')}
+    </div>
+    <div class="info-box" style="margin-top:10px;font-size:0.8rem;">
+      ※ 委員会の実際の開催日は施設の正式な開催日程に従って調整してください。
     </div>
   `;
 }
