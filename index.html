@@ -223,24 +223,31 @@
   </div>
 
   <!-- ===== STEP 7: スケジュール（様式5ベース・修正版） ===== -->
-  <div class="tab-panel" id="panel-7">
-    <div class="card">
-      <h2>📅 倫理審査から研究開始までのスケジュール</h2>
-      <div class="info-box">
-        「新規様式５提出予定日」を入力すると、委員会開催日や研究計画書提出期限などを自動計算します。
-        実際の開催日は施設の正式日程を必ずご確認ください。
-      </div>
-
-      <label class="field-label">
-        新規様式５提出予定日
-        <span class="req">*</span>
-        <span class="hint">IRB 開催日の 7 週間前</span>
-      </label>
-      <input type="date" id="start-date" oninput="generateSchedule()" style="max-width:200px;" />
-
-      <div id="schedule-area" style="margin-top:16px;"></div>
+  <!-- ===== STEP 7: スケジュール ===== -->
+<div class="tab-panel" id="panel-7">
+  <div class="card">
+    <h2>📅 倫理審査から研究開始までのスケジュール</h2>
+    <div class="info-box">
+      「倫理審査委員会の開催予定日」を入力すると、<br>
+      その前後のスケジュール（研究計画書提出・様式5提出・事前確認・予備審査・研究開始準備など）を自動計算します。
     </div>
 
+    <label class="field-label">
+      倫理審査委員会 開催予定日
+      <span class="req">*</span>
+      <span class="hint">IRB 本審査予定日</span>
+    </label>
+    <input type="date" id="start-date" oninput="generateSchedule()" style="max-width:200px;">
+
+    <div id="schedule-area" style="margin-top:16px;"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
+    <button class="btn btn-warn btn-lg" onclick="goToStep(8)">✨ AIブラッシュアップへ →</button>
+  </div>
+</div>
+  
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
       <button class="btn btn-warn btn-lg" onclick="goToStep(8)">✨ AIブラッシュアップへ →</button>
