@@ -167,9 +167,6 @@
   </div>
 
   <!-- ===== STEP 3: 症例数計算 ===== -->
-  <!-- ここから STEP3 〜 STEP6, STEP8 は元ファイルそのままです（全文貼付） -->
-  <!-- ※長いですが、そのままコピペしてご利用ください -->
-
   <div class="tab-panel" id="panel-3">
     <div class="card">
       <h2>📊 症例数計算</h2>
@@ -187,16 +184,201 @@
         <button class="btn btn-secondary" id="ctab-5" onclick="switchCalcTab(5)" style="padding:6px 14px;font-size:0.82rem;">1標本t検定</button>
       </div>
 
-      <!-- 以降の cpanel-1〜5, 各 result div は元 index.html と同じ内容をそのまま貼付 -->
-      <!-- （ここは省略せず、元ファイルの HTML を丸ごと使ってください） -->
-
       <!-- Calc1: 対応なしt検定 -->
       <div id="cpanel-1">
-        <!-- ... 元の Calc1 HTML ... -->
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>検定方法</label>
+            <select id="c1-test"><option value="two">両側</option><option value="one">片側</option></select>
+          </div>
+          <div class="calc-field">
+            <label>有意水準 α</label>
+            <input type="number" id="c1-alpha" value="0.05" step="0.01" min="0.001" max="0.5">
+          </div>
+          <div class="calc-field">
+            <label>検定力 1-β</label>
+            <input type="number" id="c1-power" value="0.80" step="0.01" min="0.5" max="0.99">
+          </div>
+        </div>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>対照群の平均</label>
+            <input type="number" id="c1-m1" value="100">
+          </div>
+          <div class="calc-field">
+            <label>介入群の平均</label>
+            <input type="number" id="c1-m2" value="110">
+          </div>
+          <div class="calc-field">
+            <label>標準偏差 σ</label>
+            <input type="number" id="c1-sd" value="15" min="0.1">
+          </div>
+          <div class="calc-field">
+            <label>群比率（介入/対照）</label>
+            <input type="number" id="c1-ratio" value="1" step="0.1" min="0.5" max="3">
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:flex-start;margin-top:10px;">
+          <button class="btn btn-primary" onclick="calcTTest()">
+            計算する
+          </button>
+          <button class="btn btn-secondary" onclick="resetCalc(1)">
+            リセット
+          </button>
+        </div>
+        <div id="c1-result" class="calc-result-box hidden"></div>
+        <div class="info-box" style="margin-top:10px;font-size:0.8rem;">Cohen's d：0.2=小、0.5=中、0.8=大の効果量</div>
       </div>
 
-      <!-- Calc2〜Calc5 も元の HTML をそのまま -->
-      <!-- ... -->
+      <!-- Calc2: 比率の比較 -->
+      <div id="cpanel-2" class="hidden">
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>検定方法</label>
+            <select id="c2-test"><option value="two">両側</option><option value="one">片側</option></select>
+          </div>
+          <div class="calc-field">
+            <label>有意水準 α</label>
+            <input type="number" id="c2-alpha" value="0.05" step="0.01" min="0.001" max="0.5">
+          </div>
+          <div class="calc-field">
+            <label>検定力 1-β</label>
+            <input type="number" id="c2-power" value="0.80" step="0.01" min="0.5" max="0.99">
+          </div>
+        </div>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>対照群の反応率 (%)</label>
+            <input type="number" id="c2-p1" value="30" min="1" max="99">
+          </div>
+          <div class="calc-field">
+            <label>介入群の反応率 (%)</label>
+            <input type="number" id="c2-p2" value="50" min="1" max="99">
+          </div>
+          <div class="calc-field">
+            <label>群比率（介入/対照）</label>
+            <input type="number" id="c2-ratio" value="1" step="0.1" min="0.5" max="3">
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:flex-start;margin-top:10px;">
+          <button class="btn btn-primary" onclick="calcProportions()">
+            計算する
+          </button>
+          <button class="btn btn-secondary" onclick="resetCalc(2)">
+            リセット
+          </button>
+        </div>
+        <div id="c2-result" class="calc-result-box hidden"></div>
+      </div>
+
+      <!-- Calc3: 対応ありt検定 -->
+      <div id="cpanel-3" class="hidden">
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>検定方法</label>
+            <select id="c3-test"><option value="two">両側</option><option value="one">片側</option></select>
+          </div>
+          <div class="calc-field">
+            <label>有意水準 α</label>
+            <input type="number" id="c3-alpha" value="0.05" step="0.01" min="0.001" max="0.5">
+          </div>
+          <div class="calc-field">
+            <label>検定力 1-β</label>
+            <input type="number" id="c3-power" value="0.80" step="0.01" min="0.5" max="0.99">
+          </div>
+        </div>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>前値-後値の平均差</label>
+            <input type="number" id="c3-diff" value="5" step="0.1">
+          </div>
+          <div class="calc-field">
+            <label>対応差の標準偏差</label>
+            <input type="number" id="c3-sd" value="10" step="0.1" min="0.1">
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:flex-start;margin-top:10px;">
+          <button class="btn btn-primary" onclick="calcPaired()">
+            計算する
+          </button>
+          <button class="btn btn-secondary" onclick="resetCalc(3)">
+            リセット
+          </button>
+        </div>
+        <div id="c3-result" class="calc-result-box hidden"></div>
+      </div>
+
+      <!-- Calc4: 感度・特異度 -->
+      <div id="cpanel-4" class="hidden">
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>有意水準 α</label>
+            <input type="number" id="c4-alpha" value="0.05" step="0.01" min="0.001" max="0.5">
+          </div>
+          <div class="calc-field">
+            <label>期待する感度/特異度</label>
+            <input type="number" id="c4-p" value="0.85" step="0.01" min="0.01" max="0.99">
+          </div>
+          <div class="calc-field">
+            <label>許容誤差 (d)</label>
+            <input type="number" id="c4-d" value="0.1" step="0.01" min="0.01">
+          </div>
+          <div class="calc-field">
+            <label>有病率（小数）</label>
+            <input type="number" id="c4-prev" value="0.3" step="0.01" min="0.01" max="0.99">
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:flex-start;margin-top:10px;">
+          <button class="btn btn-primary" onclick="calcSensSpec()">
+            計算する
+          </button>
+          <button class="btn btn-secondary" onclick="resetCalc(4)">
+            リセット
+          </button>
+        </div>
+        <div id="c4-result" class="calc-result-box hidden"></div>
+      </div>
+
+      <!-- Calc5: 1標本t検定 -->
+      <div id="cpanel-5" class="hidden">
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>検定方法</label>
+            <select id="c5-test"><option value="two">両側</option><option value="one">片側</option></select>
+          </div>
+          <div class="calc-field">
+            <label>有意水準 α</label>
+            <input type="number" id="c5-alpha" value="0.05" step="0.01" min="0.001" max="0.5">
+          </div>
+          <div class="calc-field">
+            <label>検定力 1-β</label>
+            <input type="number" id="c5-power" value="0.80" step="0.01" min="0.5" max="0.99">
+          </div>
+        </div>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>帰無仮説の値 μ₀</label>
+            <input type="number" id="c5-mu0" value="0">
+          </div>
+          <div class="calc-field">
+            <label>期待する平均 μ₁</label>
+            <input type="number" id="c5-mu1" value="5">
+          </div>
+          <div class="calc-field">
+            <label>標準偏差 σ</label>
+            <input type="number" id="c5-sd" value="10" step="0.1" min="0.1">
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:flex-start;margin-top:10px;">
+          <button class="btn btn-primary" onclick="calcOneSample()">
+            計算する
+          </button>
+          <button class="btn btn-secondary" onclick="resetCalc(5)">
+            リセット
+          </button>
+        </div>
+        <div id="c5-result" class="calc-result-box hidden"></div>
+      </div>
     </div>
 
     <div class="btn-row">
@@ -206,70 +388,27 @@
   </div>
 
   <!-- ===== STEP 4: 統計解析計画 ===== -->
-  <!-- ※ここも元 index.html の panel-4 をそのまま貼り付け -->
-
   <div class="tab-panel" id="panel-4">
-    <!-- ... 元の STEP4 (SAP) の HTML 全文 ... -->
-  </div>
+    <div class="card">
+      <h2>📐 統計解析計画書 作成ガイド</h2>
+      <div class="info-box">
+        対話形式で一つずつ確認しながら進めることで、統計解析計画書のひな型が完成します。
+        最後にAIブラッシュアップへデータを渡して計画書の形に仕上げます。
+      </div>
 
-  <!-- ===== STEP 5: 新規性・先行研究 ===== -->
-  <div class="tab-panel" id="panel-5">
-    <!-- ... 元の STEP5 HTML 全文 ... -->
-  </div>
+      <!-- SAP Progress -->
+      <div id="sap-progress-wrap" style="margin:16px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:0.8rem;font-weight:600;color:var(--text-sub);">進捗</span>
+          <span id="sap-progress-label" style="font-size:0.8rem;color:var(--primary);font-weight:600;">Step 1 / 7</span>
+        </div>
+        <div style="background:var(--border);border-radius:6px;height:8px;overflow:hidden;">
+          <div id="sap-progress-bar" style="background:var(--primary);height:100%;width:14%;transition:width 0.4s;border-radius:6px;"></div>
+        </div>
+      </div>
 
-  <!-- ===== STEP 6: 必要書類 ===== -->
-  <div class="tab-panel" id="panel-6">
-    <!-- ... 元の STEP6 HTML 全文 ... -->
-  </div>
-
-  <!-- ===== STEP 7: スケジュール（様式5ベース・修正版） ===== -->
-  <!-- ===== STEP 7: スケジュール ===== -->
-<div class="tab-panel" id="panel-7">
-  <div class="card">
-    <h2>📅 倫理審査から研究開始までのスケジュール</h2>
-    <div class="info-box">
-      「倫理審査委員会の開催予定日」を入力すると、<br>
-      その前後のスケジュール（研究計画書提出・様式5提出・事前確認・予備審査・研究開始準備など）を自動計算します。
-    </div>
-
-    <label class="field-label">
-      倫理審査委員会 開催予定日
-      <span class="req">*</span>
-      <span class="hint">IRB 本審査予定日</span>
-    </label>
-    <input type="date" id="start-date" oninput="generateSchedule()" style="max-width:200px;">
-
-    <div id="schedule-area" style="margin-top:16px;"></div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
-    <button class="btn btn-warn btn-lg" onclick="goToStep(8)">✨ AIブラッシュアップへ →</button>
-  </div>
-</div>
-
-  <!-- ===== STEP 8: AIブラッシュアップ ===== -->
-  <div class="tab-panel" id="panel-8">
-    <!-- ... 元の STEP8 HTML 全文 ... -->
-  </div>
-
-</div><!-- /main -->
-
-<!-- ===== 終了画面 ===== -->
-<div class="end-screen" id="endScreen">
-  <div class="end-inner">
-    <div class="end-icon">✅</div>
-    <h2 class="end-title">お疲れさまでした</h2>
-    <p class="end-body">
-      入力内容はリセットされました。<br>
-      新しい研究アイデアの整理を始めるには<br>下のボタンを押してください。
-    </p>
-    <button type="button" class="btn-restart" onclick="restartFromEnd()">
-      🔬 新しい研究アイデアを入力する
-    </button>
-  </div>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
+      <!-- SAP Step Navigator -->
+      <div id="sap-steps-nav" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="sap-nav-btn active" id="sap-nav-1" onclick="sapGoTo(1)">①主要評価項目</button>
+        <button class="sap-nav-btn" id="sap-nav-2" onclick="sapGoTo(2)">②副次評価項目</button>
+        <button class="sap-nav-btn" 
