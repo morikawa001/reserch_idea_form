@@ -745,22 +745,30 @@ function switchCalcTab(n) {
 }
 
 // ── Schedule ──
+// ── Schedule（IRB開催日を基準に前後を表示）──
 function generateSchedule() {
   const input = document.getElementById('start-date');
   const container = document.getElementById('schedule-area');
   if (!container) return;
 
-  let baseDate = null;
-  if (input && input.value) {
-    baseDate = new Date(input.value);
-  } else {
-    container.innerHTML = '<div class="info-box">様式5提出予定日を入力するとスケジュールが表示されます。</div>';
+  if (!input || !input.value) {
+    container.innerHTML = '<div class="info-box">まず「倫理審査委員会 開催予定日」を入力してください。</div>';
     return;
   }
 
+  // IRB開催日
+  const irbDate = new Date(input.value);
+
+  // 日付ヘルパー
   function addDays(d, days) {
     const nd = new Date(d);
     nd.setDate(nd.getDate() + days);
+    return nd;
+  }
+
+  function addMonths(d, months) {
+    const nd = new Date(d);
+    nd.setMonth(nd.getMonth() + months);
     return nd;
   }
 
@@ -768,29 +776,112 @@ function generateSchedule() {
     const y = d.getFullYear();
     const m = ('0' + (d.getMonth() + 1)).slice(-2);
     const day = ('0' + d.getDate()).slice(-2);
-    return `${y}/${m}/${day}`;
+    return `${y}-${m}-${day}`;
   }
 
-  const milestones = [
-    { week: 'Week 0', offset: 0, title: '様式5提出', desc: '研究計画概略書を倫理審査委員会事務局へ提出' },
-    { week: 'Week 2', offset: 14, title: '事前審査・修正', desc: '事務局からの指摘に対応し、書類修正・補足' },
-    { week: 'Week 4', offset: 28, title: '倫理審査委員会 本審査', desc: 'IRBにて研究計画の審査' },
-    { week: 'Week 6', offset: 42, title: 'IRB結果通知・条件対応', desc: '承認・条件付き承認に対する対応' },
-    { week: 'Week 8', offset: 56, title: '研究開始準備', desc: '同意説明文書印刷、CRF作成、スタッフ説明' },
-    { week: 'Week 10', offset: 70, title: '研究開始（登録開始）', desc: '対象者リクルート、データ収集開始' }
+  // ── 1) IRB 前のスケジュール ──
+  const rpDeadline    = addMonths(irbDate, -2);      // 2か月前
+  const docsDeadline  = addDays(irbDate, -7 * 7);    // 7週間前
+  const preCheckDone  = addDays(irbDate, -5 * 7);    // 5週間前
+  const preReviewDone = addDays(irbDate, -3 * 7);    // 3週間前
+
+  const beforeMilestones = [
+    {
+      title: '研究計画書提出期限',
+      desc: '委員会開催日の 2 か月前までに、研究計画書案を作成し、事務局へ提出。',
+      date: rpDeadline
+    },
+    {
+      title: '新規申請書類提出期限（様式5等）',
+      desc: '委員会開催日の 7 週間前までに、様式5を含む新規申請書類一式を提出。',
+      date: docsDeadline
+    },
+    {
+      title: '事前確認完了目標',
+      desc: '委員会開催日の 5 週間前までに、事務局による形式・内容の事前確認を完了。',
+      date: preCheckDone
+    },
+    {
+      title: '予備審査（委員事前レビュー）完了目標',
+      desc: '委員会開催日の 3 週間前までに、主担当委員による予備審査を完了。',
+      date: preReviewDone
+    },
+    {
+      title: '倫理審査委員会 本審査',
+      desc: 'IRB開催日。研究計画が審査され、承認後に研究開始が可能。',
+      date: irbDate
+    }
   ];
 
-  container.innerHTML = `
+  // ── 2) IRB 後のスケジュール（旧Week0〜10アレンジ）──
+  const afterMilestones = [
+    {
+      week: 'Week 0',
+      offset: 0,
+      title: '倫理審査委員会 本審査',
+      desc: 'IRBにて研究計画の審査。条件付き承認の場合は条件対応が必要。'
+    },
+    {
+      week: 'Week 2',
+      offset: 14,
+      title: 'IRB結果通知・条件対応',
+      desc: '承認・条件付き承認の通知を受け、必要な条件対応・文書修正を実施。'
+    },
+    {
+      week: 'Week 4',
+      offset: 28,
+      title: '研究開始準備',
+      desc: '同意説明文書・同意書の印刷、CRF/電子データシートの準備、スタッフ説明会の実施。'
+    },
+    {
+      week: 'Week 6',
+      offset: 42,
+      title: '研究開始（登録開始）',
+      desc: '対象者リクルート開始、同意取得、データ収集開始。モニタリング・データ管理体制を稼働。'
+    }
+  ];
+
+  const beforeHtml = `
+    <h3>① 倫理審査委員会【前】のスケジュール</h3>
     <div class="timeline">
-      ${milestones.map((m, i) => {
-        const d = addDays(baseDate, m.offset);
-        return `
-          <div class="tl-item ${i === milestones.length - 1 ? 'milestone' : ''}">
-            <div class="tl-week">${m.week} 目安日：${fmt(d)}</div>
+      ${beforeMilestones
+        .sort((a, b) => a.date - b.date)
+        .map((m) => {
+          const isIRB = (m.date.getTime() === irbDate.getTime());
+          return `
+          <div class="tl-item ${isIRB ? 'milestone' : ''}">
+            <div class="tl-week">${fmt(m.date)}</div>
             <div class="tl-title">${m.title}</div>
             <div class="tl-desc">${m.desc}</div>
           </div>`;
-      }).join('')}
+        })
+        .join('')}
+    </div>
+  `;
+
+  const afterHtml = `
+    <h3 style="margin-top:18px;">② 倫理審査委員会【後】のスケジュール（目安）</h3>
+    <div class="timeline">
+      ${afterMilestones
+        .map((m, i, arr) => {
+          const d = addDays(irbDate, m.offset);
+          const isLast = i === arr.length - 1;
+          return `
+          <div class="tl-item ${isLast ? 'milestone' : ''}">
+            <div class="tl-week">${m.week}　目安日：${fmt(d)}</div>
+            <div class="tl-title">${m.title}</div>
+            <div class="tl-desc">${m.desc}</div>
+          </div>`;
+        })
+        .join('')}
+    </div>
+  `;
+
+  container.innerHTML = `
+    ${beforeHtml}
+    ${afterHtml}
+    <div class="info-box" style="margin-top:10px;font-size:0.8rem;">
+      ※ 日付はあくまで目安です。実際の委員会開催日程・事務局スケジュールに合わせて調整してください。
     </div>
   `;
 }
