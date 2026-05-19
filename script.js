@@ -485,7 +485,7 @@ function renderDocuments() {
     <div class="doc-section">
       <h4>📋 全研究共通（必須）</h4>
       <div class="doc-list">
-        <div class="doc-item"><span class="doc-num">5</span><span><a href="https://morikawa001.github.io/reserch_idea_form/form5.html" target="_blank" rel="noopener noreferrer">様式5｜研究計画概略書</a></span><span class="required">必須</span></div>
+        <div class="doc-item"><span class="doc-num">様式5</span><span><a href="https://morikawa001.github.io/reserch_idea_form/form5.html" target="_blank" rel="noopener noreferrer">研究計画概略書</a></span><span class="required">必須</span></div>
         <div class="doc-item"><span class="doc-num">様式7</span><span>研究者の履歴書</span><span class="required">必須</span></div>
         <div class="doc-item"><span class="doc-num">様式40</span><span>利益相反自己申告書</span><span class="required">必須</span></div>
         <div class="doc-item"><span class="doc-num">様式29</span><span>誓約書</span><span class="required">必須</span></div>
