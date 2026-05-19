@@ -63,6 +63,8 @@
       padding:16px;
       position:sticky;
       top:14px;
+      max-height:calc(100vh - 28px);
+      overflow:auto;
     }
     .panel h2{
       font-size:18px;
@@ -110,6 +112,11 @@
       font-size:11px;
       color:#666;
       line-height:1.5;
+    }
+
+    .check-grid label{
+      font-weight:400;
+      margin:4px 0;
     }
 
     .preview-area{
@@ -227,10 +234,8 @@
       vertical-align:middle;
     }
 
-    .section-gap{height:2mm;}
     .mt4{margin-top:4px;}
     .mt6{margin-top:6px;}
-    .mb4{margin-bottom:4px;}
 
     .ref-title{
       font-size:15px;
@@ -249,11 +254,6 @@
       border:1px solid #111 !important;
     }
 
-    .check-grid label{
-      font-weight:400;
-      margin:4px 0;
-    }
-
     @page{
       size:A4;
       margin:7mm 8mm 8mm;
@@ -261,7 +261,7 @@
 
     @media (max-width:1300px){
       .layout{grid-template-columns:1fr;}
-      .panel{position:static;}
+      .panel{position:static; max-height:none;}
       .page{width:100%;min-height:auto;}
     }
 
@@ -413,6 +413,7 @@
         <h3>本文</h3>
         <label for="purpose">目的</label>
         <textarea id="purpose"></textarea>
+
         <div class="grid3">
           <div>
             <label for="subjects">対象者</label>
@@ -427,24 +428,67 @@
             <input type="text" id="casesSite">
           </div>
         </div>
+
         <label for="method">研究方法</label>
         <textarea id="method"></textarea>
+
         <label for="outcomes">評価項目</label>
         <textarea id="outcomes"></textarea>
-        <label for="subStudy">付随研究</label>
-        <input type="text" id="subStudy">
+
+        <label>付随研究</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="sub_yes"> あり</label>
+          <label><input type="checkbox" id="sub_no"> なし</label>
+        </div>
         <label for="subStudyDesc">付随研究の説明</label>
         <textarea id="subStudyDesc"></textarea>
 
         <h3>2ページ目</h3>
-        <label for="sampleInfo">試料・情報の提供</label>
-        <textarea id="sampleInfo"></textarea>
-        <label for="futureUse">特定されない将来の研究</label>
-        <input type="text" id="futureUse">
-        <label for="foreignProvide">外国への提供</label>
-        <input type="text" id="foreignProvide">
-        <label for="policyCheck">SCCポリシーの確認</label>
-        <textarea id="policyCheck"></textarea>
+
+        <label>試料・情報の提供</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="sample_none"> なし</label>
+          <label><input type="checkbox" id="sample_yes"> あり</label>
+
+          <label><input type="checkbox" id="mat_sample"> 試料</label>
+          <label><input type="checkbox" id="mat_blood"> 血液</label>
+          <label><input type="checkbox" id="mat_tissue"> 組織</label>
+          <label><input type="checkbox" id="mat_preparat"> プレパラート</label>
+          <label><input type="checkbox" id="mat_block"> 組織ブロック</label>
+          <label><input type="checkbox" id="mat_fresh"> 新鮮組織</label>
+          <label><input type="checkbox" id="mat_dna"> DNA等</label>
+          <label for="mat_other_text">その他</label>
+          <input type="text" id="mat_other_text">
+
+          <label><input type="checkbox" id="mat_info"> 情報</label>
+          <label><input type="checkbox" id="info_medical"> 病名・投薬内容・検査結果等</label>
+          <label for="info_other_text">その他（例：バーチャルスライド、手術動画、内視鏡画像等）</label>
+          <input type="text" id="info_other_text">
+        </div>
+
+        <label>特定されない将来の研究の有無</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="future_none"> なし</label>
+          <label><input type="checkbox" id="future_yes"> あり</label>
+        </div>
+        <label for="future_place">保存先</label>
+        <input type="text" id="future_place">
+
+        <label>外国への提供の有無</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="foreign_none"> なし</label>
+          <label><input type="checkbox" id="foreign_yes"> あり</label>
+        </div>
+        <label for="foreign_country">国名</label>
+        <input type="text" id="foreign_country">
+
+        <label>ＳＣＣポリシーの確認</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="policy_confirm">
+            説明同意書について、患者さんの視点から十分わかりやすい記載となっていることを確認しました
+          </label>
+        </div>
+
         <label for="publication">結果の公表・その他</label>
         <textarea id="publication"></textarea>
 
@@ -624,9 +668,8 @@
             <tr>
               <th>付随研究</th>
               <td colspan="3" class="dense">
-                □ あり　□ なし<br>
+                <span id="mk-sub_yes">□</span> あり　<span id="mk-sub_no">□</span> なし　
                 <span class="tiny">説明：「あり」の場合は内容を記載してください。</span><br>
-                <span id="out-subStudy" class="placeholder">未入力</span><br>
                 <span id="out-subStudyDesc" class="placeholder">未入力</span>
               </td>
             </tr>
@@ -644,18 +687,43 @@
 
             <tr>
               <th>試料・情報の提供</th>
-              <td colspan="3" id="out-sampleInfo" class="cell-lines placeholder dense">未入力</td>
+              <td colspan="3" class="dense">
+                <div><span id="mk-sample_none">□</span>なし</div>
+                <div>
+                  <span id="mk-sample_yes">□</span>あり　
+                  <span id="mk-mat_sample">□</span>試料（<span id="mk-mat_blood">□</span>血液　
+                  <span id="mk-mat_tissue">□</span>組織(<span id="mk-mat_preparat">□</span>プレパラート　
+                  <span id="mk-mat_block">□</span>組織ブロック　
+                  <span id="mk-mat_fresh">□</span>新鮮組織)
+                  <span id="mk-mat_dna">□</span>DNA等　
+                  <span id="mk-mat_other_text_box">□</span>その他（<span id="out-mat_other_text" class="placeholder">未入力</span>））
+                </div>
+                <div>
+                  　　　<span id="mk-mat_info">□</span>情報（<span id="mk-info_medical">□</span>病名・投薬内容・検査結果等
+                </div>
+                <div>
+                  <span id="mk-info_other_text_box">□</span>その他（例：バーチャルスライド、手術動画、内視鏡画像等：<span id="out-info_other_text" class="placeholder">未入力</span>））
+                </div>
+                <div>
+                  　うち、特定されない将来の研究の有無　<span id="mk-future_none">□</span>なし　
+                  <span id="mk-future_yes">□</span>あり(保存先：<span id="out-future_place" class="placeholder">未入力</span>)
+                </div>
+                <div>
+                  　うち、外国への提供の有無　　<span id="mk-foreign_none">□</span>なし　
+                  <span id="mk-foreign_yes">□</span>あり(国名：<span id="out-foreign_country" class="placeholder">未入力</span>)
+                </div>
+              </td>
             </tr>
-            <tr>
-              <th>うち、特定されない将来の研究の有無</th>
-              <td id="out-futureUse" class="placeholder mid">未入力</td>
-              <th>うち、外国への提供の有無</th>
-              <td id="out-foreignProvide" class="placeholder mid">未入力</td>
-            </tr>
+
             <tr>
               <th>ＳＣＣポリシーの確認</th>
-              <td colspan="3" id="out-policyCheck" class="cell-lines placeholder dense">未入力</td>
+              <td colspan="3" class="dense">
+                <span id="mk-policy_confirm">□</span>
+                説明同意書について、患者さんの視点から十分わかりやすい記載となっていることを確認しました。
+                <span class="tiny">（学会論文発表等説明同意書が無い研究の場合はチェック不要です）</span>
+              </td>
             </tr>
+
             <tr>
               <th>結果の公表・その他</th>
               <td colspan="3" class="dense">
@@ -778,9 +846,9 @@
         'deptCollab','leadSite','orgType','support','requester','fundUse',
         'regPeriod','studyPeriod','obsPeriod','retroPeriod','retroStudyPeriod',
         'purpose','subjects','casesTotal','casesSite','method','outcomes',
-        'subStudy','subStudyDesc','sampleInfo','futureUse','foreignProvide',
-        'policyCheck','publication','signDate1','signDate2','reviewInfo',
-        'cat_other_text','gl_other_text'
+        'subStudyDesc','publication','signDate1','signDate2','reviewInfo',
+        'cat_other_text','gl_other_text',
+        'mat_other_text','info_other_text','future_place','foreign_country'
       ];
       textIds.forEach(id => setOutput('out-' + id, getVal(id)));
 
@@ -817,7 +885,27 @@
         ['gl_pmda','mk-gl_pmda'],
         ['gl_clinical','mk-gl_clinical'],
         ['gl_gene','mk-gl_gene'],
-        ['gl_life','mk-gl_life']
+        ['gl_life','mk-gl_life'],
+
+        ['sub_yes','mk-sub_yes'],
+        ['sub_no','mk-sub_no'],
+
+        ['sample_none','mk-sample_none'],
+        ['sample_yes','mk-sample_yes'],
+        ['mat_sample','mk-mat_sample'],
+        ['mat_blood','mk-mat_blood'],
+        ['mat_tissue','mk-mat_tissue'],
+        ['mat_preparat','mk-mat_preparat'],
+        ['mat_block','mk-mat_block'],
+        ['mat_fresh','mk-mat_fresh'],
+        ['mat_dna','mk-mat_dna'],
+        ['mat_info','mk-mat_info'],
+        ['info_medical','mk-info_medical'],
+        ['future_none','mk-future_none'],
+        ['future_yes','mk-future_yes'],
+        ['foreign_none','mk-foreign_none'],
+        ['foreign_yes','mk-foreign_yes'],
+        ['policy_confirm','mk-policy_confirm']
       ];
       pairs.forEach(([inputId, markId]) => setMark(inputId, markId));
 
@@ -828,6 +916,14 @@
       const otherGl = document.getElementById('mk-gl_other_text_box');
       const otherGlText = getVal('gl_other_text');
       if (otherGl) otherGl.textContent = otherGlText ? '■' : '□';
+
+      const matOther = document.getElementById('mk-mat_other_text_box');
+      const matOtherText = getVal('mat_other_text');
+      if (matOther) matOther.textContent = matOtherText ? '■' : '□';
+
+      const infoOther = document.getElementById('mk-info_other_text_box');
+      const infoOtherText = getVal('info_other_text');
+      if (infoOther) infoOther.textContent = infoOtherText ? '■' : '□';
     }
 
     document.querySelectorAll('input, textarea, select').forEach(el => {
