@@ -3,231 +3,239 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>様式5｜研究計画概略書 自動反映デモ</title>
+  <title>様式5｜研究計画概略書</title>
   <style>
     body {
       font-family: "Yu Gothic", "Meiryo", sans-serif;
       margin: 0;
-      background: #f4f6fa;
-      color: #1e2a3b;
+      background: #f3f5f8;
+      color: #222;
     }
     .wrap {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 20px;
     }
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 8px;
-      color: #1a5c96;
-    }
-    .sub-title {
-      font-size: 0.92rem;
-      color: #5a6a7e;
-      margin-bottom: 16px;
-    }
-    .top-links {
+    .topbar {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
-    .top-links a {
+    .topbar a, .topbar button {
       display: inline-block;
       text-decoration: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-    .link-primary {
       background: #1a5c96;
       color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .link-secondary {
+    .topbar a.secondary, .topbar button.secondary {
       background: #fff;
       color: #1a5c96;
-      border: 1.5px solid #1a5c96;
+      border: 1px solid #1a5c96;
     }
 
-    .grid {
+    .layout {
       display: grid;
-      grid-template-columns: 420px 1fr;
+      grid-template-columns: 360px 1fr;
       gap: 20px;
+      align-items: start;
     }
-    .panel {
+
+    .panel, .paper {
       background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .panel {
+      padding: 18px;
+      position: sticky;
+      top: 16px;
     }
     .panel h2 {
-      font-size: 1.05rem;
-      margin-bottom: 14px;
+      margin: 0 0 12px;
+      font-size: 18px;
       color: #1a5c96;
-      border-bottom: 2px solid #e8f0fb;
-      padding-bottom: 8px;
+    }
+    .panel h3 {
+      font-size: 14px;
+      margin: 18px 0 8px;
+      color: #1a5c96;
+      border-bottom: 1px solid #dbe6f3;
+      padding-bottom: 4px;
     }
     label {
       display: block;
+      font-size: 13px;
       font-weight: 700;
-      font-size: 0.88rem;
-      margin: 12px 0 4px;
+      margin: 10px 0 4px;
     }
-    input, textarea, select {
+    input[type="text"], input[type="date"], textarea, select {
       width: 100%;
       box-sizing: border-box;
-      padding: 10px 12px;
-      border: 1.5px solid #dde2ec;
-      border-radius: 8px;
-      font-size: 0.92rem;
+      border: 1px solid #cfd8e3;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 14px;
       font-family: inherit;
     }
     textarea {
-      min-height: 90px;
+      min-height: 70px;
       resize: vertical;
     }
-    .radio-group {
+    .radio-list, .check-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
       margin-top: 6px;
     }
-    .radio-group label {
+    .radio-list label, .check-list label {
       font-weight: 400;
-      margin: 0;
       display: flex;
       align-items: center;
       gap: 8px;
+      margin: 0;
     }
-    .btn-row {
-      display: flex;
+    .inline-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: #1a5c96;
-      color: #fff;
-    }
-    .btn-secondary {
-      background: #fff;
-      color: #1a5c96;
-      border: 1.5px solid #1a5c96;
     }
 
-    .doc {
-      background: #fff;
-      border: 1px solid #d9dee8;
+    .paper {
       padding: 28px;
-      min-height: 900px;
+      background: #fff;
     }
-    .doc-title {
+    .paper-title {
       text-align: center;
-      font-size: 1.25rem;
+      font-size: 24px;
       font-weight: 700;
-      margin-bottom: 8px;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
     }
-    .doc-subtitle {
+    .paper-note {
       text-align: center;
-      font-size: 0.9rem;
-      color: #5a6a7e;
-      margin-bottom: 24px;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 20px;
     }
-    .doc-table {
+
+    .form-table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
+      margin-bottom: 18px;
     }
-    .doc-table th,
-    .doc-table td {
-      border: 1px solid #666;
-      padding: 10px;
+    .form-table th, .form-table td {
+      border: 1px solid #444;
+      padding: 8px 10px;
       vertical-align: top;
-      font-size: 0.92rem;
-      line-height: 1.7;
+      font-size: 13px;
+      line-height: 1.6;
       word-break: break-word;
     }
-    .doc-table th {
-      width: 180px;
+    .form-table th {
       background: #f7f7f7;
+      width: 180px;
       text-align: left;
     }
+
     .placeholder {
       color: #999;
     }
-    .note {
-      font-size: 0.82rem;
-      color: #5a6a7e;
-      margin-top: 10px;
-      line-height: 1.6;
+    .checkmarks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+    }
+    .check-item {
+      white-space: nowrap;
+      font-size: 13px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a5c96;
+      margin: 22px 0 10px;
+      border-left: 4px solid #1a5c96;
+      padding-left: 8px;
+    }
+    .signature-box {
+      margin-top: 20px;
+      font-size: 13px;
+      line-height: 2;
     }
 
-    @media (max-width: 900px) {
-      .grid {
+    @media (max-width: 1000px) {
+      .layout {
         grid-template-columns: 1fr;
+      }
+      .panel {
+        position: static;
       }
     }
 
     @media print {
-      .form-panel,
-      .top-links,
-      .sub-title {
-        display: none;
-      }
       body {
         background: #fff;
+      }
+      .panel, .topbar {
+        display: none;
       }
       .wrap {
         max-width: none;
         padding: 0;
       }
-      .panel {
+      .paper {
         box-shadow: none;
+        border-radius: 0;
         padding: 0;
-      }
-      .doc {
-        border: none;
-        padding: 0;
-      }
-      h1 {
-        display: none;
       }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>様式5 自動入力ページ</h1>
-    <div class="sub-title">研究計画概略書（倫理審査委員会事前相談用）の試作ページです。</div>
-
-    <div class="top-links">
-      <a href="index.html" class="link-secondary">← index.html に戻る</a>
-      <a href="javascript:window.print()" class="link-primary">印刷 / PDF保存</a>
+    <div class="topbar">
+      <a href="index.html" class="secondary">← index.html に戻る</a>
+      <button onclick="updatePreview()">プレビュー更新</button>
+      <button class="secondary" onclick="window.print()">印刷 / PDF保存</button>
     </div>
 
-    <div class="grid">
-      <div class="panel form-panel">
-        <h2>入力フォーム</h2>
+    <div class="layout">
+      <div class="panel">
+        <h2>様式5 入力</h2>
 
-        <label for="theme">研究テーマ</label>
-        <input type="text" id="theme" placeholder="例：がん患者の術後疼痛管理における看護介入の効果">
+        <h3>研究責任者</h3>
+        <label for="responsibleDept">所属</label>
+        <input type="text" id="responsibleDept">
 
-        <label for="background">研究の背景・動機</label>
-        <textarea id="background" placeholder="例：術後疼痛コントロールが不十分な患者が多く、系統的介入が必要と考えた。"></textarea>
+        <label for="responsibleTitle">職名</label>
+        <input type="text" id="responsibleTitle">
 
-        <label for="purpose">研究目的</label>
-        <textarea id="purpose" placeholder="例：術後患者に対する疼痛評価プロトコルの有効性を検証する。"></textarea>
+        <label for="responsibleName">氏名</label>
+        <input type="text" id="responsibleName">
 
-        <label for="design">想定する研究デザイン</label>
+        <h3>研究基本情報</h3>
+        <label for="theme">臨床研究課題名</label>
+        <input type="text" id="theme">
+
+        <label for="publicTitle">秘密保持のための課題名</label>
+        <input type="text" id="publicTitle">
+
+        <label for="background">研究の背景</label>
+        <textarea id="background"></textarea>
+
+        <label for="purpose">目的</label>
+        <textarea id="purpose"></textarea>
+
+        <label for="design">研究デザイン</label>
         <select id="design">
           <option value="">選択してください</option>
           <option value="横断研究">横断研究</option>
@@ -240,84 +248,147 @@
           <option value="未定">未定</option>
         </select>
 
-        <label for="disease">研究対象の疾患・領域</label>
-        <input type="text" id="disease" placeholder="例：消化器がん、乳がん、緩和ケア">
+        <label for="subjects">対象者</label>
+        <input type="text" id="subjects">
 
-        <label for="subjects">研究対象者</label>
-        <input type="text" id="subjects" placeholder="例：当院入院中の成人消化器がん術後患者">
-
-        <label for="setting">研究対象施設・部署</label>
-        <input type="text" id="setting" placeholder="例：静岡がんセンター 外科病棟">
-
-        <label>介入を行いますか？</label>
-        <div class="radio-group">
-          <label><input type="radio" name="intervention" value="はい"> はい</label>
-          <label><input type="radio" name="intervention" value="いいえ"> いいえ</label>
+        <div class="inline-2">
+          <div>
+            <label for="casesTotal">症例数</label>
+            <input type="text" id="casesTotal">
+          </div>
+          <div>
+            <label for="casesSite">うち当施設</label>
+            <input type="text" id="casesSite">
+          </div>
         </div>
 
-        <label>侵襲の程度</label>
-        <div class="radio-group">
-          <label><input type="radio" name="invasiveness" value="侵襲なし"> 侵襲なし</label>
-          <label><input type="radio" name="invasiveness" value="軽微な侵襲"> 軽微な侵襲</label>
-          <label><input type="radio" name="invasiveness" value="侵襲あり"> 侵襲あり</label>
+        <label for="method">研究方法</label>
+        <textarea id="method"></textarea>
+
+        <label for="outcomes">評価項目</label>
+        <textarea id="outcomes"></textarea>
+
+        <label for="publication">結果の公表・その他</label>
+        <textarea id="publication"></textarea>
+
+        <h3>区分</h3>
+        <label>研究組織の分類</label>
+        <div class="radio-list">
+          <label><input type="radio" name="orgType" value="単独施設による研究"> 単独施設による研究</label>
+          <label><input type="radio" name="orgType" value="多施設共同研究の主任研究者"> 多施設共同研究の主任研究者</label>
+          <label><input type="radio" name="orgType" value="多施設共同研究への参加"> 多施設共同研究への参加</label>
+          <label><input type="radio" name="orgType" value="その他"> その他</label>
         </div>
 
-        <div class="btn-row">
-          <button class="btn-primary" onclick="updatePreview()">プレビュー更新</button>
-          <button class="btn-secondary" onclick="window.print()">印刷 / PDF保存</button>
+        <label>介入</label>
+        <div class="radio-list">
+          <label><input type="radio" name="intervention" value="あり"> あり</label>
+          <label><input type="radio" name="intervention" value="なし"> なし</label>
         </div>
 
-        <div class="note">
-          まずは Web 上で様式5イメージに自動反映する試作版です。<br>
-          将来的には index.html の入力値をこのページへ連動させる想定です。
+        <label>侵襲</label>
+        <div class="radio-list">
+          <label><input type="radio" name="invasiveness" value="あり"> あり</label>
+          <label><input type="radio" name="invasiveness" value="軽微"> 軽微</label>
+          <label><input type="radio" name="invasiveness" value="軽微でない"> 軽微でない</label>
+          <label><input type="radio" name="invasiveness" value="なし"> なし</label>
         </div>
+
+        <label>観察研究</label>
+        <div class="radio-list">
+          <label><input type="radio" name="observationType" value="前向き"> 前向き</label>
+          <label><input type="radio" name="observationType" value="後向き"> 後向き</label>
+        </div>
+
+        <label>付随研究</label>
+        <div class="radio-list">
+          <label><input type="radio" name="subStudy" value="あり"> あり</label>
+          <label><input type="radio" name="subStudy" value="なし"> なし</label>
+        </div>
+
+        <label for="subStudyDesc">付随研究の説明</label>
+        <textarea id="subStudyDesc"></textarea>
       </div>
 
-      <div class="panel">
-        <h2>様式5プレビュー</h2>
+      <div class="paper">
+        <div class="paper-title">様式５　研究計画概略書</div>
+        <div class="paper-note">提出時は注意書等を削除して提出する想定の試作プレビューです。</div>
 
-        <div class="doc" id="doc-preview">
-          <div class="doc-title">様式5</div>
-          <div class="doc-subtitle">研究計画概略書（試作プレビュー）</div>
+        <table class="form-table">
+          <tr>
+            <th>研究責任者</th>
+            <td>
+              所属：<span id="out-responsibleDept" class="placeholder">未入力</span><br>
+              職名：<span id="out-responsibleTitle" class="placeholder">未入力</span><br>
+              氏名：<span id="out-responsibleName" class="placeholder">未入力</span>
+            </td>
+          </tr>
+          <tr>
+            <th>臨床研究課題名</th>
+            <td id="out-theme" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>秘密保持のための課題名</th>
+            <td id="out-publicTitle" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>研究組織の分類</th>
+            <td id="out-orgType" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>研究内容の区分</th>
+            <td>
+              <div class="checkmarks">
+                <div class="check-item">介入：<span id="out-intervention" class="placeholder">未入力</span></div>
+                <div class="check-item">侵襲：<span id="out-invasiveness" class="placeholder">未入力</span></div>
+                <div class="check-item">観察研究：<span id="out-observationType" class="placeholder">未入力</span></div>
+                <div class="check-item">デザイン：<span id="out-design" class="placeholder">未入力</span></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>目的</th>
+            <td id="out-purpose" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>研究の背景</th>
+            <td id="out-background" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>対象者・症例数</th>
+            <td>
+              対象者：<span id="out-subjects" class="placeholder">未入力</span><br>
+              症例数：<span id="out-casesTotal" class="placeholder">未入力</span> 例
+              （うち、当施設 <span id="out-casesSite" class="placeholder">未入力</span> 例）
+            </td>
+          </tr>
+          <tr>
+            <th>研究方法</th>
+            <td id="out-method" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>評価項目</th>
+            <td id="out-outcomes" class="placeholder">未入力</td>
+          </tr>
+          <tr>
+            <th>付随研究</th>
+            <td>
+              有無：<span id="out-subStudy" class="placeholder">未入力</span><br>
+              内容：<span id="out-subStudyDesc" class="placeholder">未入力</span>
+            </td>
+          </tr>
+          <tr>
+            <th>結果の公表・その他</th>
+            <td id="out-publication" class="placeholder">未入力</td>
+          </tr>
+        </table>
 
-          <table class="doc-table">
-            <tr>
-              <th>研究課題名</th>
-              <td id="out-theme" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>研究の背景</th>
-              <td id="out-background" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>研究目的</th>
-              <td id="out-purpose" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>研究デザイン</th>
-              <td id="out-design" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>対象疾患・領域</th>
-              <td id="out-disease" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>研究対象者</th>
-              <td id="out-subjects" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>研究対象施設・部署</th>
-              <td id="out-setting" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>介入の有無</th>
-              <td id="out-intervention" class="placeholder">未入力</td>
-            </tr>
-            <tr>
-              <th>侵襲の程度</th>
-              <td id="out-invasiveness" class="placeholder">未入力</td>
-            </tr>
-          </table>
+        <div class="section-title">署名欄</div>
+        <div class="signature-box">
+          今回計画した研究計画の概要を報告します。<br><br>
+          研究責任者（自署）　　　　　　　　　　　　　　　　（記入日　西暦　　　年　　月　　日）<br><br>
+          上記記載内容を確認しました。<br><br>
+          診療科部長（自署）　　　　　　　　　　　　　　　　（記入日　西暦　　　年　　月　　日）
         </div>
       </div>
     </div>
@@ -337,7 +408,6 @@
     function setOutput(id, value) {
       const el = document.getElementById(id);
       if (!el) return;
-
       if (value) {
         el.textContent = value;
         el.classList.remove('placeholder');
@@ -348,15 +418,26 @@
     }
 
     function updatePreview() {
+      setOutput('out-responsibleDept', getVal('responsibleDept'));
+      setOutput('out-responsibleTitle', getVal('responsibleTitle'));
+      setOutput('out-responsibleName', getVal('responsibleName'));
       setOutput('out-theme', getVal('theme'));
+      setOutput('out-publicTitle', getVal('publicTitle'));
       setOutput('out-background', getVal('background'));
       setOutput('out-purpose', getVal('purpose'));
       setOutput('out-design', getVal('design'));
-      setOutput('out-disease', getVal('disease'));
       setOutput('out-subjects', getVal('subjects'));
-      setOutput('out-setting', getVal('setting'));
+      setOutput('out-casesTotal', getVal('casesTotal'));
+      setOutput('out-casesSite', getVal('casesSite'));
+      setOutput('out-method', getVal('method'));
+      setOutput('out-outcomes', getVal('outcomes'));
+      setOutput('out-publication', getVal('publication'));
+      setOutput('out-orgType', getRadio('orgType'));
       setOutput('out-intervention', getRadio('intervention'));
       setOutput('out-invasiveness', getRadio('invasiveness'));
+      setOutput('out-observationType', getRadio('observationType'));
+      setOutput('out-subStudy', getRadio('subStudy'));
+      setOutput('out-subStudyDesc', getVal('subStudyDesc'));
     }
 
     document.querySelectorAll('input, textarea, select').forEach(el => {
