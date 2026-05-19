@@ -170,24 +170,16 @@
       font-weight:700;
       background:#fff;
     }
+    .form td div{
+      margin-bottom:2px;
+    }
+    .form td div:last-child{
+      margin-bottom:0;
+    }
 
     .center{text-align:center;}
     .right{text-align:right;}
     .mid{vertical-align:middle !important;}
-
-    .w-08{width:8%;}
-    .w-10{width:10%;}
-    .w-12{width:12%;}
-    .w-14{width:14%;}
-    .w-16{width:16%;}
-    .w-18{width:18%;}
-    .w-20{width:20%;}
-    .w-22{width:22%;}
-    .w-24{width:24%;}
-    .w-25{width:25%;}
-    .w-28{width:28%;}
-    .w-30{width:30%;}
-    .w-35{width:35%;}
 
     .dense{line-height:1.18;}
     .cell-lines{
@@ -255,6 +247,11 @@
     .ref-table th, .ref-table td{
       padding:2px 3px !important;
       border:1px solid #111 !important;
+    }
+
+    .check-grid label{
+      font-weight:400;
+      margin:4px 0;
     }
 
     @page{
@@ -346,59 +343,60 @@
         <label for="fundUse">研究資金の活用</label>
         <textarea id="fundUse"></textarea>
 
-       <h3>研究内容の区分</h3>
+        <h3>研究内容の区分</h3>
+        <div class="grid2 check-grid">
+          <div>
+            <label><input type="checkbox" id="cat_trial"> 治験（市販後臨床試験を含む）</label>
+            <label><input type="checkbox" id="phase1"> Ⅰ相</label>
+            <label><input type="checkbox" id="phase2"> Ⅱ相</label>
+            <label><input type="checkbox" id="phase3"> Ⅲ相</label>
+            <label><input type="checkbox" id="postmarket"> 市販後臨床試験</label>
 
-<div class="grid2">
-  <div>
-    <label><input type="checkbox" id="cat_trial"> 治験（市販後臨床試験を含む）</label>
-    <label><input type="checkbox" id="phase1"> Ⅰ相</label>
-    <label><input type="checkbox" id="phase2"> Ⅱ相</label>
-    <label><input type="checkbox" id="phase3"> Ⅲ相</label>
-    <label><input type="checkbox" id="postmarket"> 市販後臨床試験</label>
+            <label><input type="checkbox" id="cat_specified"> 特定臨床研究</label>
+            <label><input type="checkbox" id="drug_offlabel"> 適応外</label>
+            <label><input type="checkbox" id="drug_unapproved"> 未承認</label>
+            <label><input type="checkbox" id="drug_approved"> 承認内</label>
+            <label><input type="checkbox" id="fund_yes"> 資金提供あり</label>
+            <label><input type="checkbox" id="fund_no"> 資金提供なし</label>
 
-    <label><input type="checkbox" id="cat_specified"> 特定臨床研究</label>
-    <label><input type="checkbox" id="drug_offlabel"> 適応外</label>
-    <label><input type="checkbox" id="drug_unapproved"> 未承認</label>
-    <label><input type="checkbox" id="drug_approved"> 承認内</label>
-    <label><input type="checkbox" id="fund_yes"> 資金提供あり</label>
-    <label><input type="checkbox" id="fund_no"> 資金提供なし</label>
+            <label><input type="checkbox" id="cat_effort"> 努力義務研究</label>
 
-    <label><input type="checkbox" id="cat_effort"> 努力義務研究</label>
+            <label><input type="checkbox" id="cat_non_specified"> 非特定臨床研究</label>
+            <label><input type="checkbox" id="inv_yes"> 侵襲あり</label>
+            <label><input type="checkbox" id="inv_minor"> 軽微</label>
+            <label><input type="checkbox" id="inv_major"> 軽微でない</label>
+            <label><input type="checkbox" id="inv_no"> 侵襲なし</label>
+            <label><input type="checkbox" id="medical_yes"> 通常診療を超える医療行為あり</label>
+            <label><input type="checkbox" id="medical_no"> 通常診療を超える医療行為なし</label>
+            <label><input type="checkbox" id="intervention_yes"> 介入あり</label>
+            <label><input type="checkbox" id="intervention_no"> 介入なし</label>
+          </div>
 
-    <label><input type="checkbox" id="cat_non_specified"> 非特定臨床研究</label>
-    <label><input type="checkbox" id="inv_yes"> 侵襲あり</label>
-    <label><input type="checkbox" id="inv_minor"> 軽微</label>
-    <label><input type="checkbox" id="inv_major"> 軽微でない</label>
-    <label><input type="checkbox" id="inv_no"> 侵襲なし</label>
-    <label><input type="checkbox" id="medical_yes"> 通常診療を超える医療行為あり</label>
-    <label><input type="checkbox" id="medical_no"> 通常診療を超える医療行為なし</label>
-    <label><input type="checkbox" id="intervention_yes"> 介入あり</label>
-    <label><input type="checkbox" id="intervention_no"> 介入なし</label>
-  </div>
+          <div>
+            <label><input type="checkbox" id="cat_obs"> 観察研究</label>
+            <label><input type="checkbox" id="obs_prospective"> 前向き</label>
+            <label><input type="checkbox" id="obs_retrospective"> 後向き</label>
 
-  <div>
-    <label><input type="checkbox" id="cat_obs"> 観察研究</label>
-    <label><input type="checkbox" id="obs_prospective"> 前向き</label>
-    <label><input type="checkbox" id="obs_retrospective"> 後向き</label>
+            <label><input type="checkbox" id="cat_basic"> 基礎的研究</label>
+            <label><input type="checkbox" id="cat_biobank"> バイオバンクの検体を使用した研究</label>
+            <label><input type="checkbox" id="cat_genome"> ヒトゲノム・遺伝子解析</label>
+            <label><input type="checkbox" id="cat_gene_therapy"> 遺伝子治療</label>
+            <label><input type="checkbox" id="cat_epi"> 疫学研究</label>
 
-    <label><input type="checkbox" id="cat_basic"> 基礎的研究</label>
-    <label><input type="checkbox" id="cat_biobank"> バイオバンクの検体を使用した研究</label>
-    <label><input type="checkbox" id="cat_genome"> ヒトゲノム・遺伝子解析</label>
-    <label><input type="checkbox" id="cat_gene_therapy"> 遺伝子治療</label>
-    <label><input type="checkbox" id="cat_epi"> 疫学研究</label>
+            <label for="cat_other_text">その他</label>
+            <input type="text" id="cat_other_text">
+          </div>
+        </div>
 
-    <label for="cat_other_text">その他</label>
-    <input type="text" id="cat_other_text">
-  </div>
-</div>
-
-<h3>適応される指針等</h3>
-<label><input type="checkbox" id="gl_pmda"> 薬機法（GCP、GPSP、GVP等）</label>
-<label><input type="checkbox" id="gl_clinical"> 臨床研究法</label>
-<label><input type="checkbox" id="gl_gene"> 遺伝子治療臨床研究に関する指針</label>
-<label><input type="checkbox" id="gl_life"> 人を対象とする生命科学・医学系研究に関する倫理指針</label>
-<label for="gl_other_text">その他</label>
-<input type="text" id="gl_other_text">
+        <h3>適応される指針等</h3>
+        <div class="check-grid">
+          <label><input type="checkbox" id="gl_pmda"> 薬機法（GCP、GPSP、GVP等）</label>
+          <label><input type="checkbox" id="gl_clinical"> 臨床研究法</label>
+          <label><input type="checkbox" id="gl_gene"> 遺伝子治療臨床研究に関する指針</label>
+          <label><input type="checkbox" id="gl_life"> 人を対象とする生命科学・医学系研究に関する倫理指針</label>
+          <label for="gl_other_text">その他</label>
+          <input type="text" id="gl_other_text">
+        </div>
 
         <h3>期間</h3>
         <label for="regPeriod">被験者登録予定期間</label>
@@ -459,7 +457,7 @@
         <textarea id="reviewInfo"></textarea>
 
         <div class="small mt6">
-          今回は見た目優先で、セル幅・行間・余白・ページ密度をA4印刷向けに詰めています。
+          PDF原本に近い見た目を優先し、固定レイアウト・A4印刷向け余白・チェック表示を調整しています。
         </div>
       </div>
 
@@ -492,13 +490,13 @@
             </tr>
 
             <tr>
-  <th></th>
-  <td colspan="3" class="dense">
-    必要なら秘密保持のための課題名を記載<br>
-    <span id="out-secretTitle" class="placeholder">未入力</span><br>
-    <span class="red tiny">注意：この欄に記載がない場合には、上記の「臨床研究課題名」がそのまま公開されます。</span>
-  </td>
-</tr>
+              <th></th>
+              <td colspan="3" class="dense">
+                必要なら秘密保持のための課題名を記載<br>
+                <span id="out-secretTitle" class="placeholder">未入力</span><br>
+                <span class="red tiny">注意：この欄に記載がない場合には、上記の「臨床研究課題名」がそのまま公開されます。</span>
+              </td>
+            </tr>
 
             <tr>
               <th>研究組織の分類</th>
@@ -524,51 +522,45 @@
             </tr>
 
             <tr>
-              <tr>
-  <th>研究内容の区分</th>
-  <td colspan="3" class="dense">
-    <div> <span id="mk-cat_trial">□</span> 治験（市販後臨床試験を含む）　　　　　　　　　　　　　　　　　　　　<span class="tiny">※複数選択可</span></div>
-    <div> <span id="mk-phase1">□</span> Ⅰ相　　　<span id="mk-phase2">□</span> Ⅱ相　　　<span id="mk-phase3">□</span> Ⅲ相　　　<span id="mk-postmarket">□</span> 市販後臨床試験</div>
-    <div>
-      <span id="mk-cat_specified">□</span> 特定臨床研究　医薬品等〔<span id="mk-drug_offlabel">□</span> 適応外 <span id="mk-drug_unapproved">□</span> 未承認 <span id="mk-drug_approved">□</span> 承認内〕
-      資金提供 <span id="mk-fund_yes">□</span> あり <span id="mk-fund_no">□</span> なし
-    </div>
-    <div><span id="mk-cat_effort">□</span> 努力義務研究</div>
-    <div>
-      <span id="mk-cat_non_specified">□</span> 非特定臨床研究　① 侵襲　<span id="mk-inv_yes">□</span> あり
-      〔<span id="mk-inv_minor">□</span> 軽微　<span id="mk-inv_major">□</span> 軽微でない〕
-      <span id="mk-inv_no">□</span> なし
-    </div>
-    <div>
-      通常診療を超える医療行為　<span id="mk-medical_yes">□</span> あり　<span id="mk-medical_no">□</span> なし
-    </div>
-    <div>
-      ② 介入　<span id="mk-intervention_yes">□</span> あり　<span id="mk-intervention_no">□</span> なし
-    </div>
-    <div>
-      <span id="mk-cat_obs">□</span> 観察研究（<span id="mk-obs_prospective">□</span> 前向き　<span id="mk-obs_retrospective">□</span> 後向き）
-    </div>
-    <div>
-      <span id="mk-cat_basic">□</span> 基礎的研究　　<span id="mk-cat_biobank">□</span> バイオバンクの検体を使用した研究　　<span id="mk-cat_genome">□</span> ヒトゲノム・遺伝子解析
-    </div>
-    <div>
-      <span id="mk-cat_gene_therapy">□</span> 遺伝子治療　　<span id="mk-cat_epi">□</span> 疫学研究　　<span id="mk-cat_other_text_box">□</span> その他（<span id="out-cat_other_text" class="placeholder">未入力</span>）
-    </div>
-  </td>
-</tr>
-
-<tr>
-  <th>適応される指針等</th>
-  <td colspan="3" class="dense">
-    <div><span id="mk-gl_pmda">□</span> 薬機法（GCP、GPSP、GVP等）　<span id="mk-gl_clinical">□</span> 臨床研究法　<span id="mk-gl_gene">□</span> 遺伝子治療臨床研究に関する指針</div>
-    <div><span id="mk-gl_life">□</span> 人を対象とする生命科学・医学系研究に関する倫理指針</div>
-    <div><span id="mk-gl_other_text_box">□</span> その他（<span id="out-gl_other_text" class="placeholder">未入力</span>）</div>
-  </td>
-</tr>
+              <th>研究内容の区分</th>
+              <td colspan="3" class="dense">
+                <div><span id="mk-cat_trial">□</span> 治験（市販後臨床試験を含む）　　　　　　　　　　　　　　　　　　　　<span class="tiny">※複数選択可</span></div>
+                <div><span id="mk-phase1">□</span> Ⅰ相　　　<span id="mk-phase2">□</span> Ⅱ相　　　<span id="mk-phase3">□</span> Ⅲ相　　　<span id="mk-postmarket">□</span> 市販後臨床試験</div>
+                <div>
+                  <span id="mk-cat_specified">□</span> 特定臨床研究　医薬品等〔<span id="mk-drug_offlabel">□</span> 適応外 <span id="mk-drug_unapproved">□</span> 未承認 <span id="mk-drug_approved">□</span>承認内〕
+                  資金提供 <span id="mk-fund_yes">□</span> あり <span id="mk-fund_no">□</span> なし
+                </div>
+                <div><span id="mk-cat_effort">□</span> 努力義務研究</div>
+                <div>
+                  <span id="mk-cat_non_specified">□</span> 非特定臨床研究　① 侵襲　<span id="mk-inv_yes">□</span> あり
+                  〔<span id="mk-inv_minor">□</span> 軽微　<span id="mk-inv_major">□</span> 軽微でない〕
+                  <span id="mk-inv_no">□</span> なし
+                </div>
+                <div>
+                  通常診療を超える医療行為　<span id="mk-medical_yes">□</span> あり　<span id="mk-medical_no">□</span> なし
+                </div>
+                <div>
+                  ② 介入　<span id="mk-intervention_yes">□</span> あり　<span id="mk-intervention_no">□</span> なし
+                </div>
+                <div>
+                  <span id="mk-cat_obs">□</span> 観察研究（<span id="mk-obs_prospective">□</span> 前向き　<span id="mk-obs_retrospective">□</span> 後向き）
+                </div>
+                <div>
+                  <span id="mk-cat_basic">□</span> 基礎的研究　　<span id="mk-cat_biobank">□</span> バイオバンクの検体を使用した研究　　<span id="mk-cat_genome">□</span> ヒトゲノム・遺伝子解析
+                </div>
+                <div>
+                  <span id="mk-cat_gene_therapy">□</span> 遺伝子治療　　<span id="mk-cat_epi">□</span> 疫学研究　　<span id="mk-cat_other_text_box">□</span> その他（<span id="out-cat_other_text" class="placeholder">未入力</span>）
+                </div>
+              </td>
+            </tr>
 
             <tr>
               <th>適応される指針等</th>
-              <td colspan="3" id="out-guideline" class="cell-lines placeholder dense">未入力</td>
+              <td colspan="3" class="dense">
+                <div><span id="mk-gl_pmda">□</span> 薬機法（GCP、GPSP、GVP等）　<span id="mk-gl_clinical">□</span> 臨床研究法　<span id="mk-gl_gene">□</span> 遺伝子治療臨床研究に関する指針</div>
+                <div><span id="mk-gl_life">□</span> 人を対象とする生命科学・医学系研究に関する倫理指針</div>
+                <div><span id="mk-gl_other_text_box">□</span> その他（<span id="out-gl_other_text" class="placeholder">未入力</span>）</div>
+              </td>
             </tr>
 
             <tr>
@@ -773,17 +765,69 @@
       }
     }
 
+    function setMark(inputId, markId){
+      const input = document.getElementById(inputId);
+      const mark = document.getElementById(markId);
+      if(!input || !mark) return;
+      mark.textContent = input.checked ? '■' : '□';
+    }
+
     function updatePreview(){
-      const ids = [
+      const textIds = [
         'responsibleDept','responsibleTitle','responsibleName','theme','secretTitle',
         'deptCollab','leadSite','orgType','support','requester','fundUse',
-        'researchCategory','guideline','regPeriod','studyPeriod','obsPeriod',
-        'retroPeriod','retroStudyPeriod','purpose','subjects','casesTotal',
-        'casesSite','method','outcomes','subStudy','subStudyDesc','sampleInfo',
-        'futureUse','foreignProvide','policyCheck','publication','signDate1',
-        'signDate2','reviewInfo'
+        'regPeriod','studyPeriod','obsPeriod','retroPeriod','retroStudyPeriod',
+        'purpose','subjects','casesTotal','casesSite','method','outcomes',
+        'subStudy','subStudyDesc','sampleInfo','futureUse','foreignProvide',
+        'policyCheck','publication','signDate1','signDate2','reviewInfo',
+        'cat_other_text','gl_other_text'
       ];
-      ids.forEach(id => setOutput('out-' + id, getVal(id)));
+      textIds.forEach(id => setOutput('out-' + id, getVal(id)));
+
+      const pairs = [
+        ['cat_trial','mk-cat_trial'],
+        ['phase1','mk-phase1'],
+        ['phase2','mk-phase2'],
+        ['phase3','mk-phase3'],
+        ['postmarket','mk-postmarket'],
+        ['cat_specified','mk-cat_specified'],
+        ['drug_offlabel','mk-drug_offlabel'],
+        ['drug_unapproved','mk-drug_unapproved'],
+        ['drug_approved','mk-drug_approved'],
+        ['fund_yes','mk-fund_yes'],
+        ['fund_no','mk-fund_no'],
+        ['cat_effort','mk-cat_effort'],
+        ['cat_non_specified','mk-cat_non_specified'],
+        ['inv_yes','mk-inv_yes'],
+        ['inv_minor','mk-inv_minor'],
+        ['inv_major','mk-inv_major'],
+        ['inv_no','mk-inv_no'],
+        ['medical_yes','mk-medical_yes'],
+        ['medical_no','mk-medical_no'],
+        ['intervention_yes','mk-intervention_yes'],
+        ['intervention_no','mk-intervention_no'],
+        ['cat_obs','mk-cat_obs'],
+        ['obs_prospective','mk-obs_prospective'],
+        ['obs_retrospective','mk-obs_retrospective'],
+        ['cat_basic','mk-cat_basic'],
+        ['cat_biobank','mk-cat_biobank'],
+        ['cat_genome','mk-cat_genome'],
+        ['cat_gene_therapy','mk-cat_gene_therapy'],
+        ['cat_epi','mk-cat_epi'],
+        ['gl_pmda','mk-gl_pmda'],
+        ['gl_clinical','mk-gl_clinical'],
+        ['gl_gene','mk-gl_gene'],
+        ['gl_life','mk-gl_life']
+      ];
+      pairs.forEach(([inputId, markId]) => setMark(inputId, markId));
+
+      const otherCat = document.getElementById('mk-cat_other_text_box');
+      const otherCatText = getVal('cat_other_text');
+      if (otherCat) otherCat.textContent = otherCatText ? '■' : '□';
+
+      const otherGl = document.getElementById('mk-gl_other_text_box');
+      const otherGlText = getVal('gl_other_text');
+      if (otherGl) otherGl.textContent = otherGlText ? '■' : '□';
     }
 
     document.querySelectorAll('input, textarea, select').forEach(el => {
@@ -795,101 +839,3 @@
   </script>
 </body>
 </html>
-
-<script>
-  function getVal(id){
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : '';
-  }
-
-  function setOutput(id, value){
-    const el = document.getElementById(id);
-    if(!el) return;
-    if(value){
-      el.textContent = value;
-      el.classList.remove('placeholder');
-    }else{
-      el.textContent = '未入力';
-      el.classList.add('placeholder');
-    }
-  }
-
-  function setMark(inputId, markId){
-    const input = document.getElementById(inputId);
-    const mark = document.getElementById(markId);
-    if(!input || !mark) return;
-    mark.textContent = input.checked ? '■' : '□';
-  }
-
-  function updatePreview(){
-    const textIds = [
-      'responsibleDept','responsibleTitle','responsibleName','theme','secretTitle',
-      'deptCollab','leadSite','orgType','support','requester','fundUse',
-      'regPeriod','studyPeriod','obsPeriod','retroPeriod','retroStudyPeriod',
-      'purpose','subjects','casesTotal','casesSite','method','outcomes',
-      'subStudy','subStudyDesc','sampleInfo','futureUse','foreignProvide',
-      'policyCheck','publication','signDate1','signDate2','reviewInfo',
-      'cat_other_text','gl_other_text'
-    ];
-    textIds.forEach(id => setOutput('out-' + id, getVal(id)));
-
-    const pairs = [
-      ['cat_trial','mk-cat_trial'],
-      ['phase1','mk-phase1'],
-      ['phase2','mk-phase2'],
-      ['phase3','mk-phase3'],
-      ['postmarket','mk-postmarket'],
-      ['cat_specified','mk-cat_specified'],
-      ['drug_offlabel','mk-drug_offlabel'],
-      ['drug_unapproved','mk-drug_unapproved'],
-      ['drug_approved','mk-drug_approved'],
-      ['fund_yes','mk-fund_yes'],
-      ['fund_no','mk-fund_no'],
-      ['cat_effort','mk-cat_effort'],
-      ['cat_non_specified','mk-cat_non_specified'],
-      ['inv_yes','mk-inv_yes'],
-      ['inv_minor','mk-inv_minor'],
-      ['inv_major','mk-inv_major'],
-      ['inv_no','mk-inv_no'],
-      ['medical_yes','mk-medical_yes'],
-      ['medical_no','mk-medical_no'],
-      ['intervention_yes','mk-intervention_yes'],
-      ['intervention_no','mk-intervention_no'],
-      ['cat_obs','mk-cat_obs'],
-      ['obs_prospective','mk-obs_prospective'],
-      ['obs_retrospective','mk-obs_retrospective'],
-      ['cat_basic','mk-cat_basic'],
-      ['cat_biobank','mk-cat_biobank'],
-      ['cat_genome','mk-cat_genome'],
-      ['cat_gene_therapy','mk-cat_gene_therapy'],
-      ['cat_epi','mk-cat_epi'],
-      ['gl_pmda','mk-gl_pmda'],
-      ['gl_clinical','mk-gl_clinical'],
-      ['gl_gene','mk-gl_gene'],
-      ['gl_life','mk-gl_life']
-    ];
-    pairs.forEach(([inputId, markId]) => setMark(inputId, markId));
-
-    const otherCat = document.getElementById('mk-cat_other_text_box');
-    const otherCatText = getVal('cat_other_text');
-    if (otherCat) otherCat.textContent = otherCatText ? '■' : '□';
-
-    const otherGl = document.getElementById('mk-gl_other_text_box');
-    const otherGlText = getVal('gl_other_text');
-    if (otherGl) otherGl.textContent = otherGlText ? '■' : '□';
-  }
-
-  document.querySelectorAll('input, textarea, select').forEach(el => {
-    el.addEventListener('input', updatePreview);
-    el.addEventListener('change', updatePreview);
-  });
-
-  updatePreview();
-</script>
-
-.form td div {
-  margin-bottom: 2px;
-}
-.form td div:last-child {
-  margin-bottom: 0;
-}
