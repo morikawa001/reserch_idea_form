@@ -284,11 +284,11 @@
 <body>
   <div class="wrap">
     <div class="topbar">
-  <a href="index.html" class="secondary">← index.html に戻る</a>
-  <button type="button" onclick="updatePreview()">プレビュー更新</button>
-  <button type="button" onclick="clearForm5All()">入力内容をすべてクリア</button>
-  <button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
-</div>
+      <a href="index.html" class="secondary">← index.html に戻る</a>
+      <button type="button" onclick="updatePreview()">プレビュー更新</button>
+      <button type="button" onclick="clearForm5All()">入力内容をすべてクリア</button>
+      <button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
+    </div>
 
     <div class="layout">
       <div class="panel">
@@ -817,426 +817,432 @@
   </div>
 
   <script>
-  const STORAGE_KEY = 'researchIdeaFormData';
+    const STORAGE_KEY = 'researchIdeaFormData';
+    let isClearingForm5 = false;
 
-  function getVal(id){
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : '';
-  }
-
-  function setVal(id, value){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.value = value ?? '';
-  }
-
-  function setChecked(id, checked){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.checked = !!checked;
-  }
-
-  function setOutput(id, value){
-    const el = document.getElementById(id);
-    if(!el) return;
-    if(value){
-      el.textContent = value;
-      el.classList.remove('placeholder');
-    }else{
-      el.textContent = '未入力';
-      el.classList.add('placeholder');
-    }
-  }
-
-  function setMark(inputId, markId){
-    const input = document.getElementById(inputId);
-    const mark = document.getElementById(markId);
-    if(!input || !mark) return;
-    mark.textContent = input.checked ? '■' : '□';
-  }
-
-  function loadSavedResearchIdeaData(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return null;
-      return JSON.parse(raw);
-    }catch(e){
-      console.error('researchIdeaFormData parse error:', e);
-      return null;
-    }
-  }
-
-  function buildMethodFromResearchIdea(data){
-    const lines = [];
-
-    if (data.design) lines.push(`研究デザイン：${data.design}`);
-    if (data.researchType) lines.push(`研究種別：${data.researchType}`);
-
-    const interventionMap = { yes:'介入あり', no:'介入なし' };
-    const invasivenessMap = { none:'侵襲なし', minor:'軽微な侵襲', major:'侵襲あり' };
-    const retrospectiveMap = { yes:'後向き研究', no:'前向き収集あり' };
-
-    if (data.intervention) lines.push(interventionMap[data.intervention] || data.intervention);
-    if (data.invasiveness) lines.push(invasivenessMap[data.invasiveness] || data.invasiveness);
-    if (data.retrospective) lines.push(retrospectiveMap[data.retrospective] || data.retrospective);
-
-    if (data.setting) lines.push(`実施施設・部署：${data.setting}`);
-    if (data.subjects) lines.push(`対象：${data.subjects}`);
-    if (data.background) lines.push(`背景：${data.background}`);
-
-    return lines.join('\n');
-  }
-
-  function buildOutcomesFromResearchIdea(data){
-    const lines = [];
-    if (data.sapPrimaryEndpoint) lines.push(`主要評価項目：${data.sapPrimaryEndpoint}`);
-
-    if (Array.isArray(data.sapSecondaryEndpoints) && data.sapSecondaryEndpoints.length) {
-      const sec = data.sapSecondaryEndpoints
-        .map((item, idx) => `${idx + 1}. ${item.name}${item.type ? `（${item.type}）` : ''}`)
-        .join('\n');
-      lines.push(`副次評価項目：\n${sec}`);
+    function getVal(id){
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
     }
 
-    if (data.sapTiming) lines.push(`測定時点：${data.sapTiming}`);
-    return lines.join('\n');
-  }
-
-  function buildReviewInfoFromResearchIdea(data){
-    const lines = [];
-    if (data.researchType) lines.push(`研究種別：${data.researchType}`);
-
-    if (data.clinicalTrial === 'yes' || (data.researchType || '').includes('特定臨床研究')) {
-      lines.push('想定委員会：認定臨床研究審査委員会（CRB）/ 関連IRB');
-    } else if ((data.researchType || '').includes('治験')) {
-      lines.push('想定委員会：治験審査委員会（IRB）');
-    } else if ((data.researchType || '').includes('観察研究') || (data.researchType || '').includes('介入研究')) {
-      lines.push('想定委員会：倫理審査委員会（IRB）');
+    function setVal(id, value){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.value = value ?? '';
     }
 
-    if (data.invasiveness === 'none') {
-      lines.push('侵襲：なし');
-    } else if (data.invasiveness === 'minor') {
-      lines.push('侵襲：軽微');
-    } else if (data.invasiveness === 'major') {
-      lines.push('侵襲：あり');
+    function setChecked(id, checked){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.checked = !!checked;
     }
 
-    if (data.intervention === 'yes') lines.push('介入：あり');
-    if (data.intervention === 'no') lines.push('介入：なし');
-
-    return lines.join('\n');
-  }
-
-  function inferAndApplyFromResearchIdea(data){
-    if (!data) return;
-
-    if (!getVal('theme') && data.theme) setVal('theme', data.theme);
-    if (!getVal('purpose') && data.purpose) setVal('purpose', data.purpose);
-    if (!getVal('subjects') && data.subjects) setVal('subjects', data.subjects);
-
-    if (!getVal('method')) {
-      const methodText = buildMethodFromResearchIdea(data);
-      if (methodText) setVal('method', methodText);
-    }
-
-    if (!getVal('outcomes')) {
-      const outcomeText = buildOutcomesFromResearchIdea(data);
-      if (outcomeText) setVal('outcomes', outcomeText);
-    }
-
-    if (!getVal('reviewInfo')) {
-      const reviewText = buildReviewInfoFromResearchIdea(data);
-      if (reviewText) setVal('reviewInfo', reviewText);
-    }
-
-    if (!getVal('studyPeriod') && data.startDate) {
-      const d = new Date(data.startDate);
-      if (!isNaN(d.getTime())) {
-        const y = d.getFullYear();
-        setVal('studyPeriod', `承認日 ～（西暦）${y + 2}年 3月 31日`);
+    function setOutput(id, value){
+      const el = document.getElementById(id);
+      if(!el) return;
+      if(value){
+        el.textContent = value;
+        el.classList.remove('placeholder');
+      }else{
+        el.textContent = '未入力';
+        el.classList.add('placeholder');
       }
     }
 
-    if (!getVal('regPeriod') && data.startDate) {
-      const d = new Date(data.startDate);
-      if (!isNaN(d.getTime())) {
-        const y = d.getFullYear();
-        setVal('regPeriod', `承認日 ～（西暦）${y + 1}年 3月 31日`);
+    function setMark(inputId, markId){
+      const input = document.getElementById(inputId);
+      const mark = document.getElementById(markId);
+      if(!input || !mark) return;
+      mark.textContent = input.checked ? '■' : '□';
+    }
+
+    function loadSavedResearchIdeaData(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch(e){
+        console.error('researchIdeaFormData parse error:', e);
+        return null;
       }
     }
 
-    if (data.researchType) {
-      if (data.researchType.includes('治験')) setChecked('cat_trial', true);
-      if (data.researchType.includes('特定臨床研究')) setChecked('cat_specified', true);
-      if (data.researchType.includes('介入研究') && !data.researchType.includes('特定臨床研究')) setChecked('cat_non_specified', true);
-      if (data.researchType.includes('観察研究')) setChecked('cat_obs', true);
+    function buildMethodFromResearchIdea(data){
+      const lines = [];
+
+      if (data.design) lines.push(`研究デザイン：${data.design}`);
+      if (data.researchType) lines.push(`研究種別：${data.researchType}`);
+
+      const interventionMap = { yes:'介入あり', no:'介入なし' };
+      const invasivenessMap = { none:'侵襲なし', minor:'軽微な侵襲', major:'侵襲あり' };
+      const retrospectiveMap = { yes:'後向き研究', no:'前向き収集あり' };
+
+      if (data.intervention) lines.push(interventionMap[data.intervention] || data.intervention);
+      if (data.invasiveness) lines.push(invasivenessMap[data.invasiveness] || data.invasiveness);
+      if (data.retrospective) lines.push(retrospectiveMap[data.retrospective] || data.retrospective);
+
+      if (data.setting) lines.push(`実施施設・部署：${data.setting}`);
+      if (data.subjects) lines.push(`対象：${data.subjects}`);
+      if (data.background) lines.push(`背景：${data.background}`);
+
+      return lines.join('\n');
     }
 
-    if (data.unapproved === 'yes') setChecked('drug_unapproved', true);
-    if (data.unapproved === 'no') setChecked('drug_approved', true);
+    function buildOutcomesFromResearchIdea(data){
+      const lines = [];
+      if (data.sapPrimaryEndpoint) lines.push(`主要評価項目：${data.sapPrimaryEndpoint}`);
 
-    if (data.funding === 'yes') setChecked('fund_yes', true);
-    if (data.funding === 'no') setChecked('fund_no', true);
+      if (Array.isArray(data.sapSecondaryEndpoints) && data.sapSecondaryEndpoints.length) {
+        const sec = data.sapSecondaryEndpoints
+          .map((item, idx) => `${idx + 1}. ${item.name}${item.type ? `（${item.type}）` : ''}`)
+          .join('\n');
+        lines.push(`副次評価項目：\n${sec}`);
+      }
 
-    if (data.invasiveness === 'none') setChecked('inv_no', true);
-    if (data.invasiveness === 'minor') {
-      setChecked('inv_yes', true);
-      setChecked('inv_minor', true);
-    }
-    if (data.invasiveness === 'major') {
-      setChecked('inv_yes', true);
-      setChecked('inv_major', true);
-    }
-
-    if (data.intervention === 'yes') setChecked('intervention_yes', true);
-    if (data.intervention === 'no') setChecked('intervention_no', true);
-
-    if (data.retrospective === 'yes') {
-      setChecked('cat_obs', true);
-      setChecked('obs_retrospective', true);
-    }
-    if (data.retrospective === 'no') {
-      setChecked('obs_prospective', true);
+      if (data.sapTiming) lines.push(`測定時点：${data.sapTiming}`);
+      return lines.join('\n');
     }
 
-    if (data.multicenter === 'yes') {
-      if (!getVal('orgType')) setVal('orgType', '多施設共同研究の主任研究者');
-    } else if (data.multicenter === 'no') {
-      if (!getVal('orgType')) setVal('orgType', '単独施設による研究');
+    function buildReviewInfoFromResearchIdea(data){
+      const lines = [];
+      if (data.researchType) lines.push(`研究種別：${data.researchType}`);
+
+      if (data.clinicalTrial === 'yes' || (data.researchType || '').includes('特定臨床研究')) {
+        lines.push('想定委員会：認定臨床研究審査委員会（CRB）/ 関連IRB');
+      } else if ((data.researchType || '').includes('治験')) {
+        lines.push('想定委員会：治験審査委員会（IRB）');
+      } else if ((data.researchType || '').includes('観察研究') || (data.researchType || '').includes('介入研究')) {
+        lines.push('想定委員会：倫理審査委員会（IRB）');
+      }
+
+      if (data.invasiveness === 'none') {
+        lines.push('侵襲：なし');
+      } else if (data.invasiveness === 'minor') {
+        lines.push('侵襲：軽微');
+      } else if (data.invasiveness === 'major') {
+        lines.push('侵襲：あり');
+      }
+
+      if (data.intervention === 'yes') lines.push('介入：あり');
+      if (data.intervention === 'no') lines.push('介入：なし');
+
+      return lines.join('\n');
     }
 
-    if (!getVal('gl_other_text')) {
-      if (data.researchType && data.researchType.includes('治験')) {
-        setChecked('gl_pmda', true);
-      } else if (data.researchType && data.researchType.includes('特定臨床研究')) {
-        setChecked('gl_clinical', true);
-      } else {
-        setChecked('gl_life', true);
+    function inferAndApplyFromResearchIdea(data){
+      if (!data) return;
+
+      if (!getVal('theme') && data.theme) setVal('theme', data.theme);
+      if (!getVal('purpose') && data.purpose) setVal('purpose', data.purpose);
+      if (!getVal('subjects') && data.subjects) setVal('subjects', data.subjects);
+
+      if (!getVal('method')) {
+        const methodText = buildMethodFromResearchIdea(data);
+        if (methodText) setVal('method', methodText);
+      }
+
+      if (!getVal('outcomes')) {
+        const outcomeText = buildOutcomesFromResearchIdea(data);
+        if (outcomeText) setVal('outcomes', outcomeText);
+      }
+
+      if (!getVal('reviewInfo')) {
+        const reviewText = buildReviewInfoFromResearchIdea(data);
+        if (reviewText) setVal('reviewInfo', reviewText);
+      }
+
+      if (!getVal('studyPeriod') && data.startDate) {
+        const d = new Date(data.startDate);
+        if (!isNaN(d.getTime())) {
+          const y = d.getFullYear();
+          setVal('studyPeriod', `承認日 ～（西暦）${y + 2}年 3月 31日`);
+        }
+      }
+
+      if (!getVal('regPeriod') && data.startDate) {
+        const d = new Date(data.startDate);
+        if (!isNaN(d.getTime())) {
+          const y = d.getFullYear();
+          setVal('regPeriod', `承認日 ～（西暦）${y + 1}年 3月 31日`);
+        }
+      }
+
+      if (data.researchType) {
+        if (data.researchType.includes('治験')) setChecked('cat_trial', true);
+        if (data.researchType.includes('特定臨床研究')) setChecked('cat_specified', true);
+        if (data.researchType.includes('介入研究') && !data.researchType.includes('特定臨床研究')) setChecked('cat_non_specified', true);
+        if (data.researchType.includes('観察研究')) setChecked('cat_obs', true);
+      }
+
+      if (data.unapproved === 'yes') setChecked('drug_unapproved', true);
+      if (data.unapproved === 'no') setChecked('drug_approved', true);
+
+      if (data.funding === 'yes') setChecked('fund_yes', true);
+      if (data.funding === 'no') setChecked('fund_no', true);
+
+      if (data.invasiveness === 'none') setChecked('inv_no', true);
+      if (data.invasiveness === 'minor') {
+        setChecked('inv_yes', true);
+        setChecked('inv_minor', true);
+      }
+      if (data.invasiveness === 'major') {
+        setChecked('inv_yes', true);
+        setChecked('inv_major', true);
+      }
+
+      if (data.intervention === 'yes') setChecked('intervention_yes', true);
+      if (data.intervention === 'no') setChecked('intervention_no', true);
+
+      if (data.retrospective === 'yes') {
+        setChecked('cat_obs', true);
+        setChecked('obs_retrospective', true);
+      }
+      if (data.retrospective === 'no') {
+        setChecked('obs_prospective', true);
+      }
+
+      if (data.multicenter === 'yes') {
+        if (!getVal('orgType')) setVal('orgType', '多施設共同研究の主任研究者');
+      } else if (data.multicenter === 'no') {
+        if (!getVal('orgType')) setVal('orgType', '単独施設による研究');
+      }
+
+      if (!getVal('gl_other_text')) {
+        if (data.researchType && data.researchType.includes('治験')) {
+          setChecked('gl_pmda', true);
+        } else if (data.researchType && data.researchType.includes('特定臨床研究')) {
+          setChecked('gl_clinical', true);
+        } else {
+          setChecked('gl_life', true);
+        }
       }
     }
-  }
 
-  function loadForm5SavedDraft(){
-    try{
-      const raw = localStorage.getItem('form5DraftData');
-      if(!raw) return null;
-      return JSON.parse(raw);
-    }catch(e){
-      console.error('form5DraftData parse error:', e);
-      return null;
-    }
-  }
-
-  function applyValues(data){
-    if(!data) return;
-
-    const directMap = {
-      responsibleDept: data.responsibleDept,
-      responsibleTitle: data.responsibleTitle,
-      responsibleName: data.responsibleName,
-      theme: data.theme,
-      secretTitle: data.secretTitle,
-      orgType: data.orgType,
-      deptCollab: data.deptCollab,
-      leadSite: data.leadSite,
-      support: data.support,
-      requester: data.requester,
-      fundUse: data.fundUse,
-      regPeriod: data.regPeriod,
-      studyPeriod: data.studyPeriod,
-      obsPeriod: data.obsPeriod,
-      retroPeriod: data.retroPeriod,
-      retroStudyPeriod: data.retroStudyPeriod,
-      purpose: data.purpose,
-      subjects: data.subjects,
-      casesTotal: data.casesTotal,
-      casesSite: data.casesSite,
-      method: data.method,
-      outcomes: data.outcomes,
-      subStudyDesc: data.subStudyDesc,
-      publication: data.publication,
-      signDate1: data.signDate1,
-      signDate2: data.signDate2,
-      reviewInfo: data.reviewInfo,
-      cat_other_text: data.cat_other_text,
-      gl_other_text: data.gl_other_text,
-      mat_other_text: data.mat_other_text,
-      info_other_text: data.info_other_text,
-      future_place: data.future_place,
-      foreign_country: data.foreign_country
-    };
-
-    Object.entries(directMap).forEach(([id, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        setVal(id, value);
+    function loadForm5SavedDraft(){
+      try{
+        const raw = localStorage.getItem('form5DraftData');
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch(e){
+        console.error('form5DraftData parse error:', e);
+        return null;
       }
-    });
+    }
 
-    const checkboxIds = [
-      'cat_trial','phase1','phase2','phase3','postmarket',
-      'cat_specified','drug_offlabel','drug_unapproved','drug_approved','fund_yes','fund_no',
-      'cat_effort','cat_non_specified','inv_yes','inv_minor','inv_major','inv_no',
-      'medical_yes','medical_no','intervention_yes','intervention_no',
-      'cat_obs','obs_prospective','obs_retrospective',
-      'cat_basic','cat_biobank','cat_genome','cat_gene_therapy','cat_epi',
-      'gl_pmda','gl_clinical','gl_gene','gl_life',
-      'sub_yes','sub_no',
-      'sample_none','sample_yes',
-      'mat_sample','mat_blood','mat_tissue','mat_preparat','mat_block','mat_fresh','mat_dna',
-      'mat_info','info_medical','future_none','future_yes',
-      'foreign_none','foreign_yes','policy_confirm'
-    ];
+    function applyValues(data){
+      if(!data) return;
 
-    checkboxIds.forEach(id => {
-      if (typeof data[id] === 'boolean') setChecked(id, data[id]);
-    });
-  }
+      const directMap = {
+        responsibleDept: data.responsibleDept,
+        responsibleTitle: data.responsibleTitle,
+        responsibleName: data.responsibleName,
+        theme: data.theme,
+        secretTitle: data.secretTitle,
+        orgType: data.orgType,
+        deptCollab: data.deptCollab,
+        leadSite: data.leadSite,
+        support: data.support,
+        requester: data.requester,
+        fundUse: data.fundUse,
+        regPeriod: data.regPeriod,
+        studyPeriod: data.studyPeriod,
+        obsPeriod: data.obsPeriod,
+        retroPeriod: data.retroPeriod,
+        retroStudyPeriod: data.retroStudyPeriod,
+        purpose: data.purpose,
+        subjects: data.subjects,
+        casesTotal: data.casesTotal,
+        casesSite: data.casesSite,
+        method: data.method,
+        outcomes: data.outcomes,
+        subStudyDesc: data.subStudyDesc,
+        publication: data.publication,
+        signDate1: data.signDate1,
+        signDate2: data.signDate2,
+        reviewInfo: data.reviewInfo,
+        cat_other_text: data.cat_other_text,
+        gl_other_text: data.gl_other_text,
+        mat_other_text: data.mat_other_text,
+        info_other_text: data.info_other_text,
+        future_place: data.future_place,
+        foreign_country: data.foreign_country
+      };
 
-  function collectForm5Data(){
-    const data = {};
+      Object.entries(directMap).forEach(([id, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          setVal(id, value);
+        }
+      });
+
+      const checkboxIds = [
+        'cat_trial','phase1','phase2','phase3','postmarket',
+        'cat_specified','drug_offlabel','drug_unapproved','drug_approved','fund_yes','fund_no',
+        'cat_effort','cat_non_specified','inv_yes','inv_minor','inv_major','inv_no',
+        'medical_yes','medical_no','intervention_yes','intervention_no',
+        'cat_obs','obs_prospective','obs_retrospective',
+        'cat_basic','cat_biobank','cat_genome','cat_gene_therapy','cat_epi',
+        'gl_pmda','gl_clinical','gl_gene','gl_life',
+        'sub_yes','sub_no',
+        'sample_none','sample_yes',
+        'mat_sample','mat_blood','mat_tissue','mat_preparat','mat_block','mat_fresh','mat_dna',
+        'mat_info','info_medical','future_none','future_yes',
+        'foreign_none','foreign_yes','policy_confirm'
+      ];
+
+      checkboxIds.forEach(id => {
+        if (typeof data[id] === 'boolean') setChecked(id, data[id]);
+      });
+    }
+
+    function collectForm5Data(){
+      const data = {};
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if (!el.id) return;
+        if (el.type === 'checkbox') {
+          data[el.id] = el.checked;
+        } else {
+          data[el.id] = el.value;
+        }
+      });
+      data.savedAt = new Date().toISOString();
+      return data;
+    }
+
+    function saveForm5Draft(){
+      if (isClearingForm5) return;
+      try{
+        localStorage.setItem('form5DraftData', JSON.stringify(collectForm5Data()));
+      }catch(e){
+        console.error('form5DraftData save error:', e);
+      }
+    }
+
+    function clearForm5All(){
+      const ok = confirm('様式5に入力した内容をすべてクリアします。よろしいですか？');
+      if(!ok) return;
+
+      isClearingForm5 = true;
+
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if (!el.id) return;
+
+        if (el.type === 'checkbox') {
+          el.checked = false;
+        } else if (el.tagName === 'SELECT') {
+          el.selectedIndex = 0;
+        } else {
+          el.value = '';
+        }
+      });
+
+      localStorage.removeItem('form5DraftData');
+      updatePreview();
+
+      isClearingForm5 = false;
+    }
+
+    function updatePreview(){
+      const textIds = [
+        'responsibleDept','responsibleTitle','responsibleName','theme','secretTitle',
+        'deptCollab','leadSite','orgType','support','requester','fundUse',
+        'regPeriod','studyPeriod','obsPeriod','retroPeriod','retroStudyPeriod',
+        'purpose','subjects','casesTotal','casesSite','method','outcomes',
+        'subStudyDesc','publication','signDate1','signDate2','reviewInfo',
+        'cat_other_text','gl_other_text',
+        'mat_other_text','info_other_text','future_place','foreign_country'
+      ];
+      textIds.forEach(id => setOutput('out-' + id, getVal(id)));
+
+      const pairs = [
+        ['cat_trial','mk-cat_trial'],
+        ['phase1','mk-phase1'],
+        ['phase2','mk-phase2'],
+        ['phase3','mk-phase3'],
+        ['postmarket','mk-postmarket'],
+        ['cat_specified','mk-cat_specified'],
+        ['drug_offlabel','mk-drug_offlabel'],
+        ['drug_unapproved','mk-drug_unapproved'],
+        ['drug_approved','mk-drug_approved'],
+        ['fund_yes','mk-fund_yes'],
+        ['fund_no','mk-fund_no'],
+        ['cat_effort','mk-cat_effort'],
+        ['cat_non_specified','mk-cat_non_specified'],
+        ['inv_yes','mk-inv_yes'],
+        ['inv_minor','mk-inv_minor'],
+        ['inv_major','mk-inv_major'],
+        ['inv_no','mk-inv_no'],
+        ['medical_yes','mk-medical_yes'],
+        ['medical_no','mk-medical_no'],
+        ['intervention_yes','mk-intervention_yes'],
+        ['intervention_no','mk-intervention_no'],
+        ['cat_obs','mk-cat_obs'],
+        ['obs_prospective','mk-obs_prospective'],
+        ['obs_retrospective','mk-obs_retrospective'],
+        ['cat_basic','mk-cat_basic'],
+        ['cat_biobank','mk-cat_biobank'],
+        ['cat_genome','mk-cat_genome'],
+        ['cat_gene_therapy','mk-cat_gene_therapy'],
+        ['cat_epi','mk-cat_epi'],
+        ['gl_pmda','mk-gl_pmda'],
+        ['gl_clinical','mk-gl_clinical'],
+        ['gl_gene','mk-gl_gene'],
+        ['gl_life','mk-gl_life'],
+        ['sub_yes','mk-sub_yes'],
+        ['sub_no','mk-sub_no'],
+        ['sample_none','mk-sample_none'],
+        ['sample_yes','mk-sample_yes'],
+        ['mat_sample','mk-mat_sample'],
+        ['mat_blood','mk-mat_blood'],
+        ['mat_tissue','mk-mat_tissue'],
+        ['mat_preparat','mk-mat_preparat'],
+        ['mat_block','mk-mat_block'],
+        ['mat_fresh','mk-mat_fresh'],
+        ['mat_dna','mk-mat_dna'],
+        ['mat_info','mk-mat_info'],
+        ['info_medical','mk-info_medical'],
+        ['future_none','mk-future_none'],
+        ['future_yes','mk-future_yes'],
+        ['foreign_none','mk-foreign_none'],
+        ['foreign_yes','mk-foreign_yes'],
+        ['policy_confirm','mk-policy_confirm']
+      ];
+      pairs.forEach(([inputId, markId]) => setMark(inputId, markId));
+
+      const otherCat = document.getElementById('mk-cat_other_text_box');
+      const otherCatText = getVal('cat_other_text');
+      if (otherCat) otherCat.textContent = otherCatText ? '■' : '□';
+
+      const otherGl = document.getElementById('mk-gl_other_text_box');
+      const otherGlText = getVal('gl_other_text');
+      if (otherGl) otherGl.textContent = otherGlText ? '■' : '□';
+
+      const matOther = document.getElementById('mk-mat_other_text_box');
+      const matOtherText = getVal('mat_other_text');
+      if (matOther) matOther.textContent = matOtherText ? '■' : '□';
+
+      const infoOther = document.getElementById('mk-info_other_text_box');
+      const infoOtherText = getVal('info_other_text');
+      if (infoOther) infoOther.textContent = infoOtherText ? '■' : '□';
+
+      saveForm5Draft();
+    }
+
+    function initForm(){
+      const form5Draft = loadForm5SavedDraft();
+      if (form5Draft) applyValues(form5Draft);
+
+      const researchIdeaData = loadSavedResearchIdeaData();
+      if (researchIdeaData) inferAndApplyFromResearchIdea(researchIdeaData);
+
+      updatePreview();
+    }
+
     document.querySelectorAll('input, textarea, select').forEach(el => {
-      if (!el.id) return;
-      if (el.type === 'checkbox') {
-        data[el.id] = el.checked;
-      } else {
-        data[el.id] = el.value;
-      }
-    });
-    data.savedAt = new Date().toISOString();
-    return data;
-  }
-
-  function saveForm5Draft(){
-    try{
-      localStorage.setItem('form5DraftData', JSON.stringify(collectForm5Data()));
-    }catch(e){
-      console.error('form5DraftData save error:', e);
-    }
-  }
-
-  function clearForm5All(){
-    const ok = confirm('様式5に入力した内容をすべてクリアします。よろしいですか？');
-    if(!ok) return;
-
-    document.querySelectorAll('input, textarea, select').forEach(el => {
-      if (!el.id) return;
-
-      if (el.type === 'checkbox') {
-        el.checked = false;
-      } else if (el.tagName === 'SELECT') {
-        el.selectedIndex = 0;
-      } else {
-        el.value = '';
-      }
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
     });
 
-    localStorage.removeItem('form5DraftData');
-    updatePreview();
-  }
-
-  function updatePreview(){
-    const textIds = [
-      'responsibleDept','responsibleTitle','responsibleName','theme','secretTitle',
-      'deptCollab','leadSite','orgType','support','requester','fundUse',
-      'regPeriod','studyPeriod','obsPeriod','retroPeriod','retroStudyPeriod',
-      'purpose','subjects','casesTotal','casesSite','method','outcomes',
-      'subStudyDesc','publication','signDate1','signDate2','reviewInfo',
-      'cat_other_text','gl_other_text',
-      'mat_other_text','info_other_text','future_place','foreign_country'
-    ];
-    textIds.forEach(id => setOutput('out-' + id, getVal(id)));
-
-    const pairs = [
-      ['cat_trial','mk-cat_trial'],
-      ['phase1','mk-phase1'],
-      ['phase2','mk-phase2'],
-      ['phase3','mk-phase3'],
-      ['postmarket','mk-postmarket'],
-      ['cat_specified','mk-cat_specified'],
-      ['drug_offlabel','mk-drug_offlabel'],
-      ['drug_unapproved','mk-drug_unapproved'],
-      ['drug_approved','mk-drug_approved'],
-      ['fund_yes','mk-fund_yes'],
-      ['fund_no','mk-fund_no'],
-      ['cat_effort','mk-cat_effort'],
-      ['cat_non_specified','mk-cat_non_specified'],
-      ['inv_yes','mk-inv_yes'],
-      ['inv_minor','mk-inv_minor'],
-      ['inv_major','mk-inv_major'],
-      ['inv_no','mk-inv_no'],
-      ['medical_yes','mk-medical_yes'],
-      ['medical_no','mk-medical_no'],
-      ['intervention_yes','mk-intervention_yes'],
-      ['intervention_no','mk-intervention_no'],
-      ['cat_obs','mk-cat_obs'],
-      ['obs_prospective','mk-obs_prospective'],
-      ['obs_retrospective','mk-obs_retrospective'],
-      ['cat_basic','mk-cat_basic'],
-      ['cat_biobank','mk-cat_biobank'],
-      ['cat_genome','mk-cat_genome'],
-      ['cat_gene_therapy','mk-cat_gene_therapy'],
-      ['cat_epi','mk-cat_epi'],
-      ['gl_pmda','mk-gl_pmda'],
-      ['gl_clinical','mk-gl_clinical'],
-      ['gl_gene','mk-gl_gene'],
-      ['gl_life','mk-gl_life'],
-      ['sub_yes','mk-sub_yes'],
-      ['sub_no','mk-sub_no'],
-      ['sample_none','mk-sample_none'],
-      ['sample_yes','mk-sample_yes'],
-      ['mat_sample','mk-mat_sample'],
-      ['mat_blood','mk-mat_blood'],
-      ['mat_tissue','mk-mat_tissue'],
-      ['mat_preparat','mk-mat_preparat'],
-      ['mat_block','mk-mat_block'],
-      ['mat_fresh','mk-mat_fresh'],
-      ['mat_dna','mk-mat_dna'],
-      ['mat_info','mk-mat_info'],
-      ['info_medical','mk-info_medical'],
-      ['future_none','mk-future_none'],
-      ['future_yes','mk-future_yes'],
-      ['foreign_none','mk-foreign_none'],
-      ['foreign_yes','mk-foreign_yes'],
-      ['policy_confirm','mk-policy_confirm']
-    ];
-    pairs.forEach(([inputId, markId]) => setMark(inputId, markId));
-
-    const otherCat = document.getElementById('mk-cat_other_text_box');
-    const otherCatText = getVal('cat_other_text');
-    if (otherCat) otherCat.textContent = otherCatText ? '■' : '□';
-
-    const otherGl = document.getElementById('mk-gl_other_text_box');
-    const otherGlText = getVal('gl_other_text');
-    if (otherGl) otherGl.textContent = otherGlText ? '■' : '□';
-
-    const matOther = document.getElementById('mk-mat_other_text_box');
-    const matOtherText = getVal('mat_other_text');
-    if (matOther) matOther.textContent = matOtherText ? '■' : '□';
-
-    const infoOther = document.getElementById('mk-info_other_text_box');
-    const infoOtherText = getVal('info_other_text');
-    if (infoOther) infoOther.textContent = infoOtherText ? '■' : '□';
-
-    saveForm5Draft();
-  }
-
-  function initForm(){
-    const form5Draft = loadForm5SavedDraft();
-    if (form5Draft) applyValues(form5Draft);
-
-    const researchIdeaData = loadSavedResearchIdeaData();
-    if (researchIdeaData) inferAndApplyFromResearchIdea(researchIdeaData);
-
-    updatePreview();
-  }
-
-  document.querySelectorAll('input, textarea, select').forEach(el => {
-    el.addEventListener('input', updatePreview);
-    el.addEventListener('change', updatePreview);
-  });
-
-  initForm();
-</script>
+    initForm();
+  </script>
 </body>
 </html>
