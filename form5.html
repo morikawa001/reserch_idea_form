@@ -6,8 +6,8 @@
   <title>様式5｜研究計画概略書</title>
   <style>
     :root{
-      --line:#222;
-      --thin:#444;
+      --line:#111;
+      --thin:#333;
       --paper:#fff;
       --bg:#eef2f7;
       --text:#111;
@@ -15,8 +15,8 @@
       --accent:#b00020;
     }
     *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
     body{
-      margin:0;
       font-family:"Yu Gothic","Meiryo",sans-serif;
       background:var(--bg);
       color:var(--text);
@@ -24,13 +24,13 @@
     .wrap{
       max-width:1500px;
       margin:0 auto;
-      padding:18px;
+      padding:14px;
     }
     .topbar{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      margin-bottom:16px;
+      margin-bottom:14px;
     }
     .topbar a,.topbar button{
       border:none;
@@ -51,8 +51,8 @@
 
     .layout{
       display:grid;
-      grid-template-columns:360px 1fr;
-      gap:18px;
+      grid-template-columns:350px 1fr;
+      gap:16px;
       align-items:start;
     }
 
@@ -62,7 +62,7 @@
       box-shadow:0 2px 12px rgba(0,0,0,.08);
       padding:16px;
       position:sticky;
-      top:16px;
+      top:14px;
     }
     .panel h2{
       font-size:18px;
@@ -70,9 +70,9 @@
       color:#1a5c96;
     }
     .panel h3{
-      font-size:14px;
+      font-size:13px;
       color:#1a5c96;
-      margin:16px 0 8px;
+      margin:14px 0 8px;
       padding-bottom:4px;
       border-bottom:1px solid #d9e4f0;
     }
@@ -80,20 +80,21 @@
       display:block;
       font-size:12px;
       font-weight:700;
-      margin:8px 0 4px;
+      margin:7px 0 4px;
     }
     input[type="text"], input[type="date"], textarea, select{
       width:100%;
-      border:1px solid #cad4df;
-      border-radius:6px;
-      padding:8px 10px;
-      font-size:13px;
+      border:1px solid #c9d2dd;
+      border-radius:5px;
+      padding:7px 9px;
+      font-size:12px;
       font-family:inherit;
       background:#fff;
     }
     textarea{
-      min-height:60px;
+      min-height:56px;
       resize:vertical;
+      line-height:1.5;
     }
     .grid2{
       display:grid;
@@ -105,19 +106,6 @@
       grid-template-columns:1fr 1fr 1fr;
       gap:8px;
     }
-    .check-list{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:4px;
-      margin-top:6px;
-    }
-    .check-list label{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-weight:400;
-      margin:0;
-    }
     .small{
       font-size:11px;
       color:#666;
@@ -127,166 +115,171 @@
     .preview-area{
       display:flex;
       flex-direction:column;
-      gap:18px;
+      gap:16px;
     }
 
     .page{
       width:210mm;
       min-height:297mm;
       margin:0 auto;
-      background:var(--paper);
-      box-shadow:0 3px 18px rgba(0,0,0,.12);
-      padding:10mm 10mm 12mm;
+      background:#fff;
+      box-shadow:0 2px 16px rgba(0,0,0,.12);
+      padding:7mm 8mm 8mm;
       color:#000;
+      position:relative;
     }
 
     .title{
       text-align:center;
-      font-size:18px;
+      font-size:17px;
       font-weight:700;
-      letter-spacing:.25em;
-      margin:0 0 4px;
+      letter-spacing:.32em;
+      margin:0;
+      line-height:1.2;
     }
     .note-red{
       text-align:center;
       color:var(--accent);
-      font-size:11px;
-      margin:0 0 8px;
+      font-size:10px;
+      margin:1mm 0 0;
+      line-height:1.25;
     }
     .rev{
       text-align:right;
-      font-size:11px;
-      margin-top:-2px;
-      margin-bottom:6px;
+      font-size:10px;
+      margin:0.8mm 0 1.6mm;
+      line-height:1.2;
     }
 
     table.form{
       width:100%;
       border-collapse:collapse;
       table-layout:fixed;
-      font-size:12px;
-      line-height:1.45;
+      font-size:11px;
+      line-height:1.28;
+      margin:0;
     }
     table.form th, table.form td{
-      border:1.4px solid var(--line);
-      padding:4px 6px;
+      border:1.2px solid var(--line);
+      padding:3px 5px;
       vertical-align:top;
       word-break:break-word;
     }
     table.form th{
-      background:#fff;
       text-align:left;
       font-weight:700;
+      background:#fff;
     }
 
+    .center{text-align:center;}
+    .right{text-align:right;}
+    .mid{vertical-align:middle !important;}
+
+    .w-08{width:8%;}
+    .w-10{width:10%;}
     .w-12{width:12%;}
     .w-14{width:14%;}
     .w-16{width:16%;}
     .w-18{width:18%;}
     .w-20{width:20%;}
     .w-22{width:22%;}
+    .w-24{width:24%;}
     .w-25{width:25%;}
+    .w-28{width:28%;}
     .w-30{width:30%;}
     .w-35{width:35%;}
-    .w-40{width:40%;}
-    .w-50{width:50%;}
 
+    .dense{line-height:1.18;}
     .cell-lines{
-      line-height:1.7;
       white-space:pre-wrap;
+      line-height:1.42;
     }
-    .muted{
-      color:#666;
+    .tiny{
+      font-size:9.5px;
+      line-height:1.28;
+    }
+    .mini{
+      font-size:8.8px;
+      line-height:1.2;
     }
     .red{
-      color:#b00020;
+      color:var(--accent);
     }
-
-    .checkrow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px 16px;
-      align-items:flex-start;
-    }
-    .check{
-      white-space:nowrap;
-      display:inline-flex;
-      gap:4px;
-      align-items:center;
-    }
-    .box{
-      display:inline-block;
-      width:12px;
-      text-align:center;
-      font-size:11px;
-      line-height:1;
-    }
-    .line{
-      display:inline-block;
-      min-width:80px;
-      border-bottom:1px solid #333;
-      padding:0 2px;
-    }
-    .line.long{min-width:180px;}
-    .line.mid{min-width:120px;}
-    .line.short{min-width:50px;}
-
     .placeholder{
       color:#9a9a9a;
     }
 
-    .signature{
-      margin-top:14px;
-      font-size:12px;
-      line-height:2;
-    }
-    .signature .sigline{
+    .line{
       display:inline-block;
-      min-width:180px;
-      border-bottom:1px solid #333;
+      min-width:48px;
+      border-bottom:1px solid #222;
+      line-height:1;
+      height:1em;
+      vertical-align:baseline;
+    }
+    .line.s{min-width:34px;}
+    .line.m{min-width:68px;}
+    .line.l{min-width:120px;}
+    .line.xl{min-width:180px;}
+
+    .sig-wrap{
+      margin-top:10mm;
+      font-size:11px;
+      line-height:1.95;
+    }
+    .sigline{
+      display:inline-block;
+      min-width:46mm;
+      border-bottom:1px solid #222;
       height:1em;
       vertical-align:middle;
     }
 
-    .page-break{
-      page-break-after:always;
-    }
+    .section-gap{height:2mm;}
+    .mt4{margin-top:4px;}
+    .mt6{margin-top:6px;}
+    .mb4{margin-bottom:4px;}
 
     .ref-title{
-      font-size:16px;
+      font-size:15px;
       font-weight:700;
       text-align:center;
-      margin:0 0 8px;
+      margin:0 0 6px;
+      line-height:1.2;
     }
 
-    .tiny{
-      font-size:10px;
-      line-height:1.35;
+    .ref-table{
+      font-size:9.3px !important;
+      line-height:1.1 !important;
+    }
+    .ref-table th, .ref-table td{
+      padding:2px 3px !important;
+      border:1px solid #111 !important;
     }
 
-    @media (max-width: 1300px){
-      .layout{
-        grid-template-columns:1fr;
-      }
-      .panel{
-        position:static;
-      }
-      .page{
-        width:100%;
-        min-height:auto;
-      }
+    @page{
+      size:A4;
+      margin:7mm 8mm 8mm;
+    }
+
+    @media (max-width:1300px){
+      .layout{grid-template-columns:1fr;}
+      .panel{position:static;}
+      .page{width:100%;min-height:auto;}
     }
 
     @media print{
       body{background:#fff;}
-      .panel,.topbar{display:none;}
+      .topbar,.panel{display:none;}
       .wrap{max-width:none;padding:0;}
+      .preview-area{gap:0;}
       .page{
         width:210mm;
         min-height:297mm;
         box-shadow:none;
         margin:0 auto;
         page-break-after:always;
+        break-after:page;
       }
     }
   </style>
@@ -347,47 +340,29 @@
 
         <h3>サポート・資金</h3>
         <label for="support">外部からのサポート</label>
-        <input type="text" id="support" placeholder="例：なし / あり（研究資金）">
+        <textarea id="support"></textarea>
         <label for="requester">依頼者</label>
         <input type="text" id="requester">
         <label for="fundUse">研究資金の活用</label>
-        <input type="text" id="fundUse" placeholder="例：外部資金（科研費）">
+        <textarea id="fundUse"></textarea>
 
         <h3>研究区分</h3>
-        <div class="grid2">
-          <div>
-            <label for="researchCategory">研究内容の区分</label>
-            <textarea id="researchCategory"></textarea>
-          </div>
-          <div>
-            <label for="guideline">適応される指針等</label>
-            <textarea id="guideline"></textarea>
-          </div>
-        </div>
+        <label for="researchCategory">研究内容の区分</label>
+        <textarea id="researchCategory"></textarea>
+        <label for="guideline">適応される指針等</label>
+        <textarea id="guideline"></textarea>
 
         <h3>期間</h3>
-        <div class="grid2">
-          <div>
-            <label for="regPeriod">被験者登録予定期間</label>
-            <input type="text" id="regPeriod" placeholder="承認日 ～ 2027年3月31日">
-          </div>
-          <div>
-            <label for="studyPeriod">研究実施予定期間</label>
-            <input type="text" id="studyPeriod" placeholder="承認日 ～ 2028年3月31日">
-          </div>
-        </div>
+        <label for="regPeriod">被験者登録予定期間</label>
+        <input type="text" id="regPeriod" placeholder="承認日 ～（西暦）2027年 3月 31日">
+        <label for="studyPeriod">研究実施予定期間</label>
+        <input type="text" id="studyPeriod" placeholder="承認日 ～（西暦）2028年 3月 31日">
         <label for="obsPeriod">当センターでの観察予定期間</label>
         <input type="text" id="obsPeriod">
-        <div class="grid2">
-          <div>
-            <label for="retroPeriod">後向き研究 観察対象期間</label>
-            <input type="text" id="retroPeriod">
-          </div>
-          <div>
-            <label for="retroStudyPeriod">後向き研究 研究実施予定期間</label>
-            <input type="text" id="retroStudyPeriod">
-          </div>
-        </div>
+        <label for="retroPeriod">後向き研究 観察対象期間</label>
+        <input type="text" id="retroPeriod">
+        <label for="retroStudyPeriod">後向き研究 研究実施予定期間</label>
+        <input type="text" id="retroStudyPeriod">
 
         <h3>本文</h3>
         <label for="purpose">目的</label>
@@ -411,23 +386,17 @@
         <label for="outcomes">評価項目</label>
         <textarea id="outcomes"></textarea>
         <label for="subStudy">付随研究</label>
-        <input type="text" id="subStudy" placeholder="例：なし / あり">
+        <input type="text" id="subStudy">
         <label for="subStudyDesc">付随研究の説明</label>
         <textarea id="subStudyDesc"></textarea>
 
         <h3>2ページ目</h3>
         <label for="sampleInfo">試料・情報の提供</label>
         <textarea id="sampleInfo"></textarea>
-        <div class="grid2">
-          <div>
-            <label for="futureUse">特定されない将来の研究</label>
-            <input type="text" id="futureUse">
-          </div>
-          <div>
-            <label for="foreignProvide">外国への提供</label>
-            <input type="text" id="foreignProvide">
-          </div>
-        </div>
+        <label for="futureUse">特定されない将来の研究</label>
+        <input type="text" id="futureUse">
+        <label for="foreignProvide">外国への提供</label>
+        <input type="text" id="foreignProvide">
         <label for="policyCheck">SCCポリシーの確認</label>
         <textarea id="policyCheck"></textarea>
         <label for="publication">結果の公表・その他</label>
@@ -435,14 +404,14 @@
 
         <h3>署名・審査</h3>
         <label for="signDate1">研究責任者 記入日</label>
-        <input type="text" id="signDate1" placeholder="西暦 2026年5月19日">
+        <input type="text" id="signDate1">
         <label for="signDate2">診療科部長 記入日</label>
-        <input type="text" id="signDate2" placeholder="西暦 2026年5月19日">
+        <input type="text" id="signDate2">
         <label for="reviewInfo">審査区分・委員会</label>
         <textarea id="reviewInfo"></textarea>
 
-        <div class="small" style="margin-top:12px;">
-          PDF完全一致には印刷倍率やブラウザ差で微調整が必要ですが、この版は升目とページ構成をかなり近づけた試作です。
+        <div class="small mt6">
+          今回は見た目優先で、セル幅・行間・余白・ページ密度をA4印刷向けに詰めています。
         </div>
       </div>
 
@@ -453,21 +422,30 @@
           <div class="rev">（2025.2.10改訂）</div>
 
           <table class="form">
+            <colgroup>
+              <col style="width:16%">
+              <col style="width:17%">
+              <col style="width:17%">
+              <col style="width:50%">
+            </colgroup>
+
             <tr>
-              <th class="w-18">研究責任者</th>
-              <td colspan="3">
+              <th class="mid">研究責任者</th>
+              <td colspan="3" class="mid dense">
                 所属：<span id="out-responsibleDept" class="placeholder">未入力</span>
-                &nbsp;&nbsp; 職名：<span id="out-responsibleTitle" class="placeholder">未入力</span>
-                &nbsp;&nbsp; 氏名：<span id="out-responsibleName" class="placeholder">未入力</span>
+                &nbsp;&nbsp;職名：<span id="out-responsibleTitle" class="placeholder">未入力</span>
+                &nbsp;&nbsp;氏名：<span id="out-responsibleName" class="placeholder">未入力</span>
               </td>
             </tr>
+
             <tr>
-              <th>臨床研究課題名</th>
-              <td colspan="3" id="out-theme" class="placeholder">未入力</td>
+              <th class="mid">臨床研究課題名</th>
+              <td colspan="3" id="out-theme" class="placeholder mid">未入力</td>
             </tr>
+
             <tr>
               <th></th>
-              <td colspan="3">
+              <td colspan="3" class="dense">
                 必要なら秘密保持のための課題名を記載<br>
                 <span id="out-secretTitle" class="placeholder">未入力</span><br>
                 <span class="red tiny">注意：この欄に記載がない場合には、上記の「臨床研究課題名」がそのまま公開されます。</span>
@@ -476,103 +454,100 @@
 
             <tr>
               <th>研究組織の分類</th>
-              <td colspan="3" class="cell-lines">
-□ 単独施設による研究 （□ 自部署単独 □ 他部門共同） 他部門共同の場合：部門名（<span id="out-deptCollab" class="placeholder">未入力</span>）
+              <td colspan="3" class="cell-lines dense">□ 単独施設による研究 （□ 自部署単独 □ 他部門共同）
+他部門共同の場合：部門名（<span id="out-deptCollab" class="placeholder">未入力</span>）
 □ 多施設共同研究の主任研究者
 □ 多施設共同研究への参加（主任施設名：<span id="out-leadSite" class="placeholder">未入力</span>）
-□ その他（<span id="out-orgType" class="placeholder">未入力</span>）
-              </td>
+□ その他（<span id="out-orgType" class="placeholder">未入力</span>）</td>
             </tr>
 
             <tr>
               <th>外部からのサポート</th>
-              <td colspan="3" class="cell-lines">
-<span id="out-support" class="placeholder">未入力</span>
-依頼者：<span id="out-requester" class="placeholder">未入力</span>
-<span class="tiny">説明：受託研究の場合は依頼者を記載してください。</span>
+              <td colspan="3" class="dense">
+                <div id="out-support" class="cell-lines placeholder">未入力</div>
+                依頼者：<span id="out-requester" class="placeholder">未入力</span><br>
+                <span class="tiny">説明：受託研究の場合は依頼者を記載してください。</span>
               </td>
             </tr>
 
             <tr>
               <th>研究資金の活用</th>
-              <td colspan="3" id="out-fundUse" class="cell-lines placeholder">未入力</td>
+              <td colspan="3" id="out-fundUse" class="cell-lines placeholder dense">未入力</td>
             </tr>
 
             <tr>
               <th>研究内容の区分</th>
-              <td colspan="3" id="out-researchCategory" class="cell-lines placeholder">未入力</td>
+              <td colspan="3" id="out-researchCategory" class="cell-lines placeholder dense">未入力</td>
             </tr>
 
             <tr>
               <th>適応される指針等</th>
-              <td colspan="3" id="out-guideline" class="cell-lines placeholder">未入力</td>
+              <td colspan="3" id="out-guideline" class="cell-lines placeholder dense">未入力</td>
             </tr>
 
             <tr>
-              <th rowspan="3">前 向 研 究</th>
-              <th class="w-22">被験者登録予定期間</th>
-              <td colspan="2" id="out-regPeriod" class="placeholder">未入力</td>
+              <th rowspan="3" class="center mid">前<br>向<br>研<br>究</th>
+              <th class="mid">被験者登録予定期間</th>
+              <td colspan="2" id="out-regPeriod" class="placeholder mid">未入力</td>
             </tr>
             <tr>
-              <th>研究実施予定期間</th>
-              <td colspan="2" id="out-studyPeriod" class="placeholder">未入力</td>
+              <th class="mid">研究実施予定期間</th>
+              <td colspan="2" id="out-studyPeriod" class="placeholder mid">未入力</td>
             </tr>
             <tr>
-              <th>当センターでの観察予定期間</th>
-              <td colspan="2">
+              <th>当センターでの<br>観察予定期間</th>
+              <td colspan="2" class="dense">
                 <span class="tiny">※介入的研究に参加していただいた患者さんへの責任から、登録終了後、研究実施期間を越えて一定の観察期間を設けること。</span><br>
                 <span id="out-obsPeriod" class="placeholder">未入力</span>
               </td>
             </tr>
 
             <tr>
-              <th rowspan="2">後 向 研 究</th>
-              <th>観察対象期間</th>
-              <td colspan="2">
+              <th rowspan="2" class="center mid">後<br>向<br>研<br>究</th>
+              <th class="mid">観察対象期間</th>
+              <td colspan="2" class="dense">
                 <span id="out-retroPeriod" class="placeholder">未入力</span><br>
                 <span class="tiny">※過去の日付</span>
               </td>
             </tr>
             <tr>
               <th>研究実施予定期間</th>
-              <td colspan="2">
+              <td colspan="2" class="dense">
                 <span class="tiny">※観察した症例のデータ処理、論文作成等の日数を考慮して研究実施予定期間を設定すること。</span><br>
                 <span id="out-retroStudyPeriod" class="placeholder">未入力</span>
               </td>
             </tr>
 
             <tr>
-              <th>目的</th>
+              <th class="mid">目的</th>
               <td colspan="3" id="out-purpose" class="cell-lines placeholder">未入力</td>
             </tr>
 
             <tr>
               <th>対象者・症例数</th>
-              <td colspan="3" class="cell-lines">
-対象者：<span id="out-subjects" class="placeholder">未入力</span>
+              <td colspan="3" class="dense cell-lines">対象者：<span id="out-subjects" class="placeholder">未入力</span>
 症例数：<span id="out-casesTotal" class="placeholder">未入力</span> 例（うち、当施設 <span id="out-casesSite" class="placeholder">未入力</span> 例）
-（受託研究の場合 予定契約症例数：　　 例、被験者負担軽減費の有無 □有 □無）
-              </td>
+（受託研究の場合 予定契約症例数：<span class="line s"></span> 例、被験者負担軽減費の有無 □有 □無）</td>
             </tr>
 
             <tr>
               <th>研究方法</th>
-              <td colspan="3">
+              <td colspan="3" class="dense">
                 <span class="tiny">説明：「介入」の有無、侵襲性について、わかるように記載してください。</span><br>
-                <div id="out-method" class="cell-lines placeholder">未入力</div>
+                <div id="out-method" class="cell-lines placeholder mt4">未入力</div>
               </td>
             </tr>
 
             <tr>
-              <th>評価項目</th>
+              <th class="mid">評価項目</th>
               <td colspan="3" id="out-outcomes" class="cell-lines placeholder">未入力</td>
             </tr>
 
             <tr>
               <th>付随研究</th>
-              <td colspan="3">
+              <td colspan="3" class="dense">
                 □ あり　□ なし<br>
-                説明：「あり」の場合は内容を記載してください。<br>
+                <span class="tiny">説明：「あり」の場合は内容を記載してください。</span><br>
                 <span id="out-subStudy" class="placeholder">未入力</span><br>
                 <span id="out-subStudyDesc" class="placeholder">未入力</span>
               </td>
@@ -582,84 +557,111 @@
 
         <div class="page">
           <table class="form">
+            <colgroup>
+              <col style="width:18%">
+              <col style="width:32%">
+              <col style="width:18%">
+              <col style="width:32%">
+            </colgroup>
+
             <tr>
-              <th class="w-18">試料・情報の提供</th>
-              <td colspan="3" id="out-sampleInfo" class="cell-lines placeholder">未入力</td>
+              <th>試料・情報の提供</th>
+              <td colspan="3" id="out-sampleInfo" class="cell-lines placeholder dense">未入力</td>
             </tr>
             <tr>
               <th>うち、特定されない将来の研究の有無</th>
-              <td id="out-futureUse" class="placeholder">未入力</td>
-              <th class="w-20">うち、外国への提供の有無</th>
-              <td id="out-foreignProvide" class="placeholder">未入力</td>
+              <td id="out-futureUse" class="placeholder mid">未入力</td>
+              <th>うち、外国への提供の有無</th>
+              <td id="out-foreignProvide" class="placeholder mid">未入力</td>
             </tr>
             <tr>
               <th>ＳＣＣポリシーの確認</th>
-              <td colspan="3" id="out-policyCheck" class="cell-lines placeholder">未入力</td>
+              <td colspan="3" id="out-policyCheck" class="cell-lines placeholder dense">未入力</td>
             </tr>
             <tr>
               <th>結果の公表・その他</th>
-              <td colspan="3">
+              <td colspan="3" class="dense">
                 <div class="tiny">
                   （学会・論文発表の場合は、いつ・どこで発表するのか）<br>
                   ・研究成果の発表について、いつ、どこで発表する予定であるのかを必ず記載してください。<br>
                   ・今回の研究が付随研究である場合、本体研究に関する情報を記載してください。
                 </div>
-                <div id="out-publication" class="cell-lines placeholder" style="margin-top:6px;">未入力</div>
+                <div id="out-publication" class="cell-lines placeholder mt4">未入力</div>
               </td>
             </tr>
           </table>
 
-          <div class="signature">
+          <div class="sig-wrap">
             今回計画した研究計画の概要を報告します。<br><br>
             研究責任者（自署） <span class="sigline"></span>　（記入日 <span id="out-signDate1" class="placeholder">未入力</span>）<br><br>
             上記記載内容を確認しました。<br><br>
             診療科部長（自署） <span class="sigline"></span>　（記入日 <span id="out-signDate2" class="placeholder">未入力</span>）
           </div>
 
-          <table class="form" style="margin-top:16px;">
+          <table class="form" style="margin-top:10mm;">
             <tr>
-              <th class="w-18">審査区分・委員会等</th>
-              <td id="out-reviewInfo" class="cell-lines placeholder">未入力</td>
+              <th style="width:18%;">審査区分・委員会等</th>
+              <td id="out-reviewInfo" class="cell-lines placeholder dense">未入力</td>
             </tr>
           </table>
         </div>
 
         <div class="page">
           <div class="ref-title">研究の分類と整理</div>
-          <table class="form tiny">
+          <table class="form ref-table">
+            <colgroup>
+              <col style="width:20%">
+              <col style="width:7%">
+              <col style="width:7%">
+              <col style="width:16%">
+              <col style="width:15%">
+              <col style="width:8%">
+              <col style="width:27%">
+            </colgroup>
             <tr>
-              <th class="w-20">研究の分類</th>
-              <th class="w-10">侵襲</th>
-              <th class="w-10">介入</th>
-              <th class="w-18">審査するIRB</th>
-              <th class="w-18">倫理指針等</th>
-              <th class="w-10">審査</th>
-              <th>研究内容・詳細な内容</th>
+              <th>研究の分類</th>
+              <th>侵襲</th>
+              <th>介入</th>
+              <th>審査するIRB</th>
+              <th>倫理指針等</th>
+              <th>審査</th>
+              <th>研究内容　詳細な内容</th>
             </tr>
-            <tr><td>企業治験</td><td>あり</td><td>あり</td><td>企業治験IRB</td><td>GCP</td><td>委員会</td><td></td></tr>
-            <tr><td>製造販売後臨床試験</td><td>あり</td><td>あり</td><td>企業治験IRB</td><td>GCPほか</td><td>委員会</td><td></td></tr>
+            <tr><td>企業治験</td><td>あり</td><td>あり</td><td>企業治験IRB</td><td>ＧＣＰ</td><td>委員会</td><td></td></tr>
+            <tr><td>製造販売後臨床試験</td><td>あり</td><td>あり</td><td>企業治験IRB</td><td>ＧＣＰほか</td><td>委員会</td><td></td></tr>
             <tr><td>特定臨床研究</td><td>あり</td><td>あり</td><td>認定IRB</td><td>臨床研究法</td><td>委員会</td><td></td></tr>
-            <tr><td>医師主導治験</td><td>あり</td><td>あり</td><td>臨床研究IRB</td><td>GCP</td><td>委員会</td><td></td></tr>
+            <tr><td>医師主導治験</td><td>あり</td><td>あり</td><td>臨床研究IRB</td><td>ＧＣＰ</td><td>委員会</td><td></td></tr>
             <tr><td>使用成績調査、特定使用成績調査</td><td></td><td></td><td>臨床研究IRB</td><td>GPSP</td><td>迅速</td><td></td></tr>
             <tr><td>ヒトゲノム・遺伝子解析研究</td><td></td><td></td><td>臨床研究IRB</td><td>ヒトゲノム・遺伝子解析研究</td><td>委員会</td><td></td></tr>
+            <tr><td>ヒト胚性幹細胞（ES細胞）に関する研究</td><td></td><td></td><td>臨床研究IRB</td><td>ヒト幹細胞を用いる臨床研究</td><td>委員会</td><td></td></tr>
             <tr><td>遺伝子治療</td><td></td><td></td><td>臨床研究IRB</td><td>遺伝子治療臨床研究</td><td>委員会</td><td></td></tr>
             <tr><td>通常診療を越えた医療行為を、研究目的で実施するもの</td><td>あり</td><td>あり</td><td>臨床研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
             <tr><td>通常診療と同等の医療行為で、いくつかのグループに分けて比較を行うもの</td><td>あり</td><td>あり</td><td>臨床研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
-            <tr><td>学会論文発表を目的とする診療情報の収集・集計（後向き観察研究）</td><td>なし</td><td></td><td>臨床研究IRB / 探索研究IRB</td><td>医学系研究</td><td>迅速</td><td>SCC単独 / 多施設共同</td></tr>
+            <tr><td>診断機器開発</td><td>あり</td><td>あり</td><td>臨床研究IRB</td><td>医学系研究</td><td>委員会</td><td>新しい機器</td></tr>
+            <tr><td>新しい診断試薬</td><td>軽微</td><td>あり</td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
+            <tr><td>レジストリデータ等を用いて承認申請を目的とするもの。製品化・上市を目的とするもの。</td><td></td><td></td><td>臨床研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
+            <tr><td>学会論文発表を目的とする診療情報の収集・集計（後向き観察研究）</td><td>なし</td><td></td><td>臨床研究IRB</td><td>医学系研究</td><td>迅速</td><td>SCC単独</td></tr>
+            <tr><td>学会論文発表を目的とする診療情報の収集・集計（後向き観察研究）</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>迅速</td><td>多施設共同</td></tr>
             <tr><td>医療行為（医薬品、手術）を伴う観察研究</td><td>あり</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
             <tr><td>診療情報の収集・集計（後ろ向き）</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
-            <tr><td>診療情報の収集・集計（前向き）</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>患者コホート研究・要因対照研究など</td></tr>
-            <tr><td>アンケート・インタビュー</td><td>なし〜軽微</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>職員へのアンケートは経営戦略会議</td></tr>
-            <tr><td>採血</td><td>なし / 軽微</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>残った血液、追加、検査のために採取</td></tr>
-            <tr><td>胸水・腹水</td><td>なし / 軽微 / あり</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>残った体液、追加、検査のために採取</td></tr>
+            <tr><td>診療情報の収集・集計（前向き）</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>〈患者コホート研究・要因対照研究〉 治療効果調査など</td></tr>
+            <tr><td>アンケート・インタビュー</td><td>なし～軽微</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>職員へのアンケートは経営戦略会議</td></tr>
+            <tr><td>採血</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>残った血液</td></tr>
+            <tr><td>採血</td><td>軽微</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>追加</td></tr>
+            <tr><td>採血</td><td>軽微</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>検査のために採取</td></tr>
+            <tr><td>胸水・腹水</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>残った体液</td></tr>
+            <tr><td>胸水・腹水</td><td>軽微</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>追加</td></tr>
+            <tr><td>胸水・腹水</td><td>あり</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>検査のために採取</td></tr>
             <tr><td>尿・便・喀痰・唾液・汗・分離した微生物等</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
             <tr><td>組織採取（生検）</td><td>あり</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
-            <tr><td>手術組織 / 病理組織</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
-            <tr><td>看護ケア</td><td>なし〜軽微</td><td>あり</td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
+            <tr><td>手術組織</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
+            <tr><td>病理組織</td><td>なし</td><td></td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
+            <tr><td>看護ケア</td><td>なし～軽微</td><td>あり</td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
             <tr><td>リハビリ</td><td>軽微</td><td>あり</td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td></td></tr>
-            <tr><td>医薬品以外を用いた負荷</td><td>なし〜軽微</td><td>あり</td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>食品等</td></tr>
+            <tr><td>医薬品以外を用いた負荷</td><td>なし～軽微</td><td>あり</td><td>探索研究IRB</td><td>医学系研究</td><td>委員会</td><td>食品等</td></tr>
           </table>
-          <div class="tiny" style="margin-top:8px;">
+
+          <div class="tiny mt6">
             注意：医薬品、医療機器、再生医療等製品を用いる臨床研究で、特定臨床研究以外の臨床研究は、臨床研究法の特定臨床研究に関する規定に準じて、認定IRBでの審査を行うことができる（努力義務）。
           </div>
         </div>
