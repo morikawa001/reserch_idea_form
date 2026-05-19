@@ -1,1 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>様式5｜研究計画概略書 自動反映デモ</title>
+  <style>
+    body {
+      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      margin: 0;
+      background: #f4f6fa;
+      color: #1e2a3b;
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #1a5c96;
+    }
+    .sub-title {
+      font-size: 0.92rem;
+      color: #5a6a7e;
+      margin-bottom: 16px;
+    }
+    .top-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .top-links a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .link-primary {
+      background: #1a5c96;
+      color: #fff;
+    }
+    .link-secondary {
+      background: #fff;
+      color: #1a5c96;
+      border: 1.5px solid #1a5c96;
+    }
 
+    .grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .panel h2 {
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+      color: #1a5c96;
+      border-bottom: 2px solid #e8f0fb;
+      padding-bottom: 8px;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin: 12px 0 4px;
+    }
+    input, textarea, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1.5px solid #dde2ec;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-family: inherit;
+    }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .radio-group label {
+      font-weight: 400;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #1a5c96;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #fff;
+      color: #1a5c96;
+      border: 1.5px solid #1a5c96;
+    }
+
+    .doc {
+      background: #fff;
+      border: 1px solid #d9dee8;
+      padding: 28px;
+      min-height: 900px;
+    }
+    .doc-title {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .doc-subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #5a6a7e;
+      margin-bottom: 24px;
+    }
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .doc-table th,
+    .doc-table td {
+      border: 1px solid #666;
+      padding: 10px;
+      vertical-align: top;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+    .doc-table th {
+      width: 180px;
+      background: #f7f7f7;
+      text-align: left;
+    }
+    .placeholder {
+      color: #999;
+    }
+    .note {
+      font-size: 0.82rem;
+      color: #5a6a7e;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      .form-panel,
+      .top-links,
+      .sub-title {
+        display: none;
+      }
+      body {
+        background: #fff;
+      }
+      .wrap {
+        max-width: none;
+        padding: 0;
+      }
+      .panel {
+        box-shadow: none;
+        padding: 0;
+      }
+      .doc {
+        border: none;
+        padding: 0;
+      }
+      h1 {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>様式5 自動入力ページ</h1>
+    <div class="sub-title">研究計画概略書（倫理審査委員会事前相談用）の試作ページです。</div>
+
+    <div class="top-links">
+      <a href="index.html" class="link-secondary">← index.html に戻る</a>
+      <a href="javascript:window.print()" class="link-primary">印刷 / PDF保存</a>
+    </div>
+
+    <div class="grid">
+      <div class="panel form-panel">
+        <h2>入力フォーム</h2>
+
+        <label for="theme">研究テーマ</label>
+        <input type="text" id="theme" placeholder="例：がん患者の術後疼痛管理における看護介入の効果">
+
+        <label for="background">研究の背景・動機</label>
+        <textarea id="background" placeholder="例：術後疼痛コントロールが不十分な患者が多く、系統的介入が必要と考えた。"></textarea>
+
+        <label for="purpose">研究目的</label>
+        <textarea id="purpose" placeholder="例：術後患者に対する疼痛評価プロトコルの有効性を検証する。"></textarea>
+
+        <label for="design">想定する研究デザイン</label>
+        <select id="design">
+          <option value="">選択してください</option>
+          <option value="横断研究">横断研究</option>
+          <option value="縦断研究・コホート研究">縦断研究・コホート研究</option>
+          <option value="ケースコントロール研究">ケースコントロール研究</option>
+          <option value="ランダム化比較試験（RCT）">ランダム化比較試験（RCT）</option>
+          <option value="準実験研究">準実験研究</option>
+          <option value="質的研究">質的研究</option>
+          <option value="混合研究法">混合研究法</option>
+          <option value="未定">未定</option>
+        </select>
+
+        <label for="disease">研究対象の疾患・領域</label>
+        <input type="text" id="disease" placeholder="例：消化器がん、乳がん、緩和ケア">
+
+        <label for="subjects">研究対象者</label>
+        <input type="text" id="subjects" placeholder="例：当院入院中の成人消化器がん術後患者">
+
+        <label for="setting">研究対象施設・部署</label>
+        <input type="text" id="setting" placeholder="例：静岡がんセンター 外科病棟">
+
+        <label>介入を行いますか？</label>
+        <div class="radio-group">
+          <label><input type="radio" name="intervention" value="はい"> はい</label>
+          <label><input type="radio" name="intervention" value="いいえ"> いいえ</label>
+        </div>
+
+        <label>侵襲の程度</label>
+        <div class="radio-group">
+          <label><input type="radio" name="invasiveness" value="侵襲なし"> 侵襲なし</label>
+          <label><input type="radio" name="invasiveness" value="軽微な侵襲"> 軽微な侵襲</label>
+          <label><input type="radio" name="invasiveness" value="侵襲あり"> 侵襲あり</label>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="updatePreview()">プレビュー更新</button>
+          <button class="btn-secondary" onclick="window.print()">印刷 / PDF保存</button>
+        </div>
+
+        <div class="note">
+          まずは Web 上で様式5イメージに自動反映する試作版です。<br>
+          将来的には index.html の入力値をこのページへ連動させる想定です。
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>様式5プレビュー</h2>
+
+        <div class="doc" id="doc-preview">
+          <div class="doc-title">様式5</div>
+          <div class="doc-subtitle">研究計画概略書（試作プレビュー）</div>
+
+          <table class="doc-table">
+            <tr>
+              <th>研究課題名</th>
+              <td id="out-theme" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>研究の背景</th>
+              <td id="out-background" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>研究目的</th>
+              <td id="out-purpose" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>研究デザイン</th>
+              <td id="out-design" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>対象疾患・領域</th>
+              <td id="out-disease" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>研究対象者</th>
+              <td id="out-subjects" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>研究対象施設・部署</th>
+              <td id="out-setting" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>介入の有無</th>
+              <td id="out-intervention" class="placeholder">未入力</td>
+            </tr>
+            <tr>
+              <th>侵襲の程度</th>
+              <td id="out-invasiveness" class="placeholder">未入力</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    function getRadio(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : '';
+    }
+
+    function setOutput(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      if (value) {
+        el.textContent = value;
+        el.classList.remove('placeholder');
+      } else {
+        el.textContent = '未入力';
+        el.classList.add('placeholder');
+      }
+    }
+
+    function updatePreview() {
+      setOutput('out-theme', getVal('theme'));
+      setOutput('out-background', getVal('background'));
+      setOutput('out-purpose', getVal('purpose'));
+      setOutput('out-design', getVal('design'));
+      setOutput('out-disease', getVal('disease'));
+      setOutput('out-subjects', getVal('subjects'));
+      setOutput('out-setting', getVal('setting'));
+      setOutput('out-intervention', getRadio('intervention'));
+      setOutput('out-invasiveness', getRadio('invasiveness'));
+    }
+
+    document.querySelectorAll('input, textarea, select').forEach(el => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
+
+    updatePreview();
+  </script>
+</body>
+</html>
