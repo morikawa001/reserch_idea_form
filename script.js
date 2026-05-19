@@ -47,6 +47,168 @@ function getRadio(name) {
   return el ? el.value : '';
 }
 
+// ============================================================
+// ── Form5連携用データ保存 ──
+// ============================================================
+function collectResearchIdeaData() {
+  let sampleSizeSummary = '';
+  for (let i = 1; i <= 5; i++) {
+    const res = document.getElementById('c' + i + '-result');
+    if (res && !res.classList.contains('hidden')) {
+      const items = res.querySelectorAll('.calc-num');
+      const lines = [];
+      items.forEach(item => {
+        const val = item.querySelector('.val')?.textContent || '';
+        const lbl = item.querySelector('.lbl')?.textContent || '';
+        if (val || lbl) lines.push(`${lbl}：${val}`);
+      });
+      sampleSizeSummary = lines.join('\n');
+      break;
+    }
+  }
+
+  const secondaryEndpoints = Array.from(document.querySelectorAll('.sap-secondary-ep')).map((el, i) => {
+    const type = el.parentElement?.querySelector('.sap-secondary-type')?.value || '';
+    return el.value ? { name: el.value, type } : null;
+  }).filter(Boolean);
+
+  const checkedSensitivity = Array.from(document.querySelectorAll('.sap-sensitivity-chk:checked')).map(el => el.value);
+
+  return {
+    savedAt: new Date().toISOString(),
+    theme: getVal('theme'),
+    background: getVal('background'),
+    purpose: getVal('purpose'),
+    design: getVal('design'),
+    disease: getVal('disease'),
+    subjects: getVal('subjects'),
+    setting: getVal('setting'),
+
+    intervention: getRadio('intervention'),
+    unapproved: getRadio('unapproved'),
+    funding: getRadio('funding'),
+    clinicalTrial: getRadio('clinicalTrial'),
+    invasiveness: getRadio('invasiveness'),
+    multicenter: getRadio('multicenter'),
+    retrospective: getRadio('retrospective'),
+    researchType: window._researchType || '',
+
+    c1Test: getVal('c1-test'),
+    c1Alpha: getVal('c1-alpha'),
+    c1Power: getVal('c1-power'),
+    c1M1: getVal('c1-m1'),
+    c1M2: getVal('c1-m2'),
+    c1Sd: getVal('c1-sd'),
+    c1Ratio: getVal('c1-ratio'),
+
+    c2Test: getVal('c2-test'),
+    c2Alpha: getVal('c2-alpha'),
+    c2Power: getVal('c2-power'),
+    c2P1: getVal('c2-p1'),
+    c2P2: getVal('c2-p2'),
+    c2Ratio: getVal('c2-ratio'),
+
+    c3Test: getVal('c3-test'),
+    c3Alpha: getVal('c3-alpha'),
+    c3Power: getVal('c3-power'),
+    c3Diff: getVal('c3-diff'),
+    c3Sd: getVal('c3-sd'),
+
+    c4Alpha: getVal('c4-alpha'),
+    c4P: getVal('c4-p'),
+    c4D: getVal('c4-d'),
+    c4Prev: getVal('c4-prev'),
+
+    c5Test: getVal('c5-test'),
+    c5Alpha: getVal('c5-alpha'),
+    c5Power: getVal('c5-power'),
+    c5Mu0: getVal('c5-mu0'),
+    c5Mu1: getVal('c5-mu1'),
+    c5Sd: getVal('c5-sd'),
+
+    sampleSizeSummary,
+
+    sapPrimaryEndpoint: getVal('sap-primary-endpoint'),
+    sapDatatype: getRadio('sap-datatype'),
+    sapTiming: getVal('sap-timing'),
+    sapSecondaryEndpoints: secondaryEndpoints,
+    sapAnalysisSet: getRadio('sap-analysisset'),
+    sapExclusionPlan: getVal('sap-exclusion-plan'),
+    sapPrimaryMethod: getVal('sap-primary-method'),
+    sapCovariate: getRadio('sap-covariate'),
+    sapCovariates: getVal('sap-covariates'),
+    sapAlpha: getVal('sap-alpha'),
+    sapSided: getVal('sap-sided'),
+    sapSoftware: getVal('sap-software'),
+    sapSensitivityChecks: checkedSensitivity,
+    sapSensitivityOther: getVal('sap-sensitivity-other'),
+    sapMissing: getRadio('sap-missing'),
+    sapExclusionPlan2: getVal('sap-exclusion-plan'),
+    sapDropoutPlan: getVal('sap-dropout-plan'),
+    sapDropoutRate: getVal('sap-dropout-rate'),
+    sapAdjustedN: document.getElementById('sap-adjusted-n')?.textContent || '',
+    sapDraft: window._sapDraft || '',
+
+    startDate: getVal('start-date'),
+
+    aiIncludeBasic: document.getElementById('ai-include-basic')?.checked || false,
+    aiIncludeDesign: document.getElementById('ai-include-design')?.checked || false,
+    aiIncludeSamplesize: document.getElementById('ai-include-samplesize')?.checked || false,
+    aiIncludeSap: document.getElementById('ai-include-sap')?.checked || false,
+    aiOutputType: getRadio('ai-output-type'),
+    aiExtraInstruction: getVal('ai-extra-instruction')
+  };
+}
+
+function saveResearchIdeaData() {
+  try {
+    const data = collectResearchIdeaData();
+    localStorage.setItem('researchIdeaFormData', JSON.stringify(data));
+  } catch (e) {
+    console.error('researchIdeaFormData save error:', e);
+  }
+}
+
+function openForm5WithData(event) {
+  if (event) event.preventDefault();
+  saveResearchIdeaData();
+  window.open('https://morikawa001.github.io/reserch_idea_form/form5.html', '_blank', 'noopener,noreferrer');
+}
+
+function bindAutoSave() {
+  const selectors = [
+    '#theme', '#background', '#purpose', '#design', '#disease', '#subjects', '#setting',
+    'input[name="intervention"]', 'input[name="unapproved"]', 'input[name="funding"]',
+    'input[name="clinicalTrial"]', 'input[name="invasiveness"]',
+    'input[name="multicenter"]', 'input[name="retrospective"]',
+
+    '#c1-test', '#c1-alpha', '#c1-power', '#c1-m1', '#c1-m2', '#c1-sd', '#c1-ratio',
+    '#c2-test', '#c2-alpha', '#c2-power', '#c2-p1', '#c2-p2', '#c2-ratio',
+    '#c3-test', '#c3-alpha', '#c3-power', '#c3-diff', '#c3-sd',
+    '#c4-alpha', '#c4-p', '#c4-d', '#c4-prev',
+    '#c5-test', '#c5-alpha', '#c5-power', '#c5-mu0', '#c5-mu1', '#c5-sd',
+
+    '#sap-primary-endpoint', 'input[name="sap-datatype"]', '#sap-timing',
+    '.sap-secondary-ep', '.sap-secondary-type',
+    'input[name="sap-analysisset"]', '#sap-exclusion-plan',
+    '#sap-primary-method', 'input[name="sap-covariate"]', '#sap-covariates',
+    '#sap-alpha', '#sap-sided', '#sap-software',
+    '.sap-sensitivity-chk', '#sap-sensitivity-other',
+    'input[name="sap-missing"]', '#sap-dropout-plan', '#sap-dropout-rate',
+
+    '#start-date',
+    '#ai-include-basic', '#ai-include-design', '#ai-include-samplesize', '#ai-include-sap',
+    'input[name="ai-output-type"]', '#ai-extra-instruction'
+  ];
+
+  selectors.forEach(selector => {
+    document.querySelectorAll(selector).forEach(el => {
+      el.addEventListener('input', saveResearchIdeaData);
+      el.addEventListener('change', saveResearchIdeaData);
+    });
+  });
+}
+
 // ── Classification logic ──
 function runClassification() {
   const intervention  = getRadio('intervention');
@@ -133,6 +295,7 @@ function runClassification() {
   }
 
   window._researchType = type;
+  saveResearchIdeaData();
 
   const fc = document.getElementById('flowchart-visual');
   if (fc) {
@@ -305,7 +468,6 @@ function buildSearchUrl(db) {
 
 function renderDbList() {
   const hasAny = window._selectedKwEn.size + window._selectedKwJa.size > 0;
-
   const DBS = [
     {
       id: 'pubmed',
@@ -485,7 +647,18 @@ function renderDocuments() {
     <div class="doc-section">
       <h4>📋 全研究共通（必須）</h4>
       <div class="doc-list">
-        <div class="doc-item"><span class="doc-num">様式5</span><span><a href="https://morikawa001.github.io/reserch_idea_form/form5.html" target="_blank" rel="noopener noreferrer">研究計画概略書</a></span><span class="required">必須</span></div>
+        <div class="doc-item">
+          <span class="doc-num">様式5</span>
+          <span>
+            <a href="https://morikawa001.github.io/reserch_idea_form/form5.html"
+               target="_blank"
+               rel="noopener noreferrer"
+               onclick="openForm5WithData(event)">
+              研究計画概略書
+            </a>
+          </span>
+          <span class="required">必須</span>
+        </div>
         <div class="doc-item"><span class="doc-num">様式7</span><span>研究者の履歴書</span><span class="required">必須</span></div>
         <div class="doc-item"><span class="doc-num">様式40</span><span>利益相反自己申告書</span><span class="required">必須</span></div>
         <div class="doc-item"><span class="doc-num">様式29</span><span>誓約書</span><span class="required">必須</span></div>
@@ -634,6 +807,7 @@ function calcTTest() {
     { val: n1 + n2, lbl: '総症例数（人）' },
     { val: d.toFixed(2), lbl: "Cohen's d" }
   ]);
+  saveResearchIdeaData();
 }
 
 function calcProportions() {
@@ -660,6 +834,7 @@ function calcProportions() {
     { val: n1 + n2, lbl: '総症例数（人）' },
     { val: ((p2 - p1) * 100).toFixed(1) + '%', lbl: '反応率の差' }
   ]);
+  saveResearchIdeaData();
 }
 
 function calcPaired() {
@@ -678,6 +853,7 @@ function calcPaired() {
     { val: n, lbl: '必要症例数（人）' },
     { val: d.toFixed(2), lbl: "Cohen's d" }
   ]);
+  saveResearchIdeaData();
 }
 
 function calcSensSpec() {
@@ -694,6 +870,7 @@ function calcSensSpec() {
     { val: nTarget, lbl: '陽性例数（人）' },
     { val: nTotal, lbl: '総対象者数（人）' }
   ]);
+  saveResearchIdeaData();
 }
 
 function calcOneSample() {
@@ -713,6 +890,7 @@ function calcOneSample() {
     { val: n, lbl: '必要症例数（人）' },
     { val: d.toFixed(2), lbl: "Cohen's d" }
   ]);
+  saveResearchIdeaData();
 }
 
 function showCalcResult(id, items) {
@@ -732,6 +910,7 @@ function showCalcResult(id, items) {
 function resetCalc(n) {
   const el = document.getElementById('c' + n + '-result');
   if (el) el.classList.add('hidden');
+  saveResearchIdeaData();
 }
 
 function switchCalcTab(n) {
@@ -783,57 +962,17 @@ function generateSchedule() {
   }
 
   const beforeMilestones = [
-    {
-      phase: '委員会前',
-      date: addMonths(committeeDate, -2),
-      title: '研究計画書 提出期限',
-      desc: '委員会開催日の2か月前までに提出'
-    },
-    {
-      phase: '委員会前',
-      date: addDays(committeeDate, -49),
-      title: '申請書類 提出期限',
-      desc: '委員会開催日の7週間前までに提出'
-    },
-    {
-      phase: '委員会前',
-      date: addDays(committeeDate, -35),
-      title: '事前確認 完了期限',
-      desc: '委員会開催日の5週間前までに確認終了'
-    },
-    {
-      phase: '委員会前',
-      date: addDays(committeeDate, -21),
-      title: '予備審査 完了期限',
-      desc: '委員会開催日の3週間前までに審査終了'
-    },
-    {
-      phase: '委員会',
-      date: committeeDate,
-      title: '倫理審査委員会 開催',
-      desc: '本審査'
-    }
+    { phase: '準備開始', date: addMonths(committeeDate, -2), title: '研究構想・先行研究整理', desc: '研究テーマ・背景・目的の明確化、文献検索開始' },
+    { phase: '7週前', date: addDays(committeeDate, -49), title: '研究計画相談', desc: '臨床研究支援センターへ事前相談、様式5作成開始' },
+    { phase: '5週前', date: addDays(committeeDate, -35), title: '書類作成', desc: '研究計画書、説明文書、必要書類の整備' },
+    { phase: '3週前', date: addDays(committeeDate, -21), title: '提出準備', desc: '申請書最終確認、院内調整、提出準備' },
+    { phase: '委員会当日', date: committeeDate, title: '倫理委員会審査', desc: 'IRB/倫理審査委員会で審査' }
   ];
 
   const afterMilestones = [
-    {
-      phase: '委員会後',
-      date: addDays(committeeDate, 14),
-      title: 'IRB結果通知・条件対応',
-      desc: '承認・条件付き承認に対する対応'
-    },
-    {
-      phase: '委員会後',
-      date: addDays(committeeDate, 28),
-      title: '研究開始準備',
-      desc: '同意説明文書印刷、CRF作成、スタッフ説明'
-    },
-    {
-      phase: '委員会後',
-      date: addDays(committeeDate, 42),
-      title: '研究開始（登録開始）',
-      desc: '対象者リクルート、データ収集開始'
-    }
+    { phase: '2週後', date: addDays(committeeDate, 14), title: 'IRB結果受領', desc: '承認・条件付き承認・修正指示への対応' },
+    { phase: '4週後', date: addDays(committeeDate, 28), title: '研究開始準備', desc: 'CRF整備、研究者説明、データ収集開始準備' },
+    { phase: '6週後', date: addDays(committeeDate, 42), title: '研究開始', desc: '同意取得・症例登録・データ収集開始' }
   ];
 
   const milestones = [...beforeMilestones, ...afterMilestones];
@@ -841,14 +980,15 @@ function generateSchedule() {
   container.innerHTML = `
     <div class="timeline">
       ${milestones.map((m, i) => `
-        <div class="tl-item ${m.phase === '委員会' || i === milestones.length - 1 ? 'milestone' : ''}">
-          <div class="tl-week">${m.phase}｜目安日：${fmt(m.date)}</div>
+        <div class="tl-item ${m.phase} ${i === milestones.length - 1 ? 'milestone' : ''}">
+          <div class="tl-week">${m.phase}<br>${fmt(m.date)}</div>
           <div class="tl-title">${m.title}</div>
           <div class="tl-desc">${m.desc}</div>
         </div>
       `).join('')}
     </div>
   `;
+  saveResearchIdeaData();
 }
 
 // ── Markdown → HTML ──
@@ -858,15 +998,15 @@ function markdownToHtml(md) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-  html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-  html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(/^### (.*)$/gim, '<h3>$1</h3>');
+  html = html.replace(/^## (.*)$/gim, '<h2>$1</h2>');
+  html = html.replace(/^# (.*)$/gim, '<h1>$1</h1>');
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
   html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-  html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
-  html = html.replace(/<li>([\s\S]*?)<\/li>/gim, '<ul><li>$1</li></ul>');
+  html = html.replace(/^- (.*)$/gim, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
   html = html.replace(/\n{2,}/g, '</p><p>');
   html = '<p>' + html + '</p>';
   html = html.replace(/<p><\/p>/g, '');
@@ -876,72 +1016,44 @@ function markdownToHtml(md) {
 
 // ── AI Brushup ──
 function buildBrushupPrompt(info) {
-  const focus = info.focusAreas && info.focusAreas.length
-    ? info.focusAreas.join('、')
-    : 'PICO/PECO、研究目的、アウトカム、倫理的配慮、研究デザイン、先行研究との違い、統計解析';
+  const focus = info.focusAreas && info.focusAreas.length ? info.focusAreas.join('、') : 'PICO/PECOの整理';
+  return `あなたは臨床研究支援の専門家AIです。
+以下の研究アイデアをもとに、研究計画をブラッシュアップしてください。
 
-  return `
-あなたは、静岡県立静岡がんセンターの臨床研究支援センターの方針に配慮しつつ、
-看護・臨床研究の研究計画をブラッシュアップする専門家AIです。
+研究テーマ：${info.theme}
+研究背景：${info.background}
+研究目的：${info.purpose}
+研究デザイン：${info.design}
+対象疾患：${info.disease}
+研究対象者：${info.subjects}
+研究対象施設・部署：${info.setting}
+研究種別：${info.type}
+介入の有無：${info.intervention}
+侵襲の程度：${info.invasiveness}
+重点確認事項：${focus}
 
-以下の情報をもとに、日本語で、研究者がそのまま研究計画書のたたき台として使えるように、
-見出し付きで丁寧に提案してください。
+以下の観点で改善提案をしてください：
+1. PICO/PECOの明確化
+2. 研究目的の具体化
+3. デザインの妥当性
+4. 主要評価項目の明確化
+5. 実施可能性
+6. 倫理的配慮
+7. バイアス・限界
+8. 必要な追加情報
+9. 研究計画書にそのまま使える文章案
 
-【研究テーマ】
-${info.theme || '未入力'}
-
-【研究背景・動機】
-${info.background || '未入力'}
-
-【研究目的（PICO/PECO形式を含む）】
-${info.purpose || '未入力'}
-
-【想定する研究デザイン】
-${info.design || '未入力'}
-
-【対象疾患・領域】
-${info.disease || '未入力'}
-
-【研究対象者】
-${info.subjects || '未入力'}
-
-【研究対象施設・部署】
-${info.setting || '未入力'}
-
-【研究種別（システム判定）】
-${info.type || '未入力'}
-
-【介入の有無】
-${info.intervention || '未入力'}
-
-【侵襲の程度】
-${info.invasiveness || '未入力'}
-
-【特に重点的に改善したい点】
-${focus}
-
-出力では、次の項目を必ず含めてください：
-
-1. PICO/PECOの整理（表形式）
-2. 研究目的・仮説の明確化
-3. 主要評価項目・副次評価項目の提案
-4. 適切と思われる研究デザインとその理由
-5. サンプルサイズ検討時に確認すべきポイント
-6. 倫理的配慮（静岡がんセンターの倫理審査を想定）
-7. 先行研究レビューの観点（検索キーワード候補も含む）
-8. 統計解析の概要案
-9. 看護・臨床現場への波及効果
-
-出力はMarkdown形式で、表や箇条書きを活用してください。
-`;
+Markdown形式で出力してください。`;
 }
 
-// doBrushupは後方互換のためrunAIへ委譲
-async function doBrushup() { return runAI(); }
-async function _doBrushup_legacy() {
+function doBrushup() {
+  return runAI();
+}
+
+async function doBrushupLegacy() {
   const theme = getVal('theme');
   if (!theme) {
-    alert('研究テーマ（ステップ1）を入力してください。');
+    alert('ステップ1の研究テーマを入力してください。');
     return;
   }
 
@@ -951,7 +1063,7 @@ async function _doBrushup_legacy() {
   const disease = getVal('disease');
   const subjects = getVal('subjects');
   const setting = getVal('setting');
-  const type = window._researchType || '未判定';
+  const type = window._researchType;
   const focusAreas = Array.from(document.querySelectorAll('#panel-7 .checkbox-group input:checked')).map(c => c.value);
   const intervention = getRadio('intervention');
   const invasiveness = getRadio('invasiveness');
@@ -969,8 +1081,7 @@ async function _doBrushup_legacy() {
   aibtns.style.display = 'none';
 
   const prompt = buildBrushupPrompt({
-    theme, background, purpose, design, disease, subjects, setting,
-    type, intervention, invasiveness, focusAreas
+    theme, background, purpose, design, disease, subjects, setting, type, intervention, invasiveness, focusAreas
   });
 
   try {
@@ -1080,6 +1191,9 @@ function resetAllInputs() {
   window._researchType = null;
   window._selectedKwEn = new Set();
   window._selectedKwJa = new Set();
+  window._sapDraft = '';
+
+  localStorage.removeItem('researchIdeaFormData');
 
   const fv = document.getElementById('flowchart-visual');
   if (fv) fv.innerHTML = '';
@@ -1132,6 +1246,8 @@ window.addEventListener('DOMContentLoaded', () => {
   window._selectedKwEn = new Set();
   window._selectedKwJa = new Set();
   renderDbList();
+  bindAutoSave();
+  saveResearchIdeaData();
 });
 
 // ============================================================
@@ -1142,7 +1258,6 @@ let currentSapStep = 1;
 const SAP_TOTAL = 7;
 
 function sapGoTo(n) {
-  // 現在のパネルをhiddenに
   for (let i = 1; i <= SAP_TOTAL; i++) {
     const panel = document.getElementById('sap-panel-' + i);
     if (panel) panel.classList.toggle('hidden', i !== n);
@@ -1157,18 +1272,16 @@ function sapGoTo(n) {
 
   currentSapStep = n;
 
-  // プログレスバー更新
   const pct = Math.round((n / SAP_TOTAL) * 100);
   const bar = document.getElementById('sap-progress-bar');
   const label = document.getElementById('sap-progress-label');
   if (bar) bar.style.width = pct + '%';
   if (label) label.textContent = 'Step ' + n + ' / ' + SAP_TOTAL;
 
-  // Step 4 に来たときに推奨手法を表示
   if (n === 4) sapUpdateMethodRecommend();
-
-  // Step 7 に来たときに症例数サマリーを更新
   if (n === 7) sapUpdateSampleSizeSummary();
+
+  saveResearchIdeaData();
 }
 
 function sapUpdateDatatype() {
@@ -1192,6 +1305,7 @@ function sapUpdateDatatype() {
   }
 
   sapUpdateMethodRecommend();
+  saveResearchIdeaData();
 }
 
 function sapUpdateMethodRecommend() {
@@ -1224,24 +1338,24 @@ function sapShowMethodDetail() {
   if (!detail) return;
 
   const details = {
-    ttest_2:         '対応なしt検定：2群の平均値を比較。正規性と等分散性を確認。R: t.test(), EZR: Student t-test',
-    ttest_paired:    '対応ありt検定：前後の平均差を検定。差の正規性を確認。R: t.test(paired=TRUE)',
-    ancova:          'ANCOVA：ベースライン値等の共変量を調整した2群比較。R: lm()でベースラインを共変量に指定',
-    mixed_model:     'MMRM：反復測定データに対する混合効果モデル。欠損値に強い。R: nlme::lme(), mmrm::mmrm()',
-    anova:           '一元配置分散分析：3群以上の平均比較。多重比較（Tukey, Bonferroni）も計画する。R: aov()',
-    mw:              'Mann-Whitney U検定：非正規・順序データの2群比較。R: wilcox.test()',
-    wilcoxon:        'Wilcoxon符号付き順位検定：前後比較の非パラメトリック版。R: wilcox.test(paired=TRUE)',
-    chisq:           'カイ二乗検定：2×2以上の分割表で割合を比較。期待度数が5未満のセルがある場合はFisherを使用。R: chisq.test()',
-    fisher:          'Fisherの正確確率検定：小標本や期待度数が小さい場合に使用。R: fisher.test()',
-    logistic:        'ロジスティック回帰：共変量調整済みのオッズ比（OR）と95%CIを推定。R: glm(family=binomial)',
-    rr:              'リスク比（RR）・リスク差（RD）：絶対リスクの比較。R: epitools::riskratio()',
-    km_logrank:      'Kaplan-Meier + log-rank：生存曲線の推定と2群比較。R: survival::survfit(), survdiff()',
-    cox:             'Cox比例ハザードモデル：共変量調整済みのハザード比（HR）。比例ハザード仮定の検証も行う。R: survival::coxph()',
-    kruskal:         'Kruskal-Wallis検定：3群以上の順序・非正規データ比較。R: kruskal.test()',
-    ordinal_logistic:'順序ロジスティック回帰：順序変数への回帰モデル。R: MASS::polr()',
-    cmh:             'Cochran-Mantel-Haenszel検定：層別した分割表の解析。R: mantelhaen.test()',
-    poisson:         'ポアソン回帰：カウントデータの回帰モデル。過分散の場合は負の二項回帰へ。R: glm(family=poisson)',
-    negbinom:        '負の二項回帰：過分散のカウントデータに対応。R: MASS::glm.nb()'
+    ttest_2: '対応なしt検定：2群の平均比較。Rなら t.test、EZRなら Student t-test を使用。',
+    ttest_paired: '対応ありt検定：同一対象の前後比較。Rなら t.test(paired=TRUE)。',
+    ancova: 'ANCOVA：ベースライン値などを調整して2群比較。Rなら lm。',
+    mixed_model: '混合効果モデル（MMRM）：反復測定データに適する。Rなら nlme::lme や mmrm。',
+    anova: '一元配置分散分析：3群以上の平均比較。多重比較は Tukey, Bonferroni など。',
+    mw: 'Mann-Whitney U検定：非正規分布の2群比較。Rなら wilcox.test。',
+    wilcoxon: 'Wilcoxon符号付き順位検定：非正規分布の前後比較。Rなら wilcox.test(paired=TRUE)。',
+    chisq: 'カイ二乗検定：2×2表などの比率比較。期待度数が小さい場合はFisher検定。',
+    fisher: 'Fisherの正確確率検定：小標本の比率比較。Rなら fisher.test。',
+    logistic: 'ロジスティック回帰：調整済みORと95%CIを算出。Rなら glm(family=binomial)。',
+    rr: 'リスク比（RR）・リスク差（RD）：臨床的解釈がしやすい効果量指標。',
+    km_logrank: 'Kaplan-Meier法 + log-rank検定：生存曲線比較。Rなら survival::survfit, survdiff。',
+    cox: 'Cox比例ハザードモデル：HRを推定。比例ハザード性の確認が必要。Rなら survival::coxph。',
+    kruskal: 'Kruskal-Wallis検定：順序変数や非正規連続変数の3群以上比較。',
+    ordinal_logistic: '順序ロジスティック回帰：順序カテゴリの回帰モデル。Rなら MASS::polr。',
+    cmh: 'Cochran-Mantel-Haenszel検定：層別したカテゴリ比較。',
+    poisson: 'ポアソン回帰：発生数・発生率のモデル化。offset の設定に注意。',
+    negbinom: '負の二項回帰：過分散があるカウントデータに適する。Rなら MASS::glm.nb。'
   };
 
   if (method && details[method]) {
@@ -1250,6 +1364,8 @@ function sapShowMethodDetail() {
   } else {
     detail.classList.add('hidden');
   }
+
+  saveResearchIdeaData();
 }
 
 function sapAddSecondary() {
@@ -1260,7 +1376,7 @@ function sapAddSecondary() {
   row.className = 'sap-endpoint-row';
   row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
   row.innerHTML = `
-    <input type="text" class="sap-secondary-ep" placeholder="副次評価項目" style="flex:1;" />
+    <input type="text" class="sap-secondary-ep" placeholder="例：副作用発生率、QOLスコア変化量" style="flex:1;" />
     <select class="sap-secondary-type" style="width:140px;">
       <option value="">データ型</option>
       <option value="continuous">連続変数</option>
@@ -1269,37 +1385,44 @@ function sapAddSecondary() {
       <option value="survival">生存時間</option>
       <option value="ordinal">順序変数</option>
     </select>
-    <button class="btn btn-secondary" onclick="this.parentElement.remove()" style="padding:6px 10px;font-size:0.8rem;">✕</button>
+    <button class="btn btn-secondary" onclick="this.parentElement.remove(); saveResearchIdeaData();" style="padding:6px 10px;font-size:0.8rem;">削除</button>
   `;
   list.appendChild(row);
+
+  row.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', saveResearchIdeaData);
+    el.addEventListener('change', saveResearchIdeaData);
+  });
+
+  saveResearchIdeaData();
 }
 
 function sapCalcAdjusted() {
-  const rate = parseFloat(document.getElementById('sap-dropout-rate')?.value) || 10;
+  const rate = parseFloat(document.getElementById('sap-dropout-rate')?.value || 10);
   const el = document.getElementById('sap-adjusted-n');
   if (!el) return;
 
-  // 直近の症例数計算結果から総症例数を取得（c1〜c5の最後の計算結果を探す）
   let baseN = null;
   for (let i = 1; i <= 5; i++) {
     const res = document.getElementById('c' + i + '-result');
     if (res && !res.classList.contains('hidden')) {
       const vals = res.querySelectorAll('.val');
-      // 総症例数は通常3番目または最大値
       vals.forEach(v => {
-        const n = parseInt(v.textContent);
+        const n = parseInt(v.textContent, 10);
         if (!isNaN(n) && (baseN === null || n > baseN)) baseN = n;
       });
+      break;
     }
   }
 
   if (baseN === null) {
-    el.textContent = '症例数計算を先に実行してください';
+    el.textContent = '─';
     return;
   }
 
   const adjusted = Math.ceil(baseN / (1 - rate / 100));
-  el.textContent = adjusted + ' 人（' + baseN + ' ÷ (1 − ' + rate + '%)）';
+  el.textContent = `${adjusted}（ベース ${baseN} / 脱落率 ${rate}%）`;
+  saveResearchIdeaData();
 }
 
 function sapUpdateSampleSizeSummary() {
@@ -1315,124 +1438,104 @@ function sapUpdateSampleSizeSummary() {
       items.forEach(item => {
         const val = item.querySelector('.val')?.textContent || '';
         const lbl = item.querySelector('.lbl')?.textContent || '';
-        text += lbl + ': ' + val + '　';
+        text += `${lbl} ${val}\n`;
       });
-      el.textContent = text.trim() || '症例数が計算されていません。Step 3（症例数計算）を先に実行してください。';
+      el.textContent = text.trim() || 'Step 3 の結果がありません。';
       found = true;
       break;
     }
   }
 
-  if (!found) {
-    el.textContent = '症例数が計算されていません。Step 3（症例数計算）を先に実行してください。';
-  }
+  if (!found) el.textContent = 'Step 3 の結果がありません。';
 }
 
 function generateSAPDraft() {
-  const primaryEp   = document.getElementById('sap-primary-endpoint')?.value || '（未入力）';
-  const datatype    = getRadio('sap-datatype') || '（未選択）';
-  const timing      = document.getElementById('sap-timing')?.value || '（未選択）';
-  const analysisSet = getRadio('sap-analysisset') || '（未選択）';
-  const method      = document.getElementById('sap-primary-method')?.value || '（未選択）';
-  const covariate   = getRadio('sap-covariate') || '（未選択）';
-  const covariates  = document.getElementById('sap-covariates')?.value || 'なし';
-  const alpha       = document.getElementById('sap-alpha')?.value || '0.05';
-  const sided       = document.getElementById('sap-sided')?.value || 'two';
-  const software    = document.getElementById('sap-software')?.value || '（未選択）';
-  const missing     = getRadio('sap-missing') || '（未選択）';
-  const exclusion   = document.getElementById('sap-exclusion-plan')?.value || '（未入力）';
-  const dropout     = document.getElementById('sap-dropout-plan')?.value || '（未入力）';
-  const dropoutRate = document.getElementById('sap-dropout-rate')?.value || '10';
-
+  const primaryEp = document.getElementById('sap-primary-endpoint')?.value;
+  const datatype = getRadio('sap-datatype');
+  const timing = document.getElementById('sap-timing')?.value;
+  const analysisSet = getRadio('sap-analysisset');
+  const method = document.getElementById('sap-primary-method')?.value;
+  const covariate = getRadio('sap-covariate');
+  const covariates = document.getElementById('sap-covariates')?.value;
+  const alpha = document.getElementById('sap-alpha')?.value || 0.05;
+  const sided = document.getElementById('sap-sided')?.value || 'two';
+  const software = document.getElementById('sap-software')?.value;
+  const missing = getRadio('sap-missing');
+  const exclusion = document.getElementById('sap-exclusion-plan')?.value;
+  const dropout = document.getElementById('sap-dropout-plan')?.value;
+  const dropoutRate = document.getElementById('sap-dropout-rate')?.value || 10;
   const sensChecks = Array.from(document.querySelectorAll('.sap-sensitivity-chk:checked')).map(c => c.value);
-  const sensitivityOther = document.getElementById('sap-sensitivity-other')?.value || '';
-
+  const sensitivityOther = document.getElementById('sap-sensitivity-other')?.value;
   const secondaryEps = Array.from(document.querySelectorAll('.sap-secondary-ep'))
     .map((el, i) => {
-      const type = el.parentElement?.querySelector('.sap-secondary-type')?.value || '';
-      return el.value ? `  ${i + 1}. ${el.value}（${type || 'データ型未選択'}）` : null;
-    }).filter(Boolean).join('\n') || '  （未入力）';
+      const type = el.parentElement?.querySelector('.sap-secondary-type')?.value;
+      return el.value ? `${i + 1}. ${el.value}（${type || '型未設定'}）` : null;
+    })
+    .filter(Boolean)
+    .join('\n');
 
-  const sidedLabel  = sided === 'two' ? '両側' : '片側';
+  const sidedLabel = sided === 'two' ? '両側検定' : '片側検定';
   const datatypeLabel = {
-    continuous: '連続変数', binary: '二値変数', ordinal: '順序変数',
-    survival: '生存時間（時間-イベント）', count: 'カウントデータ'
+    continuous: '連続変数',
+    binary: '二値変数',
+    ordinal: '順序変数',
+    survival: '時間-イベントデータ',
+    count: 'カウントデータ'
   }[datatype] || datatype;
 
   const sensList = sensChecks.map(v => ({
-    pp: 'PP（Per-Protocol）解析',
-    imputation: '欠損値補完法の変更',
-    outlier: '外れ値の影響確認',
-    covariate: '共変量の変更',
-    subgroup: '事前規定サブグループ解析',
-    competing: '競合リスクの考慮'
-  })[v]).filter(Boolean).join('、') || 'なし';
+    pp: 'PP解析（Per-Protocol）',
+    imputation: '欠損値補完解析',
+    outlier: '外れ値除外解析',
+    covariate: '共変量調整の有無比較',
+    subgroup: 'サブグループ解析',
+    competing: '競合リスク解析'
+  }[v] || v)).filter(Boolean).join('、');
 
-  const draft = `統計解析計画書（ひな型）
-作成日：${new Date().toLocaleDateString('ja-JP')}
-研究テーマ：${document.getElementById('theme')?.value || '（未入力）'}
-研究種別：${window._researchType || '（未判定）'}
+  const draft = `【統計解析計画書ひな型】作成日：${new Date().toLocaleDateString('ja-JP')}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+研究テーマ：${document.getElementById('theme')?.value || '未入力'}
+研究種別：${window._researchType || '未判定'}
+
 1. 主要評価項目
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【主要評価項目】
-${primaryEp}
+主要評価項目：${primaryEp || '未入力'}
+データ型：${datatypeLabel || '未入力'}
+測定タイミング：${timing || '未入力'}
 
-【データの型】${datatypeLabel}
-【測定タイミング】${timing}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 2. 副次評価項目
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${secondaryEps}
+${secondaryEps || '特になし'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 3. 解析対象集団
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-主要解析対象集団：${analysisSet}
-除外・中断の対処：
-${exclusion}
+主要解析集団：${analysisSet || '未入力'}
+除外・中断の扱い：${exclusion || '未入力'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 4. 主要解析方法
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-主要解析手法：${method}
-調整変数設定：${covariate}
-共変量・層別因子：${covariates}
-有意水準：α = ${alpha}（${sidedLabel}検定）
-統計ソフト：${software}
+解析手法：${method || '未入力'}
+共変量調整：${covariate || '未入力'}
+調整する共変量：${covariates || 'なし'}
+有意水準：${alpha}
+検定方針：${sidedLabel}
+使用ソフト：${software || '未入力'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 5. 感度分析
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-実施する感度分析：${sensList}
+予定する感度分析：${sensList || '未設定'}
 その他：${sensitivityOther || 'なし'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-6. 欠損データ・中止例の取り扱い
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-欠損値の対処法：${missing}
-中途中止・逸脱例の扱い：
-${dropout}
+6. 欠損値・中止例の扱い
+欠損値の扱い：${missing || '未入力'}
+中止・脱落時の方針：${dropout || '未入力'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 7. 症例数との整合
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 想定ドロップアウト率：${dropoutRate}%
-※ Step 3の症例数計算結果と有意水準・検定手法が一致していることを確認してください。
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-本ひな型は自動生成されたものです。内容は生物統計家・臨床研究支援センターと相談のうえ確認してください。
-`;
+症例数計算結果との整合を確認し、登録予定症例数を最終決定する。`;
 
   const area = document.getElementById('sap-draft-area');
   const content = document.getElementById('sap-draft-content');
   if (area) area.classList.remove('hidden');
   if (content) content.textContent = draft;
 
-  // グローバルに保存しておく（AIへの受け渡し用）
   window._sapDraft = draft;
+  saveResearchIdeaData();
 
   area?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -1443,45 +1546,40 @@ function copySAPDraft() {
 
   const text = content.textContent;
   navigator.clipboard.writeText(text).then(() => {
-    alert('統計解析計画書ひな型をクリップボードにコピーしました。');
+    alert('統計解析計画書ひな型をコピーしました。');
   }).catch(() => {
-    window.prompt('以下のテキストをコピーしてください:', text);
+    window.prompt('以下をコピーしてください:', text);
   });
 }
 
 function goToAIWithSAP() {
   goToStep(8);
-  // SAP ドラフトを追加指示欄に設定
   const extra = document.getElementById('ai-extra-instruction');
   if (extra && window._sapDraft) {
-    extra.value = '以下の統計解析計画書ひな型をもとに、より完成度の高い計画書に仕上げてください。\n\n' + window._sapDraft;
+    extra.value = window._sapDraft;
   }
+  saveResearchIdeaData();
 }
 
-// ============================================================
-// ── AIブラッシュアップ（新バージョン：出力形式・SAP対応）──
-// ============================================================
-
 function buildAIPrompt() {
-  const theme       = getVal('theme');
-  const background  = getVal('background');
-  const purpose     = getVal('purpose');
-  const design      = getVal('design');
-  const disease     = getVal('disease');
-  const subjects    = getVal('subjects');
-  const setting     = getVal('setting');
-  const type        = window._researchType || '未判定';
+  const theme = getVal('theme');
+  const background = getVal('background');
+  const purpose = getVal('purpose');
+  const design = getVal('design');
+  const disease = getVal('disease');
+  const subjects = getVal('subjects');
+  const setting = getVal('setting');
+  const type = window._researchType;
   const intervention = getRadio('intervention');
   const invasiveness = getRadio('invasiveness');
-  const outputType  = getRadio('ai-output-type') || 'protocol';
-  const extraInst   = document.getElementById('ai-extra-instruction')?.value || '';
 
-  const includeBasic      = document.getElementById('ai-include-basic')?.checked;
-  const includeDesign     = document.getElementById('ai-include-design')?.checked;
+  const outputType = getRadio('ai-output-type') || 'protocol';
+  const extraInst = document.getElementById('ai-extra-instruction')?.value;
+  const includeBasic = document.getElementById('ai-include-basic')?.checked;
+  const includeDesign = document.getElementById('ai-include-design')?.checked;
   const includeSamplesize = document.getElementById('ai-include-samplesize')?.checked;
-  const includeSAP        = document.getElementById('ai-include-sap')?.checked;
+  const includeSAP = document.getElementById('ai-include-sap')?.checked;
 
-  // 症例数サマリー
   let sampleSizeSummary = '';
   if (includeSamplesize) {
     for (let i = 1; i <= 5; i++) {
@@ -1489,15 +1587,15 @@ function buildAIPrompt() {
       if (res && !res.classList.contains('hidden')) {
         const items = res.querySelectorAll('.calc-num');
         items.forEach(item => {
-          const val = item.querySelector('.val')?.textContent || '';
-          const lbl = item.querySelector('.lbl')?.textContent || '';
-          sampleSizeSummary += lbl + ': ' + val + '\n';
+          const val = item.querySelector('.val')?.textContent;
+          const lbl = item.querySelector('.lbl')?.textContent;
+          sampleSizeSummary += `${lbl}：${val}\n`;
         });
         break;
       }
     }
-    if (!sampleSizeSummary) sampleSizeSummary = '（症例数計算は実行されていません）';
   }
+  if (!sampleSizeSummary) sampleSizeSummary = '';
 
   const outputInstructions = {
     protocol: '研究計画書ひな型（全体）を作成してください。背景・目的・方法・統計解析・倫理的配慮・参考文献リストの構成でお願いします。',
