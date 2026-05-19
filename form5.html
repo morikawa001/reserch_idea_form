@@ -795,3 +795,101 @@
   </script>
 </body>
 </html>
+
+<script>
+  function getVal(id){
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function setOutput(id, value){
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(value){
+      el.textContent = value;
+      el.classList.remove('placeholder');
+    }else{
+      el.textContent = '未入力';
+      el.classList.add('placeholder');
+    }
+  }
+
+  function setMark(inputId, markId){
+    const input = document.getElementById(inputId);
+    const mark = document.getElementById(markId);
+    if(!input || !mark) return;
+    mark.textContent = input.checked ? '■' : '□';
+  }
+
+  function updatePreview(){
+    const textIds = [
+      'responsibleDept','responsibleTitle','responsibleName','theme','secretTitle',
+      'deptCollab','leadSite','orgType','support','requester','fundUse',
+      'regPeriod','studyPeriod','obsPeriod','retroPeriod','retroStudyPeriod',
+      'purpose','subjects','casesTotal','casesSite','method','outcomes',
+      'subStudy','subStudyDesc','sampleInfo','futureUse','foreignProvide',
+      'policyCheck','publication','signDate1','signDate2','reviewInfo',
+      'cat_other_text','gl_other_text'
+    ];
+    textIds.forEach(id => setOutput('out-' + id, getVal(id)));
+
+    const pairs = [
+      ['cat_trial','mk-cat_trial'],
+      ['phase1','mk-phase1'],
+      ['phase2','mk-phase2'],
+      ['phase3','mk-phase3'],
+      ['postmarket','mk-postmarket'],
+      ['cat_specified','mk-cat_specified'],
+      ['drug_offlabel','mk-drug_offlabel'],
+      ['drug_unapproved','mk-drug_unapproved'],
+      ['drug_approved','mk-drug_approved'],
+      ['fund_yes','mk-fund_yes'],
+      ['fund_no','mk-fund_no'],
+      ['cat_effort','mk-cat_effort'],
+      ['cat_non_specified','mk-cat_non_specified'],
+      ['inv_yes','mk-inv_yes'],
+      ['inv_minor','mk-inv_minor'],
+      ['inv_major','mk-inv_major'],
+      ['inv_no','mk-inv_no'],
+      ['medical_yes','mk-medical_yes'],
+      ['medical_no','mk-medical_no'],
+      ['intervention_yes','mk-intervention_yes'],
+      ['intervention_no','mk-intervention_no'],
+      ['cat_obs','mk-cat_obs'],
+      ['obs_prospective','mk-obs_prospective'],
+      ['obs_retrospective','mk-obs_retrospective'],
+      ['cat_basic','mk-cat_basic'],
+      ['cat_biobank','mk-cat_biobank'],
+      ['cat_genome','mk-cat_genome'],
+      ['cat_gene_therapy','mk-cat_gene_therapy'],
+      ['cat_epi','mk-cat_epi'],
+      ['gl_pmda','mk-gl_pmda'],
+      ['gl_clinical','mk-gl_clinical'],
+      ['gl_gene','mk-gl_gene'],
+      ['gl_life','mk-gl_life']
+    ];
+    pairs.forEach(([inputId, markId]) => setMark(inputId, markId));
+
+    const otherCat = document.getElementById('mk-cat_other_text_box');
+    const otherCatText = getVal('cat_other_text');
+    if (otherCat) otherCat.textContent = otherCatText ? '■' : '□';
+
+    const otherGl = document.getElementById('mk-gl_other_text_box');
+    const otherGlText = getVal('gl_other_text');
+    if (otherGl) otherGl.textContent = otherGlText ? '■' : '□';
+  }
+
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', updatePreview);
+    el.addEventListener('change', updatePreview);
+  });
+
+  updatePreview();
+</script>
+
+.form td div {
+  margin-bottom: 2px;
+}
+.form td div:last-child {
+  margin-bottom: 0;
+}
