@@ -346,11 +346,59 @@
         <label for="fundUse">研究資金の活用</label>
         <textarea id="fundUse"></textarea>
 
-        <h3>研究区分</h3>
-        <label for="researchCategory">研究内容の区分</label>
-        <textarea id="researchCategory"></textarea>
-        <label for="guideline">適応される指針等</label>
-        <textarea id="guideline"></textarea>
+       <h3>研究内容の区分</h3>
+
+<div class="grid2">
+  <div>
+    <label><input type="checkbox" id="cat_trial"> 治験（市販後臨床試験を含む）</label>
+    <label><input type="checkbox" id="phase1"> Ⅰ相</label>
+    <label><input type="checkbox" id="phase2"> Ⅱ相</label>
+    <label><input type="checkbox" id="phase3"> Ⅲ相</label>
+    <label><input type="checkbox" id="postmarket"> 市販後臨床試験</label>
+
+    <label><input type="checkbox" id="cat_specified"> 特定臨床研究</label>
+    <label><input type="checkbox" id="drug_offlabel"> 適応外</label>
+    <label><input type="checkbox" id="drug_unapproved"> 未承認</label>
+    <label><input type="checkbox" id="drug_approved"> 承認内</label>
+    <label><input type="checkbox" id="fund_yes"> 資金提供あり</label>
+    <label><input type="checkbox" id="fund_no"> 資金提供なし</label>
+
+    <label><input type="checkbox" id="cat_effort"> 努力義務研究</label>
+
+    <label><input type="checkbox" id="cat_non_specified"> 非特定臨床研究</label>
+    <label><input type="checkbox" id="inv_yes"> 侵襲あり</label>
+    <label><input type="checkbox" id="inv_minor"> 軽微</label>
+    <label><input type="checkbox" id="inv_major"> 軽微でない</label>
+    <label><input type="checkbox" id="inv_no"> 侵襲なし</label>
+    <label><input type="checkbox" id="medical_yes"> 通常診療を超える医療行為あり</label>
+    <label><input type="checkbox" id="medical_no"> 通常診療を超える医療行為なし</label>
+    <label><input type="checkbox" id="intervention_yes"> 介入あり</label>
+    <label><input type="checkbox" id="intervention_no"> 介入なし</label>
+  </div>
+
+  <div>
+    <label><input type="checkbox" id="cat_obs"> 観察研究</label>
+    <label><input type="checkbox" id="obs_prospective"> 前向き</label>
+    <label><input type="checkbox" id="obs_retrospective"> 後向き</label>
+
+    <label><input type="checkbox" id="cat_basic"> 基礎的研究</label>
+    <label><input type="checkbox" id="cat_biobank"> バイオバンクの検体を使用した研究</label>
+    <label><input type="checkbox" id="cat_genome"> ヒトゲノム・遺伝子解析</label>
+    <label><input type="checkbox" id="cat_gene_therapy"> 遺伝子治療</label>
+    <label><input type="checkbox" id="cat_epi"> 疫学研究</label>
+
+    <label for="cat_other_text">その他</label>
+    <input type="text" id="cat_other_text">
+  </div>
+</div>
+
+<h3>適応される指針等</h3>
+<label><input type="checkbox" id="gl_pmda"> 薬機法（GCP、GPSP、GVP等）</label>
+<label><input type="checkbox" id="gl_clinical"> 臨床研究法</label>
+<label><input type="checkbox" id="gl_gene"> 遺伝子治療臨床研究に関する指針</label>
+<label><input type="checkbox" id="gl_life"> 人を対象とする生命科学・医学系研究に関する倫理指針</label>
+<label for="gl_other_text">その他</label>
+<input type="text" id="gl_other_text">
 
         <h3>期間</h3>
         <label for="regPeriod">被験者登録予定期間</label>
@@ -476,9 +524,47 @@
             </tr>
 
             <tr>
-              <th>研究内容の区分</th>
-              <td colspan="3" id="out-researchCategory" class="cell-lines placeholder dense">未入力</td>
-            </tr>
+              <tr>
+  <th>研究内容の区分</th>
+  <td colspan="3" class="dense">
+    <div> <span id="mk-cat_trial">□</span> 治験（市販後臨床試験を含む）　　　　　　　　　　　　　　　　　　　　<span class="tiny">※複数選択可</span></div>
+    <div> <span id="mk-phase1">□</span> Ⅰ相　　　<span id="mk-phase2">□</span> Ⅱ相　　　<span id="mk-phase3">□</span> Ⅲ相　　　<span id="mk-postmarket">□</span> 市販後臨床試験</div>
+    <div>
+      <span id="mk-cat_specified">□</span> 特定臨床研究　医薬品等〔<span id="mk-drug_offlabel">□</span> 適応外 <span id="mk-drug_unapproved">□</span> 未承認 <span id="mk-drug_approved">□</span> 承認内〕
+      資金提供 <span id="mk-fund_yes">□</span> あり <span id="mk-fund_no">□</span> なし
+    </div>
+    <div><span id="mk-cat_effort">□</span> 努力義務研究</div>
+    <div>
+      <span id="mk-cat_non_specified">□</span> 非特定臨床研究　① 侵襲　<span id="mk-inv_yes">□</span> あり
+      〔<span id="mk-inv_minor">□</span> 軽微　<span id="mk-inv_major">□</span> 軽微でない〕
+      <span id="mk-inv_no">□</span> なし
+    </div>
+    <div>
+      通常診療を超える医療行為　<span id="mk-medical_yes">□</span> あり　<span id="mk-medical_no">□</span> なし
+    </div>
+    <div>
+      ② 介入　<span id="mk-intervention_yes">□</span> あり　<span id="mk-intervention_no">□</span> なし
+    </div>
+    <div>
+      <span id="mk-cat_obs">□</span> 観察研究（<span id="mk-obs_prospective">□</span> 前向き　<span id="mk-obs_retrospective">□</span> 後向き）
+    </div>
+    <div>
+      <span id="mk-cat_basic">□</span> 基礎的研究　　<span id="mk-cat_biobank">□</span> バイオバンクの検体を使用した研究　　<span id="mk-cat_genome">□</span> ヒトゲノム・遺伝子解析
+    </div>
+    <div>
+      <span id="mk-cat_gene_therapy">□</span> 遺伝子治療　　<span id="mk-cat_epi">□</span> 疫学研究　　<span id="mk-cat_other_text_box">□</span> その他（<span id="out-cat_other_text" class="placeholder">未入力</span>）
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>適応される指針等</th>
+  <td colspan="3" class="dense">
+    <div><span id="mk-gl_pmda">□</span> 薬機法（GCP、GPSP、GVP等）　<span id="mk-gl_clinical">□</span> 臨床研究法　<span id="mk-gl_gene">□</span> 遺伝子治療臨床研究に関する指針</div>
+    <div><span id="mk-gl_life">□</span> 人を対象とする生命科学・医学系研究に関する倫理指針</div>
+    <div><span id="mk-gl_other_text_box">□</span> その他（<span id="out-gl_other_text" class="placeholder">未入力</span>）</div>
+  </td>
+</tr>
 
             <tr>
               <th>適応される指針等</th>
