@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>様式8｜臨床研究申請書</title>
+  <style>
+    :root{
+      --line:#111;
+      --paper:#fff;
+      --bg:#eef2f7;
+      --text:#111;
+      --sub:#666;
+      --accent:#b00020;
+      --blue:#1a5c96;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      font-family:"Yu Gothic","Meiryo",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      max-width:1500px;
+      margin:0 auto;
+      padding:14px;
+    }
+    .topbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .topbar a,.topbar button{
+      border:none;
+      border-radius:8px;
+      padding:10px 14px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:none;
+      background:var(--blue);
+      color:#fff;
+    }
+    .topbar .secondary{
+      background:#fff;
+      color:var(--blue);
+      border:1px solid var(--blue);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:360px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .panel{
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 2px 12px rgba(0,0,0,.08);
+      padding:16px;
+      position:sticky;
+      top:14px;
+      max-height:calc(100vh - 28px);
+      overflow:auto;
+    }
+    .panel h2{
+      font-size:18px;
+      margin:0 0 10px;
+      color:var(--blue);
+    }
+    .panel h3{
+      font-size:13px;
+      color:var(--blue);
+      margin:14px 0 8px;
+      padding-bottom:4px;
+      border-bottom:1px solid #d9e4f0;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:700;
+      margin:7px 0 4px;
+    }
+    input[type="text"], input[type="date"], textarea, select{
+      width:100%;
+      border:1px solid #c9d2dd;
+      border-radius:5px;
+      padding:7px 9px;
+      font-size:12px;
+      font-family:inherit;
+      background:#fff;
+    }
+    textarea{
+      min-height:56px;
+      resize:vertical;
+      line-height:1.5;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .grid3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:8px;
+    }
+    .check-grid label{
+      font-weight:400;
+      margin:4px 0;
+    }
+    .small{
+      font-size:11px;
+      color:var(--sub);
+      line-height:1.5;
+    }
+
+    .preview-area{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .page{
+      width:210mm;
+      min-height:297mm;
+      margin:0 auto;
+      background:#fff;
+      box-shadow:0 2px 16px rgba(0,0,0,.12);
+      padding:8mm 8mm 8mm;
+      color:#000;
+    }
+
+    .head-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      font-size:10px;
+      line-height:1.3;
+      margin-bottom:2mm;
+    }
+    .head-row .center-note{
+      flex:1;
+      text-align:center;
+    }
+    .head-row .left{
+      width:24mm;
+      text-align:left;
+      font-weight:700;
+    }
+    .head-row .right{
+      width:38mm;
+      text-align:right;
+    }
+
+    .title{
+      text-align:center;
+      font-size:20px;
+      font-weight:700;
+      letter-spacing:.2em;
+      margin:2mm 0 0;
+      line-height:1.2;
+    }
+    .subtitle{
+      text-align:center;
+      font-size:12px;
+      margin:1mm 0 4mm;
+      line-height:1.2;
+    }
+
+    .meta-line{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:12px;
+      margin-bottom:2mm;
+    }
+    .line{
+      display:inline-block;
+      min-width:18mm;
+      border-bottom:1px solid #222;
+      line-height:1;
+      height:1em;
+      vertical-align:baseline;
+    }
+    .line.s{min-width:8mm;}
+    .line.m{min-width:18mm;}
+    .line.l{min-width:36mm;}
+    .line.xl{min-width:60mm;}
+    .line.xxl{min-width:90mm;}
+
+    .to-block{
+      font-size:13px;
+      line-height:1.8;
+      margin-bottom:3mm;
+    }
+
+    .role-row{
+      display:grid;
+      grid-template-columns:42mm 1fr;
+      gap:2mm;
+      font-size:12px;
+      line-height:1.8;
+      margin-bottom:2mm;
+    }
+    .person-row{
+      display:grid;
+      grid-template-columns:20mm 1fr 18mm 1fr 16mm 1fr 12mm;
+      gap:2mm;
+      align-items:end;
+      font-size:12px;
+      line-height:1.6;
+      margin-bottom:2mm;
+    }
+
+    .lead-text{
+      font-size:12px;
+      margin:2mm 0 1mm;
+    }
+    .center{
+      text-align:center;
+    }
+
+    table.form{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:11px;
+      line-height:1.3;
+      margin:0;
+    }
+    table.form th, table.form td{
+      border:1.2px solid var(--line);
+      padding:4px 5px;
+      vertical-align:top;
+      word-break:break-word;
+    }
+    table.form th{
+      text-align:left;
+      font-weight:700;
+      background:#fff;
+    }
+    .mid{vertical-align:middle !important;}
+    .dense{line-height:1.2;}
+    .cell-lines{
+      white-space:pre-wrap;
+      line-height:1.45;
+    }
+    .tiny{
+      font-size:9.5px;
+      line-height:1.25;
+    }
+    .placeholder{
+      color:#9a9a9a;
+    }
+    .material-row{
+      display:grid;
+      grid-template-columns:1fr 38%;
+      gap:0;
+    }
+    .material-row > div:last-child{
+      border-left:1.2px solid var(--line);
+      padding-left:6px;
+      min-height:18px;
+    }
+    .mt6{margin-top:6px;}
+
+    @page{
+      size:A4;
+      margin:8mm;
+    }
+
+    @media (max-width:1300px){
+      .layout{grid-template-columns:1fr;}
+      .panel{position:static; max-height:none;}
+      .page{width:100%; min-height:auto;}
+    }
+
+    @media print{
+      body{background:#fff;}
+      .topbar,.panel{display:none;}
+      .wrap{max-width:none;padding:0;}
+      .preview-area{gap:0;}
+      .page{
+        width:210mm;
+        min-height:297mm;
+        box-shadow:none;
+        margin:0 auto;
+        page-break-after:always;
+        break-after:page;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="index.html" class="secondary">← index.html に戻る</a>
+      <button type="button" onclick="updatePreview()">プレビュー更新</button>
+      <button type="button" onclick="clearForm8All()">入力内容をすべてクリア</button>
+      <button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <h2>様式8 入力</h2>
+
+        <h3>基本情報</h3>
+        <div class="grid2">
+          <div>
+            <label for="recordNo">整理番号</label>
+            <input type="text" id="recordNo">
+          </div>
+          <div>
+            <label for="applyDate">申請日</label>
+            <input type="text" id="applyDate" placeholder="西暦2026年5月20日">
+          </div>
+        </div>
+
+        <h3>研究責任者</h3>
+        <label for="role">臨床研究における役割</label>
+        <input type="text" id="role" value="研究責任者">
+        <div class="grid3">
+          <div>
+            <label for="responsibleDept">所属</label>
+            <input type="text" id="responsibleDept">
+          </div>
+          <div>
+            <label for="responsibleTitle">職名</label>
+            <input type="text" id="responsibleTitle">
+          </div>
+          <div>
+            <label for="responsibleName">氏名</label>
+            <input type="text" id="responsibleName">
+          </div>
+        </div>
+
+        <h3>申請内容</h3>
+        <label for="theme">臨床研究課題名</label>
+        <textarea id="theme"></textarea>
+
+        <label>申請事項</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="apply_clinical"> 臨床研究の実施</label>
+          <label><input type="checkbox" id="apply_other"> その他</label>
+        </div>
+        <label for="applyOtherText">その他の内容</label>
+        <input type="text" id="applyOtherText">
+
+        <label>審査形態</label>
+        <div class="check-grid">
+          <label><input type="checkbox" id="review_committee"> 委員会審査</label>
+          <label><input type="checkbox" id="review_expedited"> 迅速審査</label>
+        </div>
+
+        <h3>適応指針</h3>
+        <div class="check-grid">
+          <label><input type="checkbox" id="gl_new_life"> (新)人を対象とする生命科学・医学系研究に関する倫理指針</label>
+          <label><input type="checkbox" id="gl_old_medical"> （旧）人を対象とする医学系研究に関する倫理指針</label>
+          <label><input type="checkbox" id="gl_old_genome"> （旧）ヒトゲノム・遺伝子解析に関する倫理指針</label>
+          <label><input type="checkbox" id="gl_gcp"> GCP</label>
+          <label><input type="checkbox" id="gl_gene_therapy"> 遺伝子治療臨床研究に関する指針</label>
+          <label><input type="checkbox" id="gl_other"> その他</label>
+        </div>
+        <label for="glOtherText">その他の指針</label>
+        <input type="text" id="glOtherText">
+
+        <h3>その他の研究者</h3>
+        <label for="otherResearchers">その他の研究者</label>
+        <textarea id="otherResearchers" placeholder="氏名・所属・役割などを改行区切りで入力"></textarea>
+
+        <h3>提出資料</h3>
+        <div class="small">各資料について、チェック有無・作成年月日・版数を入力できます。</div>
+
+        <label><input type="checkbox" id="m1_check"> 研究計画概略書(様式5)</label>
+        <div class="grid2">
+          <input type="text" id="m1_date" placeholder="2026年5月20日">
+          <input type="text" id="m1_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m2_check"> 計画書作成者が配慮するべきポイントの申請者チェック表 (様式8-1)</label>
+        <div class="grid2">
+          <input type="text" id="m2_date" placeholder="2026年5月20日">
+          <input type="text" id="m2_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m3_check"> 受託研究依頼書（様式9）</label>
+        <div class="grid2">
+          <input type="text" id="m3_date" placeholder="2026年5月20日">
+          <input type="text" id="m3_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m4_check"> 研究経費概算書（様式13）</label>
+        <div class="grid2">
+          <input type="text" id="m4_date" placeholder="2026年5月20日">
+          <input type="text" id="m4_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m5_check"> 予定される研究費用に関する資料</label>
+        <div class="grid2">
+          <input type="text" id="m5_date" placeholder="2026年5月20日">
+          <input type="text" id="m5_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m6_check"> 利益相反自己申告書（様式40）</label>
+        <div class="grid2">
+          <input type="text" id="m6_date" placeholder="2026年5月20日">
+          <input type="text" id="m6_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m7_check"> 研究計画書</label>
+        <div class="grid2">
+          <input type="text" id="m7_date" placeholder="2026年5月20日">
+          <input type="text" id="m7_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m8_check"> 症例報告書見本（研究計画書にあれば省略可能）</label>
+        <div class="grid2">
+          <input type="text" id="m8_date" placeholder="2026年5月20日">
+          <input type="text" id="m8_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m9_check"> 説明文書・同意文書（様式38）・院内掲示文書（様式39）</label>
+        <div class="grid2">
+          <input type="text" id="m9_date" placeholder="2026年5月20日">
+          <input type="text" id="m9_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m10_check"> アンケート等質問票</label>
+        <div class="grid2">
+          <input type="text" id="m10_date" placeholder="2026年5月20日">
+          <input type="text" id="m10_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m11_check"> 被験薬等概要書</label>
+        <div class="grid2">
+          <input type="text" id="m11_date" placeholder="2026年5月20日">
+          <input type="text" id="m11_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m12_check"> 添付文書</label>
+        <div class="grid2">
+          <input type="text" id="m12_date" placeholder="2026年5月20日">
+          <input type="text" id="m12_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m13_check"> 被験者の健康被害に対する補償に関する資料</label>
+        <div class="grid2">
+          <input type="text" id="m13_date" placeholder="2026年5月20日">
+          <input type="text" id="m13_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m14_check"> 被験者の募集に関する資料(広告等)</label>
+        <div class="grid2">
+          <input type="text" id="m14_date" placeholder="2026年5月20日">
+          <input type="text" id="m14_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m15_check"> 実施施設における倫理審査委員会の審査結果</label>
+        <div class="grid2">
+          <input type="text" id="m15_date" placeholder="2026年5月20日">
+          <input type="text" id="m15_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m16_check"> 実施施設の施設設備の状況</label>
+        <div class="grid2">
+          <input type="text" id="m16_date" placeholder="2026年5月20日">
+          <input type="text" id="m16_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m17_check"> 実施施設における当該臨床研究に関する研究成果</label>
+        <div class="grid2">
+          <input type="text" id="m17_date" placeholder="2026年5月20日">
+          <input type="text" id="m17_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m18_check"> 当該臨床研究に関連する実施施設以外の研究状況</label>
+        <div class="grid2">
+          <input type="text" id="m18_date" placeholder="2026年5月20日">
+          <input type="text" id="m18_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m19_check"> モニタリング・監査の手順書</label>
+        <div class="grid2">
+          <input type="text" id="m19_date" placeholder="2026年5月20日">
+          <input type="text" id="m19_ver" placeholder="1.0版">
+        </div>
+
+        <label><input type="checkbox" id="m20_check"> その他</label>
+        <input type="text" id="m20_name" placeholder="資料名">
+        <div class="grid2">
+          <input type="text" id="m20_date" placeholder="2026年5月20日">
+          <input type="text" id="m20_ver" placeholder="1.0版">
+        </div>
+      </div>
+
+      <div class="preview-area">
+        <div class="page">
+          <div class="head-row">
+            <div class="left">様式８</div>
+            <div class="center-note">本様式は総長へ1部提出、臨床研究事務局が原本を保存する。</div>
+            <div class="right">整理番号　<span id="out-recordNo" class="placeholder">未入力</span></div>
+          </div>
+
+          <div class="meta-line">
+            <div>西暦　<span id="out-applyDate" class="placeholder">未入力</span></div>
+          </div>
+
+          <div class="title">臨 床 研 究 申 請 書</div>
+          <div class="subtitle">（臨床研究IRB用）</div>
+
+          <div class="to-block">
+            静岡県立静岡がんセンター　総長　殿
+          </div>
+
+          <div class="role-row">
+            <div>臨床研究における役割：</div>
+            <div><span id="out-role" class="placeholder">未入力</span></div>
+          </div>
+
+          <div class="person-row">
+            <div>所 属：</div>
+            <div><span id="out-responsibleDept" class="placeholder">未入力</span></div>
+            <div>職 名：</div>
+            <div><span id="out-responsibleTitle" class="placeholder">未入力</span></div>
+            <div>氏 名：</div>
+            <div><span id="out-responsibleName" class="placeholder">未入力</span></div>
+            <div>印</div>
+          </div>
+
+          <div class="lead-text">下記の事項について、申請いたします。</div>
+          <div class="center" style="margin-bottom:2mm;">記</div>
+
+          <table class="form">
+            <colgroup>
+              <col style="width:20%">
+              <col style="width:80%">
+            </colgroup>
+
+            <tr>
+              <th class="mid">臨床研究課題名</th>
+              <td id="out-theme" class="cell-lines placeholder">未入力</td>
+            </tr>
+
+            <tr>
+              <th class="mid">申請事項</th>
+              <td class="dense">
+                <span id="mk-apply_clinical">□</span> 臨床研究の実施　
+                <span id="mk-apply_other">□</span> その他（<span id="out-applyOtherText" class="placeholder">未入力</span>）
+              </td>
+            </tr>
+
+            <tr>
+              <th class="mid">審査形態</th>
+              <td class="dense">
+                <span id="mk-review_committee">□</span> 委員会審査　
+                <span id="mk-review_expedited">□</span> 迅速審査
+              </td>
+            </tr>
+
+            <tr>
+              <th class="mid">適応される指針等</th>
+              <td class="dense cell-lines">
+                <span id="mk-gl_new_life">□</span> (新)人を対象とする生命科学・医学系研究に関する倫理指針
+                <span id="mk-gl_old_medical">□</span> （旧）人を対象とする医学系研究に関する倫理指針
+                <span id="mk-gl_old_genome">□</span> （旧）ヒトゲノム・遺伝子解析に関する倫理指針
+                <span id="mk-gl_gcp">□</span> GCP
+                <span id="mk-gl_gene_therapy">□</span> 遺伝子治療臨床研究に関する指針
+                <span id="mk-gl_other">□</span> その他（<span id="out-glOtherText" class="placeholder">未入力</span>）
+              </td>
+            </tr>
+
+            <tr>
+              <th class="mid">その他の研究者</th>
+              <td id="out-otherResearchers" class="cell-lines placeholder">未入力</td>
+            </tr>
+
+            <tr>
+              <th class="mid">提出資料</th>
+              <td class="tiny">右枠には当該資料の作成年月日と版数を記載して下さい。</td>
+            </tr>
+
+            <tr>
+              <td colspan="2" style="padding:0;">
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m1_check">□</span> 研究計画概略書(様式５)</div>
+                  <div><span id="out-m1_date" class="placeholder">未入力</span>　<span id="out-m1_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m2_check">□</span> 計画書作成者が配慮するべきポイントの申請者チェック表 (様式８－１)</div>
+                  <div><span id="out-m2_date" class="placeholder">未入力</span>　<span id="out-m2_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m3_check">□</span> 受託研究依頼書（様式９）</div>
+                  <div><span id="out-m3_date" class="placeholder">未入力</span>　<span id="out-m3_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m4_check">□</span> 研究経費概算書（様式１３）</div>
+                  <div><span id="out-m4_date" class="placeholder">未入力</span>　<span id="out-m4_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m5_check">□</span> 予定される研究費用に関する資料</div>
+                  <div><span id="out-m5_date" class="placeholder">未入力</span>　<span id="out-m5_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m6_check">□</span> 利益相反自己申告書（様式４０）</div>
+                  <div><span id="out-m6_date" class="placeholder">未入力</span>　<span id="out-m6_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m7_check">□</span> 研究計画書</div>
+                  <div><span id="out-m7_date" class="placeholder">未入力</span>　<span id="out-m7_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m8_check">□</span> 症例報告書見本（研究計画書にあれば省略可能）</div>
+                  <div><span id="out-m8_date" class="placeholder">未入力</span>　<span id="out-m8_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m9_check">□</span> 説明文書・同意文書（様式３８）・院内掲示文書（様式３９）</div>
+                  <div><span id="out-m9_date" class="placeholder">未入力</span>　<span id="out-m9_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m10_check">□</span> アンケート等質問票</div>
+                  <div><span id="out-m10_date" class="placeholder">未入力</span>　<span id="out-m10_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m11_check">□</span> 被験薬等概要書</div>
+                  <div><span id="out-m11_date" class="placeholder">未入力</span>　<span id="out-m11_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m12_check">□</span> 添付文書</div>
+                  <div><span id="out-m12_date" class="placeholder">未入力</span>　<span id="out-m12_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m13_check">□</span> 被験者の健康被害に対する補償に関する資料</div>
+                  <div><span id="out-m13_date" class="placeholder">未入力</span>　<span id="out-m13_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m14_check">□</span> 被験者の募集に関する資料(広告等)</div>
+                  <div><span id="out-m14_date" class="placeholder">未入力</span>　<span id="out-m14_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m15_check">□</span> 実施施設における倫理審査委員会の審査結果</div>
+                  <div><span id="out-m15_date" class="placeholder">未入力</span>　<span id="out-m15_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m16_check">□</span> 実施施設の施設設備の状況</div>
+                  <div><span id="out-m16_date" class="placeholder">未入力</span>　<span id="out-m16_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m17_check">□</span> 実施施設における当該臨床研究に関する研究成果</div>
+                  <div><span id="out-m17_date" class="placeholder">未入力</span>　<span id="out-m17_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m18_check">□</span> 当該臨床研究に関連する実施施設以外の研究状況</div>
+                  <div><span id="out-m18_date" class="placeholder">未入力</span>　<span id="out-m18_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m19_check">□</span> モニタリング・監査の手順書</div>
+                  <div><span id="out-m19_date" class="placeholder">未入力</span>　<span id="out-m19_ver" class="placeholder">未入力</span></div>
+                </div>
+                <div class="material-row">
+                  <div style="padding:4px 6px;"><span id="mk-m20_check">□</span> その他（<span id="out-m20_name" class="placeholder">未入力</span>）</div>
+                  <div><span id="out-m20_date" class="placeholder">未入力</span>　<span id="out-m20_ver" class="placeholder">未入力</span></div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FORM8_STORAGE_KEY = 'form8DraftData';
+    const IDEA_STORAGE_KEY = 'researchIdeaFormData';
+    let isClearingForm8 = false;
+
+    const materialIds = Array.from({length:20}, (_,i)=>i+1);
+
+    function getEl(id){
+      return document.getElementById(id);
+    }
+
+    function getVal(id){
+      const el = getEl(id);
+      return el ? el.value.trim() : '';
+    }
+
+    function setVal(id, value){
+      const el = getEl(id);
+      if(!el) return;
+      el.value = value ?? '';
+    }
+
+    function setChecked(id, checked){
+      const el = getEl(id);
+      if(!el) return;
+      el.checked = !!checked;
+    }
+
+    function setOutput(id, value){
+      const el = getEl(id);
+      if(!el) return;
+      if(value){
+        el.textContent = value;
+        el.classList.remove('placeholder');
+      }else{
+        el.textContent = '未入力';
+        el.classList.add('placeholder');
+      }
+    }
+
+    function setMark(inputId, markId){
+      const input = getEl(inputId);
+      const mark = getEl(markId);
+      if(!input || !mark) return;
+      mark.textContent = input.checked ? '■' : '□';
+    }
+
+    function loadSavedIdeaData(){
+      try{
+        const raw = localStorage.getItem(IDEA_STORAGE_KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch(e){
+        console.error('researchIdeaFormData parse error:', e);
+        return null;
+      }
+    }
+
+    function loadForm8Draft(){
+      try{
+        const raw = localStorage.getItem(FORM8_STORAGE_KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch(e){
+        console.error('form8DraftData parse error:', e);
+        return null;
+      }
+    }
+
+    function applyValues(data){
+      if(!data) return;
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if(!el.id) return;
+        if(el.type === 'checkbox'){
+          if(typeof data[el.id] === 'boolean') el.checked = data[el.id];
+        }else if(data[el.id] !== undefined && data[el.id] !== null){
+          el.value = data[el.id];
+        }
+      });
+    }
+
+    function inferAndApplyFromIdea(data){
+      if(!data) return;
+
+      if(!getVal('theme') && data.theme) setVal('theme', data.theme);
+      if(!getVal('responsibleDept') && data.department) setVal('responsibleDept', data.department);
+      if(!getVal('responsibleTitle') && data.position) setVal('responsibleTitle', data.position);
+      if(!getVal('responsibleName') && data.name) setVal('responsibleName', data.name);
+
+      if(!getVal('otherResearchers') && Array.isArray(data.members) && data.members.length){
+        const lines = data.members.map(m => {
+          const a = m.name || '';
+          const b = m.affiliation || '';
+          const c = m.role || '';
+          return [a,b,c].filter(Boolean).join(' / ');
+        }).filter(Boolean);
+        if(lines.length) setVal('otherResearchers', lines.join('\n'));
+      }
+
+      if(data.researchType){
+        if(data.researchType.includes('治験')){
+          setChecked('gl_gcp', true);
+        }else if(data.researchType.includes('遺伝子治療')){
+          setChecked('gl_gene_therapy', true);
+        }else{
+          setChecked('gl_new_life', true);
+        }
+      }else{
+        setChecked('gl_new_life', true);
+      }
+
+      if(!getVal('role')) setVal('role', '研究責任者');
+      if(!getVal('applyDate')){
+        const now = new Date();
+        setVal('applyDate', `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`);
+      }
+
+      if(!getEl('apply_clinical').checked && !getEl('apply_other').checked){
+        setChecked('apply_clinical', true);
+      }
+
+      if(!getEl('review_committee').checked && !getEl('review_expedited').checked){
+        if(data.invasiveness === 'none' && data.intervention === 'no'){
+          setChecked('review_expedited', true);
+        }else{
+          setChecked('review_committee', true);
+        }
+      }
+
+      if(!getEl('m1_check').checked) setChecked('m1_check', true);
+      if(!getEl('m2_check').checked) setChecked('m2_check', true);
+    }
+
+    function collectForm8Data(){
+      const data = {};
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if(!el.id) return;
+        if(el.type === 'checkbox'){
+          data[el.id] = el.checked;
+        }else{
+          data[el.id] = el.value;
+        }
+      });
+      data.savedAt = new Date().toISOString();
+      return data;
+    }
+
+    function saveForm8Draft(){
+      if(isClearingForm8) return;
+      try{
+        localStorage.setItem(FORM8_STORAGE_KEY, JSON.stringify(collectForm8Data()));
+      }catch(e){
+        console.error('form8DraftData save error:', e);
+      }
+    }
+
+    function clearForm8All(){
+      const ok = confirm('様式8に入力した内容をすべてクリアします。よろしいですか？');
+      if(!ok) return;
+
+      isClearingForm8 = true;
+
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if(!el.id) return;
+        if(el.type === 'checkbox'){
+          el.checked = false;
+        }else if(el.tagName === 'SELECT'){
+          el.selectedIndex = 0;
+        }else{
+          el.value = '';
+        }
+      });
+
+      localStorage.removeItem(FORM8_STORAGE_KEY);
+      updatePreview();
+
+      isClearingForm8 = false;
+    }
+
+    function updatePreview(){
+      const textIds = [
+        'recordNo','applyDate','role','responsibleDept','responsibleTitle','responsibleName',
+        'theme','applyOtherText','glOtherText','otherResearchers','m20_name'
+      ];
+      textIds.forEach(id => setOutput('out-' + id, getVal(id)));
+
+      const checkPairs = [
+        ['apply_clinical','mk-apply_clinical'],
+        ['apply_other','mk-apply_other'],
+        ['review_committee','mk-review_committee'],
+        ['review_expedited','mk-review_expedited'],
+        ['gl_new_life','mk-gl_new_life'],
+        ['gl_old_medical','mk-gl_old_medical'],
+        ['gl_old_genome','mk-gl_old_genome'],
+        ['gl_gcp','mk-gl_gcp'],
+        ['gl_gene_therapy','mk-gl_gene_therapy'],
+        ['gl_other','mk-gl_other']
+      ];
+      checkPairs.forEach(([a,b]) => setMark(a,b));
+
+      materialIds.forEach(i => {
+        setMark(`m${i}_check`, `mk-m${i}_check`);
+        setOutput(`out-m${i}_date`, getVal(`m${i}_date`));
+        setOutput(`out-m${i}_ver`, getVal(`m${i}_ver`));
+      });
+
+      saveForm8Draft();
+    }
+
+    function initForm8(){
+      const draft = loadForm8Draft();
+      if(draft) applyValues(draft);
+
+      const idea = loadSavedIdeaData();
+      if(idea) inferAndApplyFromIdea(idea);
+
+      updatePreview();
+    }
+
+    document.querySelectorAll('input, textarea, select').forEach(el => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
+
+    initForm8();
+  </script>
+</body>
+</html>
