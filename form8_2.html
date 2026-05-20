@@ -8,6 +8,8 @@
   <style>
     :root{
       --line:#111;
+      --thin:#333;
+      --paper:#fff;
       --bg:#eef2f7;
       --text:#111;
       --sub:#666;
@@ -26,62 +28,37 @@
     .panel h2{font-size:18px;margin:0 0 10px;color:#1a5c96;}
     .panel h3{font-size:13px;color:#1a5c96;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid #d9e4f0;}
     label{display:block;font-size:12px;font-weight:700;margin:7px 0 4px;}
-    input[type="text"], textarea, select{width:100%;border:1px solid #c9d2dd;border-radius:5px;padding:7px 9px;font-size:12px;font-family:inherit;background:#fff;}
-    textarea{min-height:56px;resize:vertical;line-height:1.45;}
+    input[type="text"], input[type="date"], textarea, select{width:100%;border:1px solid #c9d2dd;border-radius:5px;padding:7px 9px;font-size:12px;font-family:inherit;background:#fff;}
+    textarea{min-height:56px;resize:vertical;line-height:1.5;}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
     .small{font-size:11px;color:#666;line-height:1.5;}
     .check-grid label{font-weight:400;margin:4px 0;}
     .preview-area{display:flex;flex-direction:column;gap:16px;}
-
-    .page{
-      width:210mm;
-      min-height:297mm;
-      margin:0 auto;
-      background:#fff;
-      box-shadow:0 2px 16px rgba(0,0,0,.12);
-      padding:5.5mm 6.5mm 6mm;
-      color:#000;
-      position:relative;
-      page-break-after:always;
-      break-after:page;
-      overflow:hidden;
-    }
-    .doc-head{font-size:9.2px;line-height:1.15;margin-bottom:1mm;}
-    .doc-head .date-row{display:flex;justify-content:space-between;gap:6px;align-items:flex-end;}
+    .page{width:210mm;min-height:297mm;margin:0 auto;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.12);padding:7mm 8mm 8mm;color:#000;position:relative;page-break-after:always;break-after:page;}
+    .doc-head{font-size:10px;line-height:1.2;margin-bottom:2mm;}
+    .doc-head .date-row{display:flex;justify-content:space-between;gap:8px;align-items:flex-end;}
     .doc-head .center-note{flex:1;text-align:center;}
-    .page-no{font-size:9px;text-align:right;margin-bottom:.8mm;line-height:1.15;}
-    .doc-title{text-align:center;font-size:15px;font-weight:700;line-height:1.2;margin:.8mm 0 1mm;letter-spacing:.02em;}
-    .note-red{color:var(--warn);font-size:8.8px;line-height:1.22;margin-bottom:.9mm;}
-
-    table.form{
-      width:100%;
-      border-collapse:collapse;
-      table-layout:fixed;
-      font-size:9.45px;
-      line-height:1.16;
-      margin:0;
-    }
-    table.form th, table.form td{
-      border:1px solid var(--line);
-      padding:2px 3px;
-      vertical-align:top;
-      word-break:break-word;
-      overflow-wrap:anywhere;
-    }
+    .doc-title{text-align:center;font-size:17px;font-weight:700;line-height:1.25;margin:1mm 0 1.5mm;letter-spacing:.04em;}
+    .note-red{color:var(--warn);font-size:10px;line-height:1.35;margin-bottom:1mm;}
+    table.form{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px;line-height:1.28;margin:0;}
+    table.form th, table.form td{border:1.2px solid var(--line);padding:3px 5px;vertical-align:top;word-break:break-word;}
     table.form th{text-align:left;font-weight:700;background:#fff;}
-
-    .dense{line-height:1.1;}
-    .tiny{font-size:8.15px;line-height:1.14;}
-    .mini{font-size:7.6px;line-height:1.1;}
+    .dense{line-height:1.18;}
+    .tiny{font-size:9.3px;line-height:1.25;}
+    .mini{font-size:8.7px;line-height:1.18;}
     .placeholder{color:#8d8d8d;}
-    .cell-lines{white-space:pre-wrap;line-height:1.22;}
-    .compact td,.compact th{padding:1.6px 3px;}
-    .ultra td,.ultra th{padding:1.2px 2.6px;}
-    .tight{line-height:1.03;}
-    .keep-all{word-break:keep-all;overflow-wrap:break-word;}
-
-    @page{size:A4;margin:5.5mm 6.5mm 6mm;}
-    @media (max-width:1300px){.layout{grid-template-columns:1fr;}.panel{position:static;max-height:none;}.page{width:100%;min-height:auto;overflow:visible;}}
+    .cell-lines{white-space:pre-wrap;line-height:1.4;}
+    .mid{vertical-align:middle !important;}
+    .center{text-align:center;}
+    .right{text-align:right;}
+    .line{display:inline-block;min-width:42px;border-bottom:1px solid #222;height:1em;vertical-align:baseline;}
+    .line.m{min-width:72px;}.line.l{min-width:120px;}.line.xl{min-width:180px;}
+    .box{display:inline-block;font-weight:700;min-width:1em;text-align:center;}
+    .page-no{font-size:10px;text-align:right;margin-bottom:1mm;}
+    .sigline{display:inline-block;min-width:42mm;border-bottom:1px solid #222;height:1em;vertical-align:middle;}
+    @page{size:A4;margin:7mm 8mm 8mm;}
+    @media (max-width:1300px){.layout{grid-template-columns:1fr;}.panel{position:static;max-height:none;}.page{width:100%;min-height:auto;}}
     @media print{body{background:#fff;}.topbar,.panel{display:none;}.wrap{max-width:none;padding:0;}.preview-area{gap:0;}.page{box-shadow:none;margin:0 auto;width:210mm;min-height:297mm;}}
   </style>
 </head>
@@ -237,7 +214,7 @@
         <label for="edc">30.EDC使用</label>
         <textarea id="edc"></textarea>
 
-        <div class="small">PDF原本に合わせて、できるだけ各マスが1ページ内に収まるよう、文字サイズ・余白・行間を圧縮した修正版です。</div>
+        <div class="small">PDF原本の表組み・A4印刷向け体裁を優先して、様式8-2の10ページ構成を再現しています。</div>
       </div>
 
       <div class="preview-area" id="previewArea"></div>
@@ -253,27 +230,27 @@
 
     function buildPage(pageNo, bodyHtml){
       return `
-      <div class="page">
-        <div class="doc-head">
-          <div class="date-row">
-            <div>様式８－２　${textOr('docDate','　　　年　　月　　日')}</div>
-            <div class="center-note">年月日を必ず記入してください。バージョン管理に用います。</div>
+        <div class="page">
+          <div class="doc-head">
+            <div class="date-row">
+              <div>様式８－２　${textOr('docDate','　　　年　　月　　日')}</div>
+              <div class="center-note">年月日を必ず記入してください。バージョン管理に用います。</div>
+            </div>
           </div>
-        </div>
-        <div class="page-no">様式 承認日 2022年8月22日　ページ ${pageNo}／全10ページ</div>
-        ${pageNo === 1 ? '<div class="doc-title">臨床研究申請書（探索研究IRB用）</div><div class="note-red">注1）記載はすべて、MS明朝、10ポで統一してください。注2）本様式作成時は青字部分を全て削除してください。</div>' : ''}
-        ${bodyHtml}
-      </div>`;
+          <div class="page-no">様式 承認日 2022年8月22日　ページ ${pageNo}／全10ページ</div>
+          ${pageNo === 1 ? `<div class="doc-title">臨床研究申請書（探索研究IRB用）</div><div class="note-red">注1）記載はすべて、MS明朝、10ポで統一してください。注2）本様式作成時は青字部分を全て削除してください。</div>` : ''}
+          ${bodyHtml}
+        </div>`;
     }
 
     function renderPreview(){
       const pages = [];
 
       pages.push(buildPage(1, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>1.研究課題名</th><td class="tight">${textOr('theme')}<div class="tiny">必要なら秘密保持のための課題名を記載：${textOr('secretTitle')}</div></td></tr>
-          <tr><th>2.研究組織の分類</th><td class="dense tiny keep-all">
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>1.研究課題名</th><td>${textOr('theme')}<div class="tiny">必要なら秘密保持のための課題名を記載：${textOr('secretTitle')}</div></td></tr>
+          <tr><th>2.研究組織の分類</th><td class="dense">
             ${mark('org_single')} 単独施設による研究<br>
             ${mark('org_lead')} 多施設共同研究の主任研究者<br>
             ${mark('org_participate')} 多施設共同研究への参加（主任施設名：${textOr('leadSite')}）<br>
@@ -282,90 +259,90 @@
             ${mark('org_student')} 大学院の学生としての研究<br>
             □ その他（${textOr('orgOther')}）
           </td></tr>
-          <tr><th>3.研究の分類・適応される指針等</th><td class="mini keep-all">
-            ${mark('guide_life')} 人を対象とする生命科学・医学系研究（※1）<br>
-            ①侵襲（※2）　${mark('invasion_yes')}あり　${mark('invasion_no')}なし<br>
-            「あり」の場合　${mark('minor_yes')}軽微　${mark('minor_no')}軽微でない<br>
-            「軽微でない」場合　${mark('medical_over_no')}通常診療を超える医療行為なし　${mark('medical_over_yes')}通常診療を超える医療行為あり（この場合、臨床研究IRB）<br>
-            ②介入（※3）　${mark('intervention_yes')}あり　${mark('intervention_no')}なし<br>
+          <tr><th>3.研究の分類・適応される指針等</th><td class="dense tiny">
+            ${mark('guide_life')} 人を対象とする生命科学・医学系研究<br>
+            ①侵襲　${mark('invasion_yes')}あり　${mark('invasion_no')}なし<br>
+            「あり」の場合、${mark('minor_yes')}軽微　${mark('minor_no')}軽微でない<br>
+            「軽微でない」場合、${mark('medical_over_no')}通常診療を超える医療行為なし　${mark('medical_over_yes')}通常診療を超える医療行為あり<br>
+            ②介入　${mark('intervention_yes')}あり　${mark('intervention_no')}なし<br>
             ③人体から取得する試料を用いる　${mark('specimen_yes')}あり　${mark('specimen_no')}なし<br>
-            「あり」の場合　${mark('biobank_yes')}バイオバンク室保存検体を使用する　${mark('biobank_no')}バイオバンク室保存検体を使用しない<br>
+            「あり」の場合、${mark('biobank_yes')}バイオバンク室保存検体を使用する　${mark('biobank_no')}使用しない<br>
             □ 上記以外の研究（適応される倫理指針等：${textOr('otherGuide')}）
           </td></tr>
           <tr><th>4.研究機関名・研究実施場所</th><td>${textOr('place')}</td></tr>
           <tr><th>5.研究実施責任者氏名</th><td>${textOr('responsibleName')}</td></tr>
-          <tr><th>6.研究者氏名</th><td class="cell-lines tiny">${nl(getVal('researchers'))}</td></tr>
+          <tr><th>6.研究者氏名</th><td class="cell-lines">${nl(getVal('researchers'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(2, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>7.共同研究機関</th><td class="cell-lines tiny">${nl(getVal('collab'))}</td></tr>
-          <tr><th>8.研究の意義・目的の概略</th><td class="cell-lines tiny">${nl(getVal('purposeSummary'))}</td></tr>
-          <tr><th>9.被験者</th><td class="tiny">(1)被験者数（予定）：${textOr('subjectCount')}<br><br>(2)被験者の選定方針<div class="cell-lines tiny">${nl(getVal('selectionPolicy'))}</div></td></tr>
-          <tr><th>10.研究方法</th><td class="tiny">(1)概略<div class="cell-lines tiny">${nl(getVal('methodSummary'))}</div><br>(2)評価項目<div class="cell-lines tiny">${nl(getVal('evaluationItems'))}</div></td></tr>
-          <tr><th>11.実施予定期間</th><td class="tiny">開始：${textOr('startDate')}<br>終了：${textOr('endDate')}</td></tr>
-          <tr><th>12.研究参加に伴う利益および不利益</th><td class="tiny">(1)利益<div class="cell-lines tiny">${nl(getVal('benefit'))}</div><br>(2)負担やリスク<div class="cell-lines tiny">${nl(getVal('risk'))}</div></td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>7.共同研究機関</th><td class="cell-lines">${nl(getVal('collab'))}</td></tr>
+          <tr><th>8.研究の意義・目的の概略</th><td class="cell-lines">${nl(getVal('purposeSummary'))}</td></tr>
+          <tr><th>9.被験者</th><td class="dense">(1)被験者数：${textOr('subjectCount')}<br><br>(2)被験者の選定方針：<div class="cell-lines">${nl(getVal('selectionPolicy'))}</div></td></tr>
+          <tr><th>10.研究方法</th><td class="dense">(1)概略<div class="cell-lines">${nl(getVal('methodSummary'))}</div><br>(2)評価項目<div class="cell-lines">${nl(getVal('evaluationItems'))}</div></td></tr>
+          <tr><th>11.実施予定期間</th><td>開始：${textOr('startDate')}<br>終了：${textOr('endDate')}</td></tr>
+          <tr><th>12.研究参加に伴う利益および不利益</th><td class="dense">(1)利益<div class="cell-lines">${nl(getVal('benefit'))}</div><br>(2)負担やリスク<div class="cell-lines">${nl(getVal('risk'))}</div></td></tr>
         </table>`));
 
       pages.push(buildPage(3, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>12(3).対策</th><td class="cell-lines tiny">${nl(getVal('riskMin'))}</td></tr>
-          <tr><th>13.保存・廃棄</th><td class="cell-lines tiny">${nl(getVal('storage'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>12(3).負担やリスクがある場合、それを最小化する対策</th><td class="cell-lines">${nl(getVal('riskMin'))}</td></tr>
+          <tr><th>13.検体およびデータの保存・廃棄について</th><td class="cell-lines">${nl(getVal('storage'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(4, `
-        <table class="form ultra">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>14.個人情報の取扱い</th><td class="cell-lines mini">${nl(getVal('privacy'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>14.個人情報の取扱い</th><td class="cell-lines">${nl(getVal('privacy'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(5, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>14.個人情報の取扱い（続き）</th><td class="mini">他施設からの受領・他施設への提供等の詳細は上記記載欄にまとめて記載</td></tr>
-          <tr><th>15.研究成果の公表</th><td class="cell-lines tiny">${nl(getVal('publication'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>14.個人情報の取扱い（続き）</th><td class="tiny">他施設からの受領・他施設への提供等の詳細は上記記載欄にまとめて記載</td></tr>
+          <tr><th>15.研究成果の公表</th><td class="cell-lines">${nl(getVal('publication'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(6, `
-        <table class="form ultra">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>16.IC手続</th><td class="cell-lines mini">${nl(getVal('consentProcedure'))}</td></tr>
-          <tr><th>17.説明文書記載事項</th><td class="cell-lines mini">${nl(getVal('consentItems'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>16.インフォームド・コンセントのための手続</th><td class="cell-lines">${nl(getVal('consentProcedure'))}</td></tr>
+          <tr><th>17.説明文書記載事項</th><td class="cell-lines">${nl(getVal('consentItems'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(7, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>18.代諾者</th><td class="cell-lines tiny">${nl(getVal('proxyConsent'))}</td></tr>
-          <tr><th>19.負担・謝礼</th><td class="cell-lines tiny">${nl(getVal('payment'))}</td></tr>
-          <tr><th>20.資金源</th><td class="cell-lines tiny">${nl(getVal('funding'))}</td></tr>
-          <tr><th>21.企業・団体との関わり</th><td class="cell-lines tiny">${nl(getVal('companyRelation'))}</td></tr>
-          <tr><th>22.共同・受託研究審査委員会</th><td class="cell-lines tiny">${nl(getVal('committeeStatus'))}</td></tr>
-          <tr><th>23.知的財産権の帰属</th><td class="cell-lines tiny">${nl(getVal('ip'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>18.代諾者からインフォームド・コンセントを受ける場合</th><td class="cell-lines">${nl(getVal('proxyConsent'))}</td></tr>
+          <tr><th>19.研究対象者等の経済的負担又は謝礼</th><td class="cell-lines">${nl(getVal('payment'))}</td></tr>
+          <tr><th>20.研究に係る資金源</th><td class="cell-lines">${nl(getVal('funding'))}</td></tr>
+          <tr><th>21.本研究と企業・団体との関わり</th><td class="cell-lines">${nl(getVal('companyRelation'))}</td></tr>
+          <tr><th>22.共同・受託研究審査委員会</th><td class="cell-lines">${nl(getVal('committeeStatus'))}</td></tr>
+          <tr><th>23.知的財産権の帰属</th><td class="cell-lines">${nl(getVal('ip'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(8, `
-        <table class="form ultra">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>24.情報公開の方法</th><td class="cell-lines mini">${nl(getVal('publicInfo'))}</td></tr>
-          <tr><th>25.相談等への対応</th><td class="cell-lines mini">${nl(getVal('consultation'))}</td></tr>
-          <tr><th>26.委託業務</th><td class="cell-lines mini">${nl(getVal('outsource'))}</td></tr>
-          <tr><th>27.将来研究・他機関提供</th><td class="cell-lines mini">${nl(getVal('futureUse'))}</td></tr>
-          <tr><th>28.確認事項</th><td class="cell-lines mini">${nl(getVal('confirmItems'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>24.研究に関する情報公開の方法</th><td class="cell-lines">${nl(getVal('publicInfo'))}</td></tr>
+          <tr><th>25.研究対象者等及びその関係者からの相談等への対応</th><td class="cell-lines">${nl(getVal('consultation'))}</td></tr>
+          <tr><th>26.研究に関する業務の一部を委託する場合</th><td class="cell-lines">${nl(getVal('outsource'))}</td></tr>
+          <tr><th>27.将来の研究のために用いられる可能性等</th><td class="cell-lines">${nl(getVal('futureUse'))}</td></tr>
+          <tr><th>28.研究実施にあたっての確認事項</th><td class="cell-lines">${nl(getVal('confirmItems'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(9, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>29.教育・研修</th><td class="cell-lines tiny">${nl(getVal('education'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>29.教育・研修の受講状況</th><td class="cell-lines">${nl(getVal('education'))}</td></tr>
         </table>`));
 
       pages.push(buildPage(10, `
-        <table class="form compact">
-          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
-          <tr><th>30.EDC使用</th><td class="cell-lines tiny">${nl(getVal('edc'))}</td></tr>
+        <table class="form">
+          <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+          <tr><th>30.EDC使用</th><td class="cell-lines">${nl(getVal('edc'))}</td></tr>
         </table>`));
 
       document.getElementById('previewArea').innerHTML = pages.join('');
