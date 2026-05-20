@@ -257,16 +257,23 @@
       color:#9a9a9a;
     }
     .material-row{
-      display:grid;
-      grid-template-columns:1fr 38%;
-      gap:0;
-    }
-    .material-row > div:last-child{
-      border-left:1.2px solid var(--line);
-      padding-left:6px;
-      min-height:18px;
-    }
-    .mt6{margin-top:6px;}
+  display:grid;
+  grid-template-columns:1fr 34%;
+  border-bottom:1.2px solid var(--line);
+}
+.material-row > div{
+  min-height:26px;
+}
+.material-row > div:first-child{
+  padding:4px 6px;
+  line-height:1.35;
+}
+.material-row > div:last-child{
+  border-left:1.2px solid var(--line);
+  padding:4px 6px;
+  line-height:1.35;
+  white-space:pre-wrap;
+}
 
     @page{
       size:A4;
@@ -573,100 +580,104 @@
               </td>
             </tr>
 
-            <tr>
-              <th class="mid">その他の研究者</th>
-              <td id="out-otherResearchers" class="cell-lines placeholder">未入力</td>
-            </tr>
+           <tr>
+  <th class="mid">その他の研究者</th>
+  <td style="padding:0;">
+    <div style="min-height:32mm; padding:6px 8px; white-space:pre-wrap; line-height:1.45;">
+      <span id="out-otherResearchers" class="placeholder">未入力</span>
+    </div>
+  </td>
+</tr>
 
-            <tr>
-              <th class="mid">提出資料</th>
-              <td class="tiny">右枠には当該資料の作成年月日と版数を記載して下さい。</td>
-            </tr>
+<tr>
+  <th class="mid">提出資料</th>
+  <td style="padding:0;">
+    <div style="border-bottom:1.2px solid #111; padding:4px 6px;" class="tiny">
+      右枠には当該資料の作成年月日と版数を記載して下さい。
+    </div>
 
-            <tr>
-              <td colspan="2" style="padding:0;">
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m1_check">□</span> 研究計画概略書(様式５)</div>
-                  <div><span id="out-m1_date" class="placeholder">未入力</span>　<span id="out-m1_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m2_check">□</span> 計画書作成者が配慮するべきポイントの申請者チェック表 (様式８－１)</div>
-                  <div><span id="out-m2_date" class="placeholder">未入力</span>　<span id="out-m2_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m3_check">□</span> 受託研究依頼書（様式９）</div>
-                  <div><span id="out-m3_date" class="placeholder">未入力</span>　<span id="out-m3_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m4_check">□</span> 研究経費概算書（様式１３）</div>
-                  <div><span id="out-m4_date" class="placeholder">未入力</span>　<span id="out-m4_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m5_check">□</span> 予定される研究費用に関する資料</div>
-                  <div><span id="out-m5_date" class="placeholder">未入力</span>　<span id="out-m5_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m6_check">□</span> 利益相反自己申告書（様式４０）</div>
-                  <div><span id="out-m6_date" class="placeholder">未入力</span>　<span id="out-m6_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m7_check">□</span> 研究計画書</div>
-                  <div><span id="out-m7_date" class="placeholder">未入力</span>　<span id="out-m7_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m8_check">□</span> 症例報告書見本（研究計画書にあれば省略可能）</div>
-                  <div><span id="out-m8_date" class="placeholder">未入力</span>　<span id="out-m8_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m9_check">□</span> 説明文書・同意文書（様式３８）・院内掲示文書（様式３９）</div>
-                  <div><span id="out-m9_date" class="placeholder">未入力</span>　<span id="out-m9_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m10_check">□</span> アンケート等質問票</div>
-                  <div><span id="out-m10_date" class="placeholder">未入力</span>　<span id="out-m10_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m11_check">□</span> 被験薬等概要書</div>
-                  <div><span id="out-m11_date" class="placeholder">未入力</span>　<span id="out-m11_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m12_check">□</span> 添付文書</div>
-                  <div><span id="out-m12_date" class="placeholder">未入力</span>　<span id="out-m12_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m13_check">□</span> 被験者の健康被害に対する補償に関する資料</div>
-                  <div><span id="out-m13_date" class="placeholder">未入力</span>　<span id="out-m13_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m14_check">□</span> 被験者の募集に関する資料(広告等)</div>
-                  <div><span id="out-m14_date" class="placeholder">未入力</span>　<span id="out-m14_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m15_check">□</span> 実施施設における倫理審査委員会の審査結果</div>
-                  <div><span id="out-m15_date" class="placeholder">未入力</span>　<span id="out-m15_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m16_check">□</span> 実施施設の施設設備の状況</div>
-                  <div><span id="out-m16_date" class="placeholder">未入力</span>　<span id="out-m16_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m17_check">□</span> 実施施設における当該臨床研究に関する研究成果</div>
-                  <div><span id="out-m17_date" class="placeholder">未入力</span>　<span id="out-m17_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m18_check">□</span> 当該臨床研究に関連する実施施設以外の研究状況</div>
-                  <div><span id="out-m18_date" class="placeholder">未入力</span>　<span id="out-m18_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m19_check">□</span> モニタリング・監査の手順書</div>
-                  <div><span id="out-m19_date" class="placeholder">未入力</span>　<span id="out-m19_ver" class="placeholder">未入力</span></div>
-                </div>
-                <div class="material-row">
-                  <div style="padding:4px 6px;"><span id="mk-m20_check">□</span> その他（<span id="out-m20_name" class="placeholder">未入力</span>）</div>
-                  <div><span id="out-m20_date" class="placeholder">未入力</span>　<span id="out-m20_ver" class="placeholder">未入力</span></div>
-                </div>
-              </td>
-            </tr>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m1_check">□</span> 研究計画概略書(様式５)</div>
+      <div><span id="out-m1_date" class="placeholder">未入力</span><br><span id="out-m1_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m2_check">□</span> 計画書作成者が配慮するべきポイントの申請者チェック表 (様式８－１)</div>
+      <div><span id="out-m2_date" class="placeholder">未入力</span><br><span id="out-m2_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m3_check">□</span> 受託研究依頼書（様式９）</div>
+      <div><span id="out-m3_date" class="placeholder">未入力</span><br><span id="out-m3_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m4_check">□</span> 研究経費概算書（様式１３）</div>
+      <div><span id="out-m4_date" class="placeholder">未入力</span><br><span id="out-m4_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m5_check">□</span> 予定される研究費用に関する資料</div>
+      <div><span id="out-m5_date" class="placeholder">未入力</span><br><span id="out-m5_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m6_check">□</span> 利益相反自己申告書（様式４０）</div>
+      <div><span id="out-m6_date" class="placeholder">未入力</span><br><span id="out-m6_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m7_check">□</span> 研究計画書</div>
+      <div><span id="out-m7_date" class="placeholder">未入力</span><br><span id="out-m7_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m8_check">□</span> 症例報告書見本（研究計画書にあれば省略可能）</div>
+      <div><span id="out-m8_date" class="placeholder">未入力</span><br><span id="out-m8_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m9_check">□</span> 説明文書・同意文書（様式３８）・院内掲示文書（様式３９）</div>
+      <div><span id="out-m9_date" class="placeholder">未入力</span><br><span id="out-m9_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m10_check">□</span> アンケート等質問票</div>
+      <div><span id="out-m10_date" class="placeholder">未入力</span><br><span id="out-m10_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m11_check">□</span> 被験薬等概要書</div>
+      <div><span id="out-m11_date" class="placeholder">未入力</span><br><span id="out-m11_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m12_check">□</span> 添付文書</div>
+      <div><span id="out-m12_date" class="placeholder">未入力</span><br><span id="out-m12_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m13_check">□</span> 被験者の健康被害に対する補償に関する資料</div>
+      <div><span id="out-m13_date" class="placeholder">未入力</span><br><span id="out-m13_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m14_check">□</span> 被験者の募集に関する資料(広告等)</div>
+      <div><span id="out-m14_date" class="placeholder">未入力</span><br><span id="out-m14_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m15_check">□</span> 実施施設における倫理審査委員会の審査結果</div>
+      <div><span id="out-m15_date" class="placeholder">未入力</span><br><span id="out-m15_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m16_check">□</span> 実施施設の施設設備の状況</div>
+      <div><span id="out-m16_date" class="placeholder">未入力</span><br><span id="out-m16_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m17_check">□</span> 実施施設における当該臨床研究に関する研究成果</div>
+      <div><span id="out-m17_date" class="placeholder">未入力</span><br><span id="out-m17_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m18_check">□</span> 当該臨床研究に関連する実施施設以外の研究状況</div>
+      <div><span id="out-m18_date" class="placeholder">未入力</span><br><span id="out-m18_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row">
+      <div style="padding:4px 6px;"><span id="mk-m19_check">□</span> モニタリング・監査の手順書</div>
+      <div><span id="out-m19_date" class="placeholder">未入力</span><br><span id="out-m19_ver" class="placeholder">未入力</span></div>
+    </div>
+    <div class="material-row" style="border-bottom:none;">
+      <div style="padding:4px 6px;"><span id="mk-m20_check">□</span> その他（<span id="out-m20_name" class="placeholder">未入力</span>）</div>
+      <div><span id="out-m20_date" class="placeholder">未入力</span><br><span id="out-m20_ver" class="placeholder">未入力</span></div>
+    </div>
+  </td>
+</tr>
           </table>
         </div>
       </div>
