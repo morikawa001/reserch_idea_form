@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>様式8-2｜臨床研究申請書（探索研究IRB用）</title>
+  <style>
+    :root{
+      --line:#111;
+      --bg:#eef2f7;
+      --text:#111;
+      --sub:#666;
+      --accent:#1a5c96;
+      --warn:#b00020;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{font-family:"Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text);}
+    .wrap{max-width:1500px;margin:0 auto;padding:14px;}
+    .topbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+    .topbar a,.topbar button{border:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;background:#1a5c96;color:#fff;}
+    .topbar .secondary{background:#fff;color:#1a5c96;border:1px solid #1a5c96;}
+    .layout{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start;}
+    .panel{background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:16px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;}
+    .panel h2{font-size:18px;margin:0 0 10px;color:#1a5c96;}
+    .panel h3{font-size:13px;color:#1a5c96;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid #d9e4f0;}
+    label{display:block;font-size:12px;font-weight:700;margin:7px 0 4px;}
+    input[type="text"], textarea, select{width:100%;border:1px solid #c9d2dd;border-radius:5px;padding:7px 9px;font-size:12px;font-family:inherit;background:#fff;}
+    textarea{min-height:56px;resize:vertical;line-height:1.45;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .small{font-size:11px;color:#666;line-height:1.5;}
+    .check-grid label{font-weight:400;margin:4px 0;}
+    .preview-area{display:flex;flex-direction:column;gap:16px;}
+
+    .page{
+      width:210mm;
+      min-height:297mm;
+      margin:0 auto;
+      background:#fff;
+      box-shadow:0 2px 16px rgba(0,0,0,.12);
+      padding:5.5mm 6.5mm 6mm;
+      color:#000;
+      position:relative;
+      page-break-after:always;
+      break-after:page;
+      overflow:hidden;
+    }
+    .doc-head{font-size:9.2px;line-height:1.15;margin-bottom:1mm;}
+    .doc-head .date-row{display:flex;justify-content:space-between;gap:6px;align-items:flex-end;}
+    .doc-head .center-note{flex:1;text-align:center;}
+    .page-no{font-size:9px;text-align:right;margin-bottom:.8mm;line-height:1.15;}
+    .doc-title{text-align:center;font-size:15px;font-weight:700;line-height:1.2;margin:.8mm 0 1mm;letter-spacing:.02em;}
+    .note-red{color:var(--warn);font-size:8.8px;line-height:1.22;margin-bottom:.9mm;}
+
+    table.form{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:9.45px;
+      line-height:1.16;
+      margin:0;
+    }
+    table.form th, table.form td{
+      border:1px solid var(--line);
+      padding:2px 3px;
+      vertical-align:top;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+    table.form th{text-align:left;font-weight:700;background:#fff;}
+
+    .dense{line-height:1.1;}
+    .tiny{font-size:8.15px;line-height:1.14;}
+    .mini{font-size:7.6px;line-height:1.1;}
+    .placeholder{color:#8d8d8d;}
+    .cell-lines{white-space:pre-wrap;line-height:1.22;}
+    .compact td,.compact th{padding:1.6px 3px;}
+    .ultra td,.ultra th{padding:1.2px 2.6px;}
+    .tight{line-height:1.03;}
+    .keep-all{word-break:keep-all;overflow-wrap:break-word;}
+
+    @page{size:A4;margin:5.5mm 6.5mm 6mm;}
+    @media (max-width:1300px){.layout{grid-template-columns:1fr;}.panel{position:static;max-height:none;}.page{width:100%;min-height:auto;overflow:visible;}}
+    @media print{body{background:#fff;}.topbar,.panel{display:none;}.wrap{max-width:none;padding:0;}.preview-area{gap:0;}.page{box-shadow:none;margin:0 auto;width:210mm;min-height:297mm;}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="index.html" class="secondary">← index.html に戻る</a>
+      <button type="button" onclick="updatePreview()">プレビュー更新</button>
+      <button type="button" onclick="clearFormAll()">入力内容をすべてクリア</button>
+      <button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <h2>様式8-2 入力</h2>
+
+        <h3>基本情報</h3>
+        <div class="grid2">
+          <div>
+            <label for="docDate">作成日</label>
+            <input type="text" id="docDate" placeholder="2026年5月20日">
+          </div>
+          <div>
+            <label for="pageInfo">ページ表記</label>
+            <input type="text" id="pageInfo" value="1／全10ページ">
+          </div>
+        </div>
+        <label for="theme">1.研究課題名</label>
+        <input type="text" id="theme">
+        <label for="secretTitle">秘密保持のための課題名</label>
+        <input type="text" id="secretTitle">
+
+        <h3>2.研究組織の分類</h3>
+        <div class="check-grid">
+          <label><input type="checkbox" id="org_single"> 単独施設による研究</label>
+          <label><input type="checkbox" id="org_lead"> 多施設共同研究の主任研究者</label>
+          <label><input type="checkbox" id="org_participate"> 多施設共同研究への参加</label>
+          <label for="leadSite">主任施設名</label>
+          <input type="text" id="leadSite">
+          <label><input type="checkbox" id="approval_yes"> 他施設の倫理委員会による承認証明書あり</label>
+          <label><input type="checkbox" id="approval_no"> 他施設の倫理委員会による承認証明書なし</label>
+          <label><input type="checkbox" id="office_yes"> 研究事務局の請負あり</label>
+          <label><input type="checkbox" id="office_no"> 研究事務局の請負なし</label>
+          <label><input type="checkbox" id="org_student"> 大学院の学生としての研究</label>
+          <label for="orgOther">その他</label>
+          <input type="text" id="orgOther">
+        </div>
+
+        <h3>3.研究の分類・適応指針</h3>
+        <div class="check-grid">
+          <label><input type="checkbox" id="guide_life"> 人を対象とする生命科学・医学系研究</label>
+          <label><input type="checkbox" id="invasion_yes"> 侵襲あり</label>
+          <label><input type="checkbox" id="invasion_no"> 侵襲なし</label>
+          <label><input type="checkbox" id="minor_yes"> 侵襲の度合いは軽微</label>
+          <label><input type="checkbox" id="minor_no"> 侵襲の度合いは軽微でない</label>
+          <label><input type="checkbox" id="medical_over_no"> 通常診療を超える医療行為なし</label>
+          <label><input type="checkbox" id="medical_over_yes"> 通常診療を超える医療行為あり</label>
+          <label><input type="checkbox" id="intervention_yes"> 介入あり</label>
+          <label><input type="checkbox" id="intervention_no"> 介入なし</label>
+          <label><input type="checkbox" id="specimen_yes"> 人体から取得する試料を用いる</label>
+          <label><input type="checkbox" id="specimen_no"> 人体から取得する試料を用いない</label>
+          <label><input type="checkbox" id="biobank_yes"> バイオバンク室保存検体を使用する</label>
+          <label><input type="checkbox" id="biobank_no"> バイオバンク室保存検体を使用しない</label>
+          <label for="otherGuide">上記以外の研究（適応される倫理指針等）</label>
+          <input type="text" id="otherGuide">
+        </div>
+
+        <h3>4〜7.組織・研究者</h3>
+        <label for="place">4.研究機関名・研究実施場所</label>
+        <input type="text" id="place" value="静岡がんセンター">
+        <label for="responsibleName">5.研究実施責任者氏名</label>
+        <input type="text" id="responsibleName">
+        <label for="researchers">6.研究者氏名</label>
+        <textarea id="researchers"></textarea>
+        <label for="collab">7.共同研究機関（代表研究者名とその役割）</label>
+        <textarea id="collab"></textarea>
+
+        <h3>8〜12.研究概要</h3>
+        <label for="purposeSummary">8.研究の意義・目的の概略</label>
+        <textarea id="purposeSummary"></textarea>
+        <div class="grid2">
+          <div>
+            <label for="subjectCount">9(1).被験者数</label>
+            <input type="text" id="subjectCount">
+          </div>
+          <div>
+            <label for="selectionPolicy">9(2).被験者の選定方針</label>
+            <textarea id="selectionPolicy"></textarea>
+          </div>
+        </div>
+        <label for="methodSummary">10(1).研究方法 概略</label>
+        <textarea id="methodSummary"></textarea>
+        <label for="evaluationItems">10(2).評価項目</label>
+        <textarea id="evaluationItems"></textarea>
+        <div class="grid2">
+          <div>
+            <label for="startDate">11.開始</label>
+            <input type="text" id="startDate" placeholder="承認日より / 2026年6月1日より">
+          </div>
+          <div>
+            <label for="endDate">11.終了</label>
+            <input type="text" id="endDate" placeholder="2028年12月31日まで">
+          </div>
+        </div>
+        <label for="benefit">12(1).利益</label>
+        <textarea id="benefit"></textarea>
+        <label for="risk">12(2).負担やリスク</label>
+        <textarea id="risk"></textarea>
+        <label for="riskMin">12(3).最小化対策</label>
+        <textarea id="riskMin"></textarea>
+
+        <h3>13〜15.保存・個人情報・公表</h3>
+        <label for="storage">13.検体およびデータの保存・廃棄</label>
+        <textarea id="storage"></textarea>
+        <label for="privacy">14.個人情報の取扱い</label>
+        <textarea id="privacy"></textarea>
+        <label for="publication">15.研究成果の公表</label>
+        <textarea id="publication"></textarea>
+
+        <h3>16〜19.同意・代諾・負担</h3>
+        <label for="consentProcedure">16.インフォームド・コンセントのための手続</label>
+        <textarea id="consentProcedure"></textarea>
+        <label for="consentItems">17.説明文書記載事項</label>
+        <textarea id="consentItems"></textarea>
+        <label for="proxyConsent">18.代諾者からICを受ける場合</label>
+        <textarea id="proxyConsent"></textarea>
+        <label for="payment">19.経済的負担又は謝礼</label>
+        <textarea id="payment"></textarea>
+
+        <h3>20〜27.資金・企業・公開・委託</h3>
+        <label for="funding">20.研究に係る資金源</label>
+        <textarea id="funding"></textarea>
+        <label for="companyRelation">21.本研究と企業・団体との関わり</label>
+        <textarea id="companyRelation"></textarea>
+        <label for="committeeStatus">22.共同・受託研究審査委員会</label>
+        <textarea id="committeeStatus"></textarea>
+        <label for="ip">23.知的財産権の帰属</label>
+        <textarea id="ip"></textarea>
+        <label for="publicInfo">24.研究に関する情報公開の方法</label>
+        <textarea id="publicInfo"></textarea>
+        <label for="consultation">25.相談等への対応</label>
+        <textarea id="consultation"></textarea>
+        <label for="outsource">26.委託業務内容及び監督方法</label>
+        <textarea id="outsource"></textarea>
+        <label for="futureUse">27.将来の研究利用・他機関提供の可能性</label>
+        <textarea id="futureUse"></textarea>
+
+        <h3>28〜30.確認・教育・EDC</h3>
+        <label for="confirmItems">28.研究実施にあたっての確認事項</label>
+        <textarea id="confirmItems"></textarea>
+        <label for="education">29.教育・研修の受講状況</label>
+        <textarea id="education"></textarea>
+        <label for="edc">30.EDC使用</label>
+        <textarea id="edc"></textarea>
+
+        <div class="small">PDF原本に合わせて、できるだけ各マスが1ページ内に収まるよう、文字サイズ・余白・行間を圧縮した修正版です。</div>
+      </div>
+
+      <div class="preview-area" id="previewArea"></div>
+    </div>
+  </div>
+
+  <script>
+    function getVal(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+    function isChecked(id){ const el = document.getElementById(id); return !!(el && el.checked); }
+    function mark(id){ return isChecked(id) ? '■' : '□'; }
+    function textOr(id, fallback='未入力'){ const v = getVal(id); return v || fallback; }
+    function nl(v){ return (v || '未入力').replace(/\n/g,'<br>'); }
+
+    function buildPage(pageNo, bodyHtml){
+      return `
+      <div class="page">
+        <div class="doc-head">
+          <div class="date-row">
+            <div>様式８－２　${textOr('docDate','　　　年　　月　　日')}</div>
+            <div class="center-note">年月日を必ず記入してください。バージョン管理に用います。</div>
+          </div>
+        </div>
+        <div class="page-no">様式 承認日 2022年8月22日　ページ ${pageNo}／全10ページ</div>
+        ${pageNo === 1 ? '<div class="doc-title">臨床研究申請書（探索研究IRB用）</div><div class="note-red">注1）記載はすべて、MS明朝、10ポで統一してください。注2）本様式作成時は青字部分を全て削除してください。</div>' : ''}
+        ${bodyHtml}
+      </div>`;
+    }
+
+    function renderPreview(){
+      const pages = [];
+
+      pages.push(buildPage(1, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>1.研究課題名</th><td class="tight">${textOr('theme')}<div class="tiny">必要なら秘密保持のための課題名を記載：${textOr('secretTitle')}</div></td></tr>
+          <tr><th>2.研究組織の分類</th><td class="dense tiny keep-all">
+            ${mark('org_single')} 単独施設による研究<br>
+            ${mark('org_lead')} 多施設共同研究の主任研究者<br>
+            ${mark('org_participate')} 多施設共同研究への参加（主任施設名：${textOr('leadSite')}）<br>
+            他施設の倫理委員会による承認証明書：${mark('approval_yes')}あり　${mark('approval_no')}なし<br>
+            研究事務局の請負：${mark('office_yes')}あり　${mark('office_no')}なし<br>
+            ${mark('org_student')} 大学院の学生としての研究<br>
+            □ その他（${textOr('orgOther')}）
+          </td></tr>
+          <tr><th>3.研究の分類・適応される指針等</th><td class="mini keep-all">
+            ${mark('guide_life')} 人を対象とする生命科学・医学系研究（※1）<br>
+            ①侵襲（※2）　${mark('invasion_yes')}あり　${mark('invasion_no')}なし<br>
+            「あり」の場合　${mark('minor_yes')}軽微　${mark('minor_no')}軽微でない<br>
+            「軽微でない」場合　${mark('medical_over_no')}通常診療を超える医療行為なし　${mark('medical_over_yes')}通常診療を超える医療行為あり（この場合、臨床研究IRB）<br>
+            ②介入（※3）　${mark('intervention_yes')}あり　${mark('intervention_no')}なし<br>
+            ③人体から取得する試料を用いる　${mark('specimen_yes')}あり　${mark('specimen_no')}なし<br>
+            「あり」の場合　${mark('biobank_yes')}バイオバンク室保存検体を使用する　${mark('biobank_no')}バイオバンク室保存検体を使用しない<br>
+            □ 上記以外の研究（適応される倫理指針等：${textOr('otherGuide')}）
+          </td></tr>
+          <tr><th>4.研究機関名・研究実施場所</th><td>${textOr('place')}</td></tr>
+          <tr><th>5.研究実施責任者氏名</th><td>${textOr('responsibleName')}</td></tr>
+          <tr><th>6.研究者氏名</th><td class="cell-lines tiny">${nl(getVal('researchers'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(2, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>7.共同研究機関</th><td class="cell-lines tiny">${nl(getVal('collab'))}</td></tr>
+          <tr><th>8.研究の意義・目的の概略</th><td class="cell-lines tiny">${nl(getVal('purposeSummary'))}</td></tr>
+          <tr><th>9.被験者</th><td class="tiny">(1)被験者数（予定）：${textOr('subjectCount')}<br><br>(2)被験者の選定方針<div class="cell-lines tiny">${nl(getVal('selectionPolicy'))}</div></td></tr>
+          <tr><th>10.研究方法</th><td class="tiny">(1)概略<div class="cell-lines tiny">${nl(getVal('methodSummary'))}</div><br>(2)評価項目<div class="cell-lines tiny">${nl(getVal('evaluationItems'))}</div></td></tr>
+          <tr><th>11.実施予定期間</th><td class="tiny">開始：${textOr('startDate')}<br>終了：${textOr('endDate')}</td></tr>
+          <tr><th>12.研究参加に伴う利益および不利益</th><td class="tiny">(1)利益<div class="cell-lines tiny">${nl(getVal('benefit'))}</div><br>(2)負担やリスク<div class="cell-lines tiny">${nl(getVal('risk'))}</div></td></tr>
+        </table>`));
+
+      pages.push(buildPage(3, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>12(3).対策</th><td class="cell-lines tiny">${nl(getVal('riskMin'))}</td></tr>
+          <tr><th>13.保存・廃棄</th><td class="cell-lines tiny">${nl(getVal('storage'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(4, `
+        <table class="form ultra">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>14.個人情報の取扱い</th><td class="cell-lines mini">${nl(getVal('privacy'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(5, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>14.個人情報の取扱い（続き）</th><td class="mini">他施設からの受領・他施設への提供等の詳細は上記記載欄にまとめて記載</td></tr>
+          <tr><th>15.研究成果の公表</th><td class="cell-lines tiny">${nl(getVal('publication'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(6, `
+        <table class="form ultra">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>16.IC手続</th><td class="cell-lines mini">${nl(getVal('consentProcedure'))}</td></tr>
+          <tr><th>17.説明文書記載事項</th><td class="cell-lines mini">${nl(getVal('consentItems'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(7, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>18.代諾者</th><td class="cell-lines tiny">${nl(getVal('proxyConsent'))}</td></tr>
+          <tr><th>19.負担・謝礼</th><td class="cell-lines tiny">${nl(getVal('payment'))}</td></tr>
+          <tr><th>20.資金源</th><td class="cell-lines tiny">${nl(getVal('funding'))}</td></tr>
+          <tr><th>21.企業・団体との関わり</th><td class="cell-lines tiny">${nl(getVal('companyRelation'))}</td></tr>
+          <tr><th>22.共同・受託研究審査委員会</th><td class="cell-lines tiny">${nl(getVal('committeeStatus'))}</td></tr>
+          <tr><th>23.知的財産権の帰属</th><td class="cell-lines tiny">${nl(getVal('ip'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(8, `
+        <table class="form ultra">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>24.情報公開の方法</th><td class="cell-lines mini">${nl(getVal('publicInfo'))}</td></tr>
+          <tr><th>25.相談等への対応</th><td class="cell-lines mini">${nl(getVal('consultation'))}</td></tr>
+          <tr><th>26.委託業務</th><td class="cell-lines mini">${nl(getVal('outsource'))}</td></tr>
+          <tr><th>27.将来研究・他機関提供</th><td class="cell-lines mini">${nl(getVal('futureUse'))}</td></tr>
+          <tr><th>28.確認事項</th><td class="cell-lines mini">${nl(getVal('confirmItems'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(9, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>29.教育・研修</th><td class="cell-lines tiny">${nl(getVal('education'))}</td></tr>
+        </table>`));
+
+      pages.push(buildPage(10, `
+        <table class="form compact">
+          <colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+          <tr><th>30.EDC使用</th><td class="cell-lines tiny">${nl(getVal('edc'))}</td></tr>
+        </table>`));
+
+      document.getElementById('previewArea').innerHTML = pages.join('');
+      saveDraft();
+    }
+
+    function saveDraft(){
+      const data = {};
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+      });
+      try { localStorage.setItem('form8_2_draft', JSON.stringify(data)); } catch(e) {}
+    }
+
+    function loadDraft(){
+      try {
+        const raw = localStorage.getItem('form8_2_draft');
+        if(!raw) return;
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(id => {
+          const el = document.getElementById(id);
+          if(!el) return;
+          if(el.type === 'checkbox') el.checked = !!data[id];
+          else el.value = data[id] || '';
+        });
+      } catch(e) {}
+    }
+
+    function clearFormAll(){
+      if(!confirm('入力内容をすべてクリアします。よろしいですか？')) return;
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if(el.type === 'checkbox') el.checked = false;
+        else if(el.id === 'place') el.value = '静岡がんセンター';
+        else if(el.id === 'pageInfo') el.value = '1／全10ページ';
+        else el.value = '';
+      });
+      localStorage.removeItem('form8_2_draft');
+      renderPreview();
+    }
+
+    function updatePreview(){ renderPreview(); }
+
+    document.querySelectorAll('input, textarea, select').forEach(el => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
+
+    loadDraft();
+    renderPreview();
+  </script>
+</body>
+</html>
