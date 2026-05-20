@@ -257,12 +257,57 @@ table.form th{text-align:left;font-weight:700;background:#fff;}
 <label><input type="checkbox" id="ip_all_sc"> 23.静岡がんセンターにすべて帰属する</label>
 <label><input type="checkbox" id="ip_part_sc"> 23.静岡がんセンターに一部帰属する</label>
 <label><input type="checkbox" id="ip_not_sc"> 23.静岡がんセンターに帰属しない</label><input type="text" id="ip_not_sc_reason" placeholder="理由">
-<h3>24〜30</h3>
-<label for="publicInfo">24.研究に関する情報公開の方法</label><textarea id="publicInfo"></textarea>
-<label for="consultation">25.相談等への対応</label><textarea id="consultation"></textarea>
-<label for="outsource">26.委託業務内容及び監督方法</label><textarea id="outsource"></textarea>
-<label for="futureUse">27.将来の研究利用・他機関提供の可能性</label><textarea id="futureUse"></textarea>
-<label for="confirmItems">28.研究実施にあたっての確認事項</label><textarea id="confirmItems"></textarea>
+<h3>24.研究に関する情報公開の方法</h3>
+<label><input type="checkbox" id="pub_jrct"> 臨床研究等提出・公開システム（jRCT）</label>
+<div class="small">法（介入を行う場合は、jRCT,UMINのいずれかに必ず登録すること）</div>
+<label><input type="checkbox" id="pub_umin"> 国立大学付属病院長会議（UMIN CTR）</label>
+<label><input type="checkbox" id="pub_japic"> 一般財団法人日本医薬情報センター（JapicCTI）</label>
+<label><input type="checkbox" id="pub_jmacct"> 公益社団法人日本医師会(JMACCT CTR)</label>
+<label><input type="checkbox" id="pub_sc_hp"> 静岡がんセンターホームページ</label>
+<label><input type="checkbox" id="pub_inhospital"> 院内掲示</label>
+<label><input type="checkbox" id="pub_other_check"> その他</label>
+<input type="text" id="pub_other_text">
+<h3>25.研究対象者等及びその関係者からの相談等への対応</h3>
+<textarea id="consultation" placeholder="相談窓口となる者の氏名などを記載"></textarea>
+<h3>26.研究に関する業務の一部を委託する場合</h3>
+<label><input type="checkbox" id="outsource_yes"> 業務委託 あり</label>
+<label><input type="checkbox" id="outsource_no"> 業務委託 なし</label>
+<label for="outsource_content">① 委託業務内容</label><textarea id="outsource_content"></textarea>
+<label for="outsource_supervision">② 委託先の監督方法（委託契約書の中で委託者が定める安全管理措置の内容や実地調査の有無など）</label><textarea id="outsource_supervision"></textarea>
+<h3>27.将来の研究利用・他機関提供の可能性</h3>
+<label><input type="checkbox" id="future_use_yes"> 将来の研究のために用いられる可能性 あり</label>
+<label><input type="checkbox" id="future_use_no"> 将来の研究のために用いられる可能性 なし</label>
+<label for="future_use_detail">「あり」の場合、現時点で想定される内容</label><textarea id="future_use_detail"></textarea>
+<label><input type="checkbox" id="future_provide_yes"> 他の研究機関に提供する可能性 あり</label>
+<label><input type="checkbox" id="future_provide_no"> 他の研究機関に提供する可能性 なし</label>
+<label for="future_provide_detail">「あり」の場合、現時点で想定される内容</label><textarea id="future_provide_detail"></textarea>
+<h3>28.研究実施にあたっての確認事項</h3>
+<div class="small">（必須事項はすべて熟読の上チェックすること。）</div>
+<label><input type="checkbox" id="chk_pi_experience"> 研究実施責任者に、研究を適正に実行するために必要な専門的知識及び臨床経験が十分にあること。</label>
+<label><input type="checkbox" id="chk_serious_ae_report"> 研究実施責任者は、臨床研究に関する重篤な有害事象及び不具合等の発生を知ったときは、直ちにその旨を総長に報告すること。（様式20）</label>
+<label><input type="checkbox" id="chk_deviation_report"> 研究計画から逸脱・変更した場合は、その旨を総長に報告すること。（様式25）</label>
+<label><input type="checkbox" id="chk_stop_condition"> 研究実施責任者は、研究により期待される利益よりも起こりうる危険が高いと判断される場合又は研究により十分な成果が得られた場合には、当該研究を中止し、又は終了すること。また、遅延なく、その旨を総長へ報告すること。（様式22）</label>
+<label><input type="checkbox" id="chk_info_follow"> 研究実施責任者は、研究を終了するまでの間、研究に関する国内外における学会発表、論文発表等の情報について把握しておくとともに、把握した当該情報について、総長に対し報告すること。（様式自由）</label>
+<label><input type="checkbox" id="chk_annual_report"> 研究実施責任者は、毎年一回、研究の進捗状況、または研究が中止あるいは終了したときには、その旨及び結果の概要を文書により総長へ報告すること。（様式24、35）</label>
+<label><input type="checkbox" id="chk_threat_info"> 倫理的妥当性若しくは科学的合理性を損なう事実若しくは情報又は損なう恐れのある情報であって研究の継続に影響を与えると考えられる情報を入手した場合は、その旨を総長に報告すること。（様式自由）</label>
+<label><input type="checkbox" id="chk_fabrication_info"> 研究の実施において、研究計画に基づく研究対象者の選定方針や研究方法から逸脱した等の事実や情報若しくは研究データの改ざんやねつ造等の事実や情報又はそのような内容を知り得てから、事実であるか確定に至っていない情報を入手した場合は、その旨を総長に報告すること。（様式自由）</label>
+<label><input type="checkbox" id="chk_trust_info"> 研究結果の信頼を損なう情報（例：研究データの改ざんやねつ造の事実等）を得た場合は、その旨を総長に報告すること。（様式自由）</label>
+<label><input type="checkbox" id="chk_privacy_measure"> 研究実施責任者は、研究を実施するに当たり、被験者の個人情報の保護のために必要な措置を講じること。</label>
+<label><input type="checkbox" id="chk_best_care_after"> 研究実施責任者は、研究終了後においても、被験者が当該研究の結果により得られた最善の予防、診断及び治療を受けることができるよう努めること。</label>
+<label><input type="checkbox" id="chk_education"> 研究者等は、臨床研究の実施に先立ち、臨床研究に関するその他臨床研究の実施に必要な知識についての講習その他必要な教育を受けること。また、研究期間中も適宜継続して、教育・研修を受けること。</label>
+<label><input type="checkbox" id="chk_scientific_principle"> 研究者等は、一般的に受け入れられた科学的原則に従い、科学的文献その他科学に関連する情報源及び十分な実験に基づいて、研究を実施すること。</label>
+<label><input type="checkbox" id="chk_publication_anonym"> 研究者等は、研究の結果を公表する場合には、被験者を特定できないように行うこと。</label>
+<label><input type="checkbox" id="chk_prior_irb"> 臨床研究の実施にあたっては、事前に研究者の所属する研究機関および実施医療機関の倫理審査委員会の承認を受けなければならない。</label>
+<label><input type="checkbox" id="chk_specimen_no_out_dispose"> 【検体を静岡がんセンター敷地外へ持ち出さない研究の場合】検体（血液など）の保存管理者は、保存期間終了後、検体を確実に廃棄すること。</label>
+<label><input type="checkbox" id="chk_not_banking"> 【検体を静岡がんセンター敷地外へ持ち出す研究（原則禁止）の場合】バンキングに相当するような研究ではないこと。</label>
+<label><input type="checkbox" id="chk_mou_audit"> 「静岡がんセンターが将来、当該検体に関する監査あるいは問い合わせを行う場合は、相手側は真摯に応じる。」ことを覚書で締結。</label>
+<label><input type="checkbox" id="chk_specimen_dispose_report"> 研究実施責任者は、検体（血液など）を廃棄した場合は、ただちに検体廃棄報告書を研究機関の長へ提出すること。</label>
+<label><input type="checkbox" id="chk_annual_storage_report"> 【研究終了後も検体（血液など）を保存する場合】検体保管管理者は、検体が廃棄されるまで、毎年１回、検体保管状況報告書を研究機関の長へ提出すること。</label>
+<label><input type="checkbox" id="chk_pathology_clinical_use"> 【検体が返却される場合】病理標本等を一般臨床として利用する。</label>
+<label><input type="checkbox" id="chk_reuse_approval"> 再度、研究に利用したい場合は、廃棄時期を明示の上、倫理審査委員会で改めて承認をもらう。</label>
+<label><input type="checkbox" id="chk_temp_storage_report"> 返却後に、再利用のため一時保管した場合には、検体一時保管届を提出し、承認されるまでの間は毎年１回、検体保管状況報告書を提出する。</label>
+<label><input type="checkbox" id="chk_share_info_other_pi"> 【他の研究機関と共同で研究を実施する場合】研究実施責任者は、当該他の研究機関の研究実施責任者に対し、把握した発表情報等について報告すること。</label>
+<label><input type="checkbox" id="chk_confirm_other"> その他</label><textarea id="confirm_other_text"></textarea>
 <label for="education">29.教育・研修の受講状況</label><textarea id="education"></textarea>
 <label for="edc">30.EDC使用</label><textarea id="edc"></textarea>
 <div class="small">PDF原本の表組み・罫線・注記・A4印刷向け体裁を優先して、ページ構成を忠実に再現するための拡張版です。</div>
@@ -324,11 +369,11 @@ pages.push(buildPage(11,total,`<table class="form"><colgroup><col style="width:2
 <tr><th>22.共同・受託研究審査委員会</th><td class="dense"><span class="checkline">${mark('joint_approved')} 承認済み</span><span class="checkline">${mark('joint_applying')} 申請中</span><span class="checkline">${mark('joint_not_yet')} 申請未</span><span class="checkline">${mark('joint_not_apply')} 申請しない</span><span class="checkline">${mark('joint_other_check')} その他（ ${esc(textOr('joint_other_text',''))} ）</span><div class="tiny">注）企業等へ研究成果などを提供する場合、知財が発生する場合、企業から研究費を受け取る場合、多施設共同研究で知財が生じる場合等は、個人情報保護・知的財産保護・補償等の理由により、共同・受託研究審査委員会への申請・承認が必要です。</div></td></tr>
 <tr><th>23.知的財産権の帰属</th><td class="dense"><span class="checkline">${mark('ip_all_sc')} 静岡がんセンターにすべて帰属する。（院内規定に従い取扱う。）</span><span class="checkline">${mark('ip_part_sc')} 静岡がんセンターに一部帰属する。（院内規定に従い取扱う。）</span><span class="checkline">${mark('ip_not_sc')} 静岡がんセンターに帰属しない。（理由： ${esc(textOr('ip_not_sc_reason',''))} ）</span></td></tr></table>`));
 pages.push(buildPage(12,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>24.研究に関する情報公開の方法</th><td class="cell-lines">${nlHtml(esc(textOr('publicInfo','未入力')))}</td></tr>
-<tr><th>25.研究対象者等及びその関係者からの相談等への対応</th><td class="cell-lines">${nlHtml(esc(textOr('consultation','未入力')))}</td></tr>
-<tr><th>26.研究に関する業務の一部を委託する場合</th><td class="cell-lines">${nlHtml(esc(textOr('outsource','未入力')))}</td></tr>
-<tr><th>27.将来の研究のために用いられる可能性等</th><td class="cell-lines">${nlHtml(esc(textOr('futureUse','未入力')))}</td></tr>
-<tr><th>28.研究実施にあたっての確認事項</th><td class="cell-lines">${nlHtml(esc(textOr('confirmItems','未入力')))}</td></tr>
+<tr><th>24.研究に関する情報公開の方法</th><td class="dense tiny"><span class="checkline">${mark('pub_jrct')} 臨床研究等提出・公開システム（jRCT）</span><div class="indent">法（介入を行う場合は、jRCT,UMINのいずれかに必ず登録すること）</div><span class="checkline">${mark('pub_umin')} 国立大学付属病院長会議（UMIN CTR）</span><span class="checkline">${mark('pub_japic')} 一般財団法人日本医薬情報センター（JapicCTI）</span><span class="checkline">${mark('pub_jmacct')} 公益社団法人日本医師会(JMACCT CTR)</span><span class="checkline">${mark('pub_sc_hp')} 静岡がんセンターホームページ</span><span class="checkline">${mark('pub_inhospital')} 院内掲示</span><span class="checkline">${mark('pub_other_check')} その他（${esc(textOr('pub_other_text',''))}）</span></td></tr>
+<tr><th>25.研究対象者等及びその関係者からの相談等への対応</th><td class="cell-lines tiny">※相談窓口となる者の氏名などを記載<br>${nlHtml(esc(textOr('consultation','')))}</td></tr>
+<tr><th>26.研究に関する業務の一部を委託する場合</th><td class="dense tiny">業務委託： ${mark('outsource_yes')}あり　${mark('outsource_no')}なし<div class="subblock">「あり」の場合</div><div class="subblock">① 委託業務内容</div><div class="cell-lines">${nlHtml(esc(textOr('outsource_content','')))}</div><div class="subblock">② 委託先の監督方法（委託契約書の中で委託者が定める安全管理措置の内容や実地調査の有無など）</div><div class="cell-lines">${nlHtml(esc(textOr('outsource_supervision','')))}</div></td></tr>
+<tr><th>27.研究対象者から取得された試料・情報について、研究対象者等から同意を受ける時点では特定されない将来の研究のために用いられる可能性等</th><td class="dense tiny">将来の研究のために用いられる可能性 ${mark('future_use_yes')}あり　${mark('future_use_no')}なし<div class="subblock">「あり」の場合、現時点で想定される内容</div><div class="cell-lines">${nlHtml(esc(textOr('future_use_detail','')))}</div>他の研究機関に提供する可能性 ${mark('future_provide_yes')}あり　${mark('future_provide_no')}なし<div class="subblock">「あり」の場合、現時点で想定される内容</div><div class="cell-lines">${nlHtml(esc(textOr('future_provide_detail','')))}</div></td></tr>
+<tr><th>28.研究実施にあたっての確認事項</th><td class="dense tiny">（必須事項はすべて熟読の上チェックすること。）<br>【必須事項】<span class="checkline">${mark('chk_pi_experience')} 研究実施責任者に、研究を適正に実行するために必要な専門的知識及び臨床経験が十分にあること。</span><span class="checkline">${mark('chk_serious_ae_report')} 研究実施責任者は、臨床研究に関する重篤な有害事象及び不具合等の発生を知ったときは、直ちにその旨を総長に報告すること。（様式20）</span><span class="checkline">${mark('chk_deviation_report')} 研究計画から逸脱・変更した場合は、その旨を総長に報告すること。（様式25）</span><span class="checkline">${mark('chk_stop_condition')} 研究実施責任者は、研究により期待される利益よりも起こりうる危険が高いと判断される場合又は研究により十分な成果が得られた場合には、当該研究を中止し、又は終了すること。また、遅延なく、その旨を総長へ報告すること。（様式22）</span><span class="checkline">${mark('chk_info_follow')} 研究実施責任者は、研究を終了するまでの間、研究に関する国内外における学会発表、論文発表等の情報について把握しておくとともに、把握した当該情報について、総長に対し報告すること。（様式自由）</span><span class="checkline">${mark('chk_annual_report')} 研究実施責任者は、毎年一回、研究の進捗状況、または研究が中止あるいは終了したときには、その旨及び結果の概要を文書により総長へ報告すること。（様式24、35）</span><span class="checkline">${mark('chk_threat_info')} 倫理的妥当性若しくは科学的合理性を損なう事実若しくは情報又は損なう恐れのある情報であって研究の継続に影響を与えると考えられる情報を入手した場合は、その旨を総長に報告すること。（様式自由）</span><span class="checkline">${mark('chk_fabrication_info')} 研究の実施において、研究計画に基づく研究対象者の選定方針や研究方法から逸脱した等の事実や情報若しくは研究データの改ざんやねつ造等の事実や情報又はそのような内容を知り得てから、事実であるか確定に至っていない情報を入手した場合は、その旨を総長に報告すること。（様式自由）</span><span class="checkline">${mark('chk_trust_info')} 研究結果の信頼を損なう情報（例：研究データの改ざんやねつ造の事実等）を得た場合は、その旨を総長に報告すること。（様式自由）</span><span class="checkline">${mark('chk_privacy_measure')} 研究実施責任者は、研究を実施するに当たり、被験者の個人情報の保護のために必要な措置を講じること。</span><span class="checkline">${mark('chk_best_care_after')} 研究実施責任者は、研究終了後においても、被験者が当該研究の結果により得られた最善の予防、診断及び治療を受けることができるよう努めること。</span><span class="checkline">${mark('chk_education')} 研究者等は、臨床研究の実施に先立ち、臨床研究に関するその他臨床研究の実施に必要な知識についての講習その他必要な教育を受けること。また、研究期間中も適宜継続して、教育・研修を受けること。</span><span class="checkline">${mark('chk_scientific_principle')} 研究者等は、一般的に受け入れられた科学的原則に従い、科学的文献その他科学に関連する情報源及び十分な実験に基づいて、研究を実施すること。</span><span class="checkline">${mark('chk_publication_anonym')} 研究者等は、研究の結果を公表する場合には、被験者を特定できないように行うこと。</span><span class="checkline">${mark('chk_prior_irb')} 臨床研究の実施にあたっては、事前に研究者の所属する研究機関および実施医療機関の倫理審査委員会の承認を受けなければならない。</span><br>【検体を静岡がんセンター敷地外へ持ち出さない研究の場合】<span class="checkline">${mark('chk_specimen_no_out_dispose')} 検体（血液など）の保存管理者は、保存期間終了後、検体を確実に廃棄すること。</span><br>【検体を静岡がんセンター敷地外へ持ち出す研究（原則禁止）の場合】<span class="checkline">${mark('chk_not_banking')} バンキングに相当するような研究ではないこと。</span><span class="checkline">${mark('chk_mou_audit')} 「静岡がんセンターが将来、当該検体に関する監査あるいは問い合わせを行う場合は、相手側は真摯に応じる。」ことを覚書で締結。</span><span class="checkline">${mark('chk_specimen_dispose_report')} 研究実施責任者は、検体（血液など）を廃棄した場合は、ただちに検体廃棄報告書を研究機関の長へ提出すること。</span><br>【研究終了後も検体（血液など）を保存する場合】<span class="checkline">${mark('chk_annual_storage_report')} 検体保管管理者は、検体が廃棄されるまで、毎年１回、検体保管状況報告書を研究機関の長へ提出すること。</span><br>【検体が返却される場合】<span class="checkline">${mark('chk_pathology_clinical_use')} 病理標本等を一般臨床として利用する。</span><span class="checkline">${mark('chk_reuse_approval')} 再度、研究に利用したい場合は、廃棄時期を明示の上、倫理審査委員会で改めて承認をもらう。</span><span class="checkline">${mark('chk_temp_storage_report')} 返却後に、再利用のため一時保管した場合には、検体一時保管届を提出し、承認されるまでの間は毎年１回、検体保管状況報告書を提出する。</span><br>【他の研究機関と共同で研究を実施する場合】<span class="checkline">${mark('chk_share_info_other_pi')} 研究実施責任者は、当該他の研究機関の研究実施責任者に対し、把握した発表情報等について報告すること。</span><span class="checkline">${mark('chk_confirm_other')} その他（${esc(textOr('confirm_other_text',''))}）</span></td></tr>
 <tr><th>29.教育・研修の受講状況</th><td class="cell-lines">${nlHtml(esc(textOr('education','未入力')))}</td></tr>
 <tr><th>30.EDC使用</th><td class="cell-lines">${nlHtml(esc(textOr('edc','未入力')))}</td></tr></table>`));
 document.getElementById('previewArea').innerHTML=pages.join('');
