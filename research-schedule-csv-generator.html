@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>研究スケジュールCSVジェネレーター</title>
+  <title>研究スケジュールCSV＋ガントチャート生成ツール</title>
+
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
   <style>
     :root, [data-theme="light"] {
       --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
@@ -13,6 +16,7 @@
       --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
       --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
       --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+
       --space-1: 0.25rem;
       --space-2: 0.5rem;
       --space-3: 0.75rem;
@@ -20,6 +24,10 @@
       --space-5: 1.25rem;
       --space-6: 1.5rem;
       --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
       --color-bg: #f7f6f2;
       --color-surface: #f9f8f5;
       --color-surface-2: #fbfbf9;
@@ -28,6 +36,7 @@
       --color-divider: #dcd9d5;
       --color-text: #28251d;
       --color-text-muted: #67655f;
+      --color-text-faint: #9f9d97;
       --color-text-inverse: #f9f8f4;
       --color-primary: #01696f;
       --color-primary-hover: #0c4e54;
@@ -35,12 +44,18 @@
       --color-success: #437a22;
       --color-warning: #964219;
       --color-error: #a12c7b;
+
       --radius-sm: 0.375rem;
       --radius-md: 0.5rem;
       --radius-lg: 0.75rem;
       --radius-xl: 1rem;
+
       --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
+      --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
+
       --font-body: 'Satoshi', 'Inter', sans-serif;
+      --font-display: 'Satoshi', 'Inter', sans-serif;
+
       --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -53,6 +68,7 @@
       --color-divider: #262523;
       --color-text: #e0dfdc;
       --color-text-muted: #a09e99;
+      --color-text-faint: #716f6a;
       --color-text-inverse: #1c1b19;
       --color-primary: #4f98a3;
       --color-primary-hover: #227f8b;
@@ -60,12 +76,20 @@
       --color-success: #6daa45;
       --color-warning: #bb653b;
       --color-error: #d163a7;
+      --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.2);
+      --shadow-md: 0 4px 12px oklch(0 0 0 / 0.3);
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -moz-text-size-adjust: none;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
     }
 
     body {
@@ -77,18 +101,9 @@
       background: var(--color-bg);
     }
 
-    input, button {
-      font: inherit;
-      color: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      background: none;
-    }
-
-    a, button, input {
+    button, input, select { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    a, button, input, select {
       transition:
         color var(--transition-interactive),
         background var(--transition-interactive),
@@ -97,9 +112,37 @@
         transform var(--transition-interactive);
     }
 
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .skip-link:focus {
+      left: var(--space-4);
+      top: var(--space-4);
+      width: auto;
+      height: auto;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      z-index: 1000;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+    }
+
     .app-shell {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 360px 1fr;
       min-height: 100dvh;
     }
 
@@ -110,6 +153,10 @@
       display: flex;
       flex-direction: column;
       gap: var(--space-6);
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      overflow-y: auto;
     }
 
     .main {
@@ -118,19 +165,6 @@
       display: flex;
       flex-direction: column;
       gap: var(--space-6);
-    }
-
-    .panel {
-      background: var(--color-surface);
-      border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .panel-body,
-    .header-card,
-    .metric-card {
-      padding: var(--space-5);
     }
 
     .brand {
@@ -147,26 +181,40 @@
       color: var(--color-primary);
       display: grid;
       place-items: center;
+      flex: none;
     }
 
     .brand-copy h1 {
       font-size: var(--text-lg);
       line-height: 1.2;
       font-weight: 700;
+      letter-spacing: -0.02em;
     }
 
-    .brand-copy p,
-    .help,
-    .metric-label,
-    .card-head p {
+    .brand-copy p {
       font-size: var(--text-xs);
       color: var(--color-text-muted);
     }
+
+    .panel {
+      background: var(--color-surface);
+      border: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel-body { padding: var(--space-5); }
 
     .section-title {
       font-size: var(--text-sm);
       font-weight: 700;
       margin-bottom: var(--space-3);
+      color: var(--color-text);
+    }
+
+    .help {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
     }
 
     .field {
@@ -182,7 +230,8 @@
 
     .field input[type="date"],
     .field input[type="file"],
-    .field input[type="text"] {
+    .field input[type="text"],
+    .field select {
       width: 100%;
       min-height: 46px;
       border-radius: var(--radius-md);
@@ -211,47 +260,52 @@
       gap: var(--space-2);
     }
 
+    .btn:active { transform: translateY(1px); }
+
     .btn-primary {
       background: var(--color-primary);
       color: var(--color-text-inverse);
     }
 
-    .btn-primary:hover {
-      background: var(--color-primary-hover);
-    }
+    .btn-primary:hover { background: var(--color-primary-hover); }
 
-    .btn-secondary,
-    .btn-ghost,
-    .theme-toggle {
+    .btn-secondary {
       background: var(--color-surface-2);
-      border: 1px solid color-mix(in oklab, var(--color-text) 14%, transparent);
+      border-color: color-mix(in oklab, var(--color-text) 14%, transparent);
+      color: var(--color-text);
     }
 
-    .topbar,
-    .card-head,
-    .utility-row {
+    .btn-ghost {
+      background: transparent;
+      border-color: color-mix(in oklab, var(--color-text) 14%, transparent);
+      color: var(--color-text-muted);
+    }
+
+    .header-card {
+      padding: var(--space-6);
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--space-3);
+      gap: var(--space-4);
       flex-wrap: wrap;
     }
 
-    .eyebrow,
-    .badge {
+    .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: var(--space-2);
       width: fit-content;
-      border-radius: 9999px;
+      border-radius: 999px;
       padding: 0.35rem 0.75rem;
-      font-size: var(--text-xs);
-      font-weight: 700;
-    }
-
-    .eyebrow {
       background: var(--color-primary-highlight);
       color: var(--color-primary);
+      font-size: var(--text-xs);
+      font-weight: 700;
     }
 
     .page-title {
@@ -263,41 +317,83 @@
 
     .lead {
       color: var(--color-text-muted);
-      max-width: 64ch;
+      max-width: 70ch;
+    }
+
+    .theme-toggle {
+      min-width: 46px;
+      min-height: 46px;
+      border-radius: var(--radius-md);
+      border: 1px solid color-mix(in oklab, var(--color-text) 14%, transparent);
+      background: var(--color-surface);
+      color: var(--color-text);
+      display: grid;
+      place-items: center;
     }
 
     .metrics {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: var(--space-4);
+    }
+
+    .metric-card {
+      padding: var(--space-5);
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .metric-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .metric-value {
       font-size: var(--text-lg);
       font-weight: 700;
       font-variant-numeric: tabular-nums lining-nums;
+      letter-spacing: -0.02em;
     }
 
     .content-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
+      grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.9fr);
       gap: var(--space-4);
       align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-4);
     }
 
     .card-head {
       padding: var(--space-5);
       border-bottom: 1px solid var(--color-divider);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
     }
 
     .card-head h2 {
       font-size: var(--text-lg);
       font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .card-head p {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
     }
 
     .table-wrap {
       overflow: auto;
-      max-height: 70dvh;
+      max-height: 46dvh;
     }
 
     table {
@@ -309,6 +405,7 @@
     thead th {
       position: sticky;
       top: 0;
+      z-index: 1;
       background: var(--color-surface);
       text-align: left;
       font-size: var(--text-xs);
@@ -327,30 +424,24 @@
       white-space: nowrap;
     }
 
-    .status-list {
-      display: grid;
-      gap: var(--space-4);
-      padding: var(--space-5);
+    tbody tr:hover {
+      background: color-mix(in oklab, var(--color-primary) 4%, var(--color-surface));
     }
 
-    .status-item,
-    .notice {
-      display: grid;
-      gap: var(--space-1);
-      padding: var(--space-4);
-      border-radius: var(--radius-lg);
-      background: var(--color-surface-2);
-      border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent);
+    .mono {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
     }
 
-    .status-item strong {
-      font-size: var(--text-sm);
-    }
-
-    .status-item span,
-    .notice {
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
       font-size: var(--text-xs);
-      color: var(--color-text-muted);
+      font-weight: 700;
+      width: fit-content;
     }
 
     .badge-neutral {
@@ -366,6 +457,44 @@
     .badge-warn {
       background: color-mix(in oklab, var(--color-warning) 14%, var(--color-surface));
       color: var(--color-warning);
+    }
+
+    .notice {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-offset);
+      border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .status-list {
+      display: grid;
+      gap: var(--space-4);
+      padding: var(--space-5);
+    }
+
+    .status-item {
+      display: grid;
+      gap: var(--space-1);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in oklab, var(--color-text) 10%, transparent);
+    }
+
+    .status-item strong { font-size: var(--text-sm); }
+    .status-item span {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .utility-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      justify-content: space-between;
     }
 
     .success-message,
@@ -389,77 +518,98 @@
       border-color: color-mix(in oklab, var(--color-error) 22%, transparent);
     }
 
-    .mono {
-      font-variant-numeric: tabular-nums lining-nums;
+    #ganttChart {
+      width: 100%;
+      min-height: 720px;
     }
 
-    @media (max-width: 1100px) {
-      .app-shell {
-        grid-template-columns: 1fr;
+    .plot-wrap {
+      padding: var(--space-4);
+    }
+
+    @media (max-width: 1220px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid color-mix(in oklab, var(--color-text) 12%, transparent);
       }
-      .metrics {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .content-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
-      .main,
-      .sidebar {
-        padding: var(--space-4);
-      }
-      .metrics {
-        grid-template-columns: 1fr;
-      }
-      .page-title {
-        font-size: 1.65rem;
+      .sidebar, .main { padding: var(--space-4); }
+      .metrics { grid-template-columns: 1fr; }
+      .page-title { font-size: 1.65rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">本文へ移動</a>
+
   <div class="app-shell">
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="設定パネル">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-label="Research schedule logo">
             <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"></rect>
             <path d="M7 9h10M7 13h6M7 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
           </svg>
         </div>
         <div class="brand-copy">
-          <h1>研究計画CSV</h1>
-          <p>GitHub Pages / HTML運用</p>
+          <h1>研究計画CSV＋ガント</h1>
+          <p>CSV生成 / 可視化 / 保存</p>
         </div>
       </div>
 
-      <section class="panel">
+      <section class="panel" aria-labelledby="input-section-title">
         <div class="panel-body">
-          <h2 class="section-title">入力</h2>
+          <h2 id="input-section-title" class="section-title">入力</h2>
 
           <div class="field">
             <label for="startDate">研究開始日</label>
             <input id="startDate" type="date" />
-            <p class="help">この日付を、テンプレートの最初の開始日に置き換える基準日として使います。</p>
+            <p class="help">テンプレートの最初の開始日を、この日付に置き換えます。</p>
           </div>
 
           <div class="field">
-            <label for="csvFile">テンプレートCSV（任意）</label>
+            <label for="csvFile">テンプレートCSV</label>
             <input id="csvFile" type="file" accept=".csv,text/csv" />
-            <p class="help">未選択でも内蔵テンプレートで動作します。</p>
+            <p class="help">Notion用CSVを読み込みます。</p>
           </div>
 
           <div class="field">
-            <label for="downloadName">出力ファイル名</label>
+            <label for="downloadName">CSV出力ファイル名</label>
             <input id="downloadName" type="text" value="research_schedule_generated.csv" />
+          </div>
+
+          <div class="field">
+            <label for="colorMode">ガント色分け</label>
+            <select id="colorMode">
+              <option value="phase">フェーズ</option>
+              <option value="category">カテゴリ</option>
+              <option value="owner">担当者</option>
+              <option value="status">ステータス</option>
+            </select>
           </div>
 
           <div class="button-row">
             <button class="btn btn-primary" id="generateBtn" type="button">CSVを生成</button>
             <button class="btn btn-secondary" id="downloadBtn" type="button" disabled>CSVを保存</button>
-            <button class="btn btn-ghost" id="resetBtn" type="button">内蔵テンプレートに戻す</button>
+            <button class="btn btn-secondary" id="saveGanttHtmlBtn" type="button" disabled>ガントHTML保存</button>
+            <button class="btn btn-secondary" id="saveGanttPngBtn" type="button" disabled>ガントPNG保存</button>
+            <button class="btn btn-ghost" id="sampleBtn" type="button">サンプルで試す</button>
           </div>
         </div>
       </section>
@@ -470,19 +620,19 @@
           <div class="status-list">
             <div class="status-item">
               <strong>基準列</strong>
-              <span>`date:期間:start` の最初の有効日を起点にします。</span>
+              <span>`date:期間:start` の最初の有効日を起点に再計算します。</span>
             </div>
             <div class="status-item">
-              <strong>日付計算</strong>
-              <span>各行の開始日・終了日を同じ差分だけ平行移動します。</span>
+              <strong>CSV保存</strong>
+              <span>変換済み行を UTF-8 BOM 付きCSVで保存します。</span>
             </div>
             <div class="status-item">
-              <strong>列保持</strong>
-              <span>列名・依存タスク・担当者・備考などはそのまま残します。</span>
+              <strong>ガントHTML保存</strong>
+              <span>後でブラウザで再表示できる自己完結HTMLを保存します。</span>
             </div>
             <div class="status-item">
-              <strong>出力形式</strong>
-              <span>UTF-8 BOM付きCSVで保存します。</span>
+              <strong>ガントPNG保存</strong>
+              <span>会議資料や申請書貼り付け用の画像として保存します。</span>
             </div>
           </div>
         </div>
@@ -496,19 +646,23 @@
       </section>
     </aside>
 
-    <main class="main">
+    <main class="main" id="main-content">
       <section class="panel">
         <div class="header-card">
           <div class="topbar">
-            <div class="eyebrow">研究開始日からCSVを自動完成</div>
+            <div class="eyebrow">研究開始日からCSVとガントを同時生成</div>
             <button class="theme-toggle" type="button" data-theme-toggle aria-label="テーマ切替"></button>
           </div>
-          <h2 class="page-title">CSV生成が反応しない問題を避けるため、内蔵テンプレート付きに修正した版です</h2>
-          <p class="lead">CSVを選ばなくても動きます。まず研究開始日だけ入れて「CSVを生成」を押せば、すぐにプレビューと保存が有効になります。</p>
+          <div>
+            <h2 class="page-title">研究計画CSVを再計算し、ガントチャートまで可視化・保存できる単一HTMLツール</h2>
+          </div>
+          <p class="lead">
+            CSVテンプレートを読み込み、開始日をずらして全日程を再計算し、その結果をCSV・インタラクティブHTML・PNGとして保存できます。
+          </p>
         </div>
       </section>
 
-      <section class="metrics">
+      <section class="metrics" aria-label="集計情報">
         <article class="panel metric-card">
           <div class="metric-label">読込行数</div>
           <div class="metric-value mono" id="metricRows">0</div>
@@ -525,36 +679,57 @@
           <div class="metric-label">変換後開始日</div>
           <div class="metric-value mono" id="metricNewDate">-</div>
         </article>
+        <article class="panel metric-card">
+          <div class="metric-label">表示バー数</div>
+          <div class="metric-value mono" id="metricBars">0</div>
+        </article>
       </section>
 
       <section class="content-grid">
-        <article class="panel">
-          <div class="card-head">
-            <div>
-              <h2>プレビュー</h2>
-              <p>先頭20件を表示します。</p>
+        <div class="stack">
+          <article class="panel">
+            <div class="card-head">
+              <div>
+                <h2>CSVプレビュー</h2>
+                <p>先頭20件を表示します。</p>
+              </div>
+              <div class="badge badge-neutral" id="previewBadge">未生成</div>
             </div>
-            <div class="badge badge-neutral" id="previewBadge">未生成</div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead id="previewHead"></thead>
-              <tbody id="previewBody"></tbody>
-            </table>
-          </div>
-        </article>
+            <div class="table-wrap">
+              <table aria-label="CSVプレビュー">
+                <thead id="previewHead"></thead>
+                <tbody id="previewBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="card-head">
+              <div>
+                <h2>ガントチャート</h2>
+                <p>色分け条件は左パネルで変更できます。</p>
+              </div>
+              <div class="badge badge-neutral" id="ganttBadge">未描画</div>
+            </div>
+            <div class="plot-wrap">
+              <div id="ganttChart" aria-label="ガントチャート表示領域"></div>
+            </div>
+          </article>
+        </div>
 
         <aside class="panel">
           <div class="card-head">
             <div>
               <h2>状態</h2>
-              <p>操作ガイドと生成結果</p>
+              <p>操作ガイドと出力内容</p>
             </div>
           </div>
           <div class="status-list">
-            <div class="notice">まず研究開始日を入力してください。CSVファイル未選択でも内蔵テンプレートで生成できます。</div>
+            <div class="notice">
+              操作順は、研究開始日入力 → CSV読込 → CSV生成 → 必要に応じてCSV保存 / ガントHTML保存 / ガントPNG保存です。
+            </div>
             <div>
-              <div class="badge badge-warn" id="modeBadge">内蔵テンプレート使用中</div>
+              <div class="badge badge-success" id="modeBadge">テンプレート待機中</div>
             </div>
             <div class="utility-row">
               <span class="help">開始日列</span>
@@ -565,8 +740,12 @@
               <strong class="mono">date:期間:end</strong>
             </div>
             <div class="utility-row">
-              <span class="help">保存文字コード</span>
-              <strong class="mono">UTF-8 BOM</strong>
+              <span class="help">HTML出力</span>
+              <strong class="mono">自己完結ファイル</strong>
+            </div>
+            <div class="utility-row">
+              <span class="help">PNG出力</span>
+              <strong class="mono">Plotly画像保存</strong>
             </div>
           </div>
         </aside>
@@ -576,53 +755,13 @@
 
   <script>
     (() => {
-      const BUILTIN_CSV = `タスク名,フェーズ,カテゴリ,ステータス,date:期間:start,date:期間:end,担当者,依存タスク,マイルストーン,工数_人日,優先度,アウトプット,備考
-研究仮説の設定,企画,研究計画,未着手,2026/6/1,2026/6/5,PI,,FALSE,2,高,研究仮説メモ,臨床的意義と主要評価項目の方向性を明確化
-先行研究レビュー,企画,研究計画,未着手,2026/6/1,2026/6/12,研究事務局,研究仮説の設定,FALSE,5,高,文献レビュー表,主要論文・類似RCT・ギャップ整理
-エンドポイント定義,企画,研究計画,未着手,2026/6/8,2026/6/12,PI/統計担当,研究仮説の設定,FALSE,2,高,主要・副次評価項目一覧,測定時点と解析対象集団も整理
-研究デザイン決定,企画,研究計画,未着手,2026/6/8,2026/6/16,PI/研究事務局,エンドポイント定義,FALSE,3,高,研究デザイン概要,割付、盲検化、評価スケジュールを整理
-サンプルサイズ設計,企画,統計解析,未着手,2026/6/13,2026/6/20,統計担当,エンドポイント定義,FALSE,3,高,サンプルサイズ根拠,脱落率考慮を含む
-プロトコルドラフト作成,プロトコル作成,研究計画,未着手,2026/6/17,2026/7/5,研究事務局,研究デザイン決定,FALSE,7,高,プロトコル v0.1,テンプレートに沿って初稿作成
-統計解析計画（SAP）作成,プロトコル作成,統計解析,未着手,2026/6/24,2026/7/8,統計担当,サンプルサイズ設計,FALSE,5,高,SAP v0.1,解析集団、主要解析、副次解析、欠測対応
-CRF設計,プロトコル作成,データ管理,未着手,2026/6/24,2026/7/10,DM,プロトコルドラフト作成,FALSE,4,中,CRF案,Visit構成と入力項目定義
-研究費申請書作成,プロトコル作成,研究計画,未着手,2026/6/24,2026/7/3,PI/事務,研究デザイン決定,FALSE,3,中,研究費申請書,必要時のみ
-プロトコル確定,プロトコル作成,研究計画,未着手,2026/7/9,2026/7/12,PI,統計解析計画（SAP）作成,TRUE,1,高,プロトコル v1.0,IRB提出版を確定
-IRB申請書作成,IRB,倫理審査,未着手,2026/7/10,2026/7/18,研究事務局,プロトコル確定,FALSE,3,高,IRB申請一式,様式・添付資料を整備
-同意説明文書作成,IRB,倫理審査,未着手,2026/7/10,2026/7/18,研究事務局/PI,プロトコル確定,FALSE,2,高,ICF v1.0,被験者向け平易表現を確認
-利益相反申告,IRB,倫理審査,未着手,2026/7/10,2026/7/15,PI/分担研究者,プロトコル確定,FALSE,1,高,COI申告書,全研究者分
-IRB提出,IRB,倫理審査,未着手,2026/7/19,2026/7/19,研究事務局,IRB申請書作成,TRUE,0.5,高,提出記録,締切日厳守
-IRB照会対応,IRB,倫理審査,未着手,2026/7/20,2026/8/15,研究事務局/PI,IRB提出,FALSE,3,高,回答書・改訂版資料,差戻し時の修正版対応
-IRB承認取得,IRB,倫理審査,未着手,2026/8/20,2026/8/20,研究事務局,IRB照会対応,TRUE,0.5,高,承認通知書,研究開始条件
-EDC構築,準備,データ管理,未着手,2026/8/1,2026/8/25,DM,CRF設計,FALSE,5,中,EDC環境,UAT含む
-研究者会議開催,準備,運営,未着手,2026/8/21,2026/8/25,事務局,IRB承認取得,FALSE,2,中,キックオフ資料,手順共有と役割確認
-モニタリング計画作成,準備,モニタリング,未着手,2026/8/10,2026/8/24,CRA/事務局,プロトコル確定,FALSE,3,中,モニタリング計画書,中央/オンサイト方針を整理
-SOP整備,準備,運営,未着手,2026/8/10,2026/8/24,事務局,プロトコル確定,FALSE,3,中,SOP一式,登録・報告・逸脱対応など
-スタッフトレーニング,準備,運営,未着手,2026/8/21,2026/8/28,事務局/CRC,研究者会議開催,FALSE,2,中,Training log,全担当者の教育記録
-登録開始,登録,被験者登録,未着手,2026/9/1,2026/9/1,PI/CRC,IRB承認取得,TRUE,0.5,高,First patient screening ready,契約・資材準備完了前提
-スクリーニング実施,登録,被験者登録,未着手,2026/9/1,2027/2/28,CRC,登録開始,FALSE,20,高,スクリーニングログ,適格性確認
-同意取得,登録,被験者登録,未着手,2026/9/1,2027/2/28,PI/CRC,スクリーニング実施,FALSE,20,高,同意取得記録,最新版ICF使用
-割付（ランダム化）,登録,被験者登録,未着手,2026/9/1,2027/2/28,CRC,同意取得,FALSE,10,高,割付記録,割付システムまたは封筒法
-最終症例登録（LPI）,登録,被験者登録,未着手,2027/2/28,2027/2/28,PI/CRC,割付（ランダム化）,TRUE,0.5,高,LPI記録,Last Patient In
-来院フォロー,追跡,追跡,未着手,2026/9/15,2027/8/31,CRC,割付（ランダム化）,FALSE,30,高,来院記録,評価スケジュールに従う
-データ入力・クエリ対応,追跡,データ管理,未着手,2026/9/15,2027/9/15,CRC/DM,EDC構築,FALSE,25,高,クエリ解決記録,定期レビュー
-AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,FALSE,8,高,安全性報告記録,重篤事象は即時報告
-モニタリング実施,追跡,モニタリング,未着手,2026/10/1,2027/9/30,CRA,モニタリング計画作成,FALSE,15,中,モニタリング報告書,定期実施
-追跡終了（LPLV）,追跡,追跡,未着手,2027/8/31,2027/8/31,PI/CRC,来院フォロー,TRUE,0.5,高,LPLV記録,Last Patient Last Visit
-データ固定（DB lock）,解析,データ管理,未着手,2027/9/20,2027/9/25,DM/統計担当,追跡終了（LPLV）,TRUE,2,高,DB lock記録,未解決クエリ解消後
-統計解析実施,解析,統計解析,未着手,2027/9/26,2027/10/20,統計担当,データ固定（DB lock）,FALSE,7,高,解析結果表,SAP準拠
-解析報告書作成,解析,統計解析,未着手,2027/10/10,2027/10/31,統計担当,統計解析実施,FALSE,4,高,統計解析報告書,図表含む
-主要結果確定,解析,統計解析,未着手,2027/10/31,2027/10/31,PI/統計担当,解析報告書作成,TRUE,0.5,高,主要結果サマリ,発表・論文化準備へ
-論文ドラフト作成,論文化,論文,未着手,2027/11/1,2027/12/10,PI/分担研究者,主要結果確定,FALSE,8,中,論文ドラフト,CONSORT準拠
-学会発表準備,論文化,発表,未着手,2027/11/10,2027/12/5,PI/事務局,主要結果確定,FALSE,3,中,演題・スライド,主要学会を想定
-論文投稿,論文化,論文,未着手,2027/12/15,2027/12/15,PI,論文ドラフト作成,TRUE,0.5,中,投稿記録,投稿規定チェック含む
-最終報告書作成,論文化,報告,未着手,2027/12/1,2027/12/20,研究事務局,主要結果確定,FALSE,3,中,最終報告書,資金元・施設報告用`;
-
       const html = document.documentElement;
       const themeBtn = document.querySelector('[data-theme-toggle]');
       let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       html.setAttribute('data-theme', theme);
 
       const setThemeIcon = () => {
+        themeBtn.setAttribute('aria-label', theme === 'dark' ? 'ライトモードに切替' : 'ダークモードに切替');
         themeBtn.innerHTML = theme === 'dark'
           ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 1.5V4M12 20V22.5M4.22 4.22L5.9 5.9M18.1 18.1L19.78 19.78M1.5 12H4M20 12H22.5M4.22 19.78L5.9 18.1M18.1 5.9L19.78 4.22"></path></svg>'
           : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3A7 7 0 0 0 21 12.79Z"></path></svg>';
@@ -633,31 +772,60 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         theme = theme === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', theme);
         setThemeIcon();
+        if (generatedRows.length) renderGantt(generatedRows);
       });
 
       const els = {
         startDate: document.getElementById('startDate'),
         csvFile: document.getElementById('csvFile'),
         downloadName: document.getElementById('downloadName'),
+        colorMode: document.getElementById('colorMode'),
         generateBtn: document.getElementById('generateBtn'),
         downloadBtn: document.getElementById('downloadBtn'),
-        resetBtn: document.getElementById('resetBtn'),
+        saveGanttHtmlBtn: document.getElementById('saveGanttHtmlBtn'),
+        saveGanttPngBtn: document.getElementById('saveGanttPngBtn'),
+        sampleBtn: document.getElementById('sampleBtn'),
         previewHead: document.getElementById('previewHead'),
         previewBody: document.getElementById('previewBody'),
         metricRows: document.getElementById('metricRows'),
         metricTasks: document.getElementById('metricTasks'),
         metricBaseDate: document.getElementById('metricBaseDate'),
         metricNewDate: document.getElementById('metricNewDate'),
+        metricBars: document.getElementById('metricBars'),
         successBox: document.getElementById('successBox'),
         errorBox: document.getElementById('errorBox'),
         previewBadge: document.getElementById('previewBadge'),
-        modeBadge: document.getElementById('modeBadge')
+        ganttBadge: document.getElementById('ganttBadge'),
+        modeBadge: document.getElementById('modeBadge'),
+        ganttChart: document.getElementById('ganttChart')
       };
 
-      let rawCsvText = BUILTIN_CSV;
+      const SAMPLE_CSV = `タスク名,フェーズ,カテゴリ,ステータス,date:期間:start,date:期間:end,担当者,依存タスク,マイルストーン,工数_人日,優先度,アウトプット,備考
+研究仮説の設定,企画,研究計画,未着手,2026/6/1,2026/6/5,PI,,FALSE,2,高,研究仮説メモ,臨床的意義と主要評価項目の方向性を明確化
+先行研究レビュー,企画,研究計画,進行中,2026/6/1,2026/6/12,研究事務局,研究仮説の設定,FALSE,5,高,文献レビュー表,主要論文・類似RCT・ギャップ整理
+エンドポイント定義,企画,研究計画,未着手,2026/6/8,2026/6/12,PI/統計担当,研究仮説の設定,FALSE,2,高,主要・副次評価項目一覧,測定時点と解析対象集団も整理
+研究デザイン決定,企画,研究計画,未着手,2026/6/8,2026/6/16,PI/研究事務局,エンドポイント定義,FALSE,3,高,研究デザイン概要,割付、盲検化、評価スケジュールを整理
+サンプルサイズ設計,企画,統計解析,未着手,2026/6/13,2026/6/20,統計担当,エンドポイント定義,FALSE,3,高,サンプルサイズ根拠,脱落率考慮を含む
+倫理審査資料作成,申請,IRB,未着手,2026/6/21,2026/7/5,研究事務局,研究デザイン決定,FALSE,6,高,IRB提出資料一式,説明文書・同意文書・実施計画書を統合
+CRF作成,準備,運用設計,未着手,2026/7/1,2026/7/12,CRC,研究デザイン決定,FALSE,4,中,CRF案,紙/EDC双方で確認
+施設立上げ,準備,運用設計,未着手,2026/7/10,2026/7/25,研究事務局,倫理審査資料作成,FALSE,5,高,施設開始手順書,契約・説明会・資材配布
+症例登録開始,実施,症例登録,未着手,2026/8/1,2026/10/31,各施設,施設立上げ,TRUE,20,高,登録患者一覧,月次進捗確認
+データ固定,解析,統計解析,未着手,2026/11/10,2026/11/20,統計担当,症例登録開始,TRUE,5,高,固定済み解析データ,照会対応完了後に固定`;
+
+      let rawCsvText = '';
       let generatedCsvText = '';
       let generatedRows = [];
       let generatedHeaders = [];
+      let currentGanttData = [];
+      let currentGanttLayout = {};
+      let currentGanttConfig = {};
+
+      const COLORSETS = {
+        phase: ['#01696f', '#0c4e54', '#437a22', '#964219', '#a12c7b', '#006494', '#7a39bb', '#da7101'],
+        category: ['#01696f', '#437a22', '#006494', '#da7101', '#964219', '#7a39bb', '#a12c7b', '#d19900'],
+        owner: ['#0c4e54', '#4f98a3', '#437a22', '#bb653b', '#9250d0', '#3b78ab', '#dd6974', '#e8af34'],
+        status: ['#01696f', '#d19900', '#964219', '#a12c7b', '#437a22', '#006494']
+      };
 
       const showSuccess = (message) => {
         els.successBox.textContent = message;
@@ -683,36 +851,6 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
 
-      const splitCsvRows = (text) => {
-        const rows = [];
-        let current = '';
-        let inQuotes = false;
-        const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-
-        for (let i = 0; i < normalized.length; i++) {
-          const ch = normalized[i];
-          const next = normalized[i + 1];
-
-          if (ch === '"') {
-            current += ch;
-            if (inQuotes && next === '"') {
-              current += next;
-              i++;
-            } else {
-              inQuotes = !inQuotes;
-            }
-          } else if (ch === '\n' && !inQuotes) {
-            if (current.trim() !== '') rows.push(current);
-            current = '';
-          } else {
-            current += ch;
-          }
-        }
-
-        if (current.trim() !== '') rows.push(current);
-        return rows;
-      };
-
       const parseCsvLine = (line) => {
         const cells = [];
         let current = '';
@@ -721,7 +859,6 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         for (let i = 0; i < line.length; i++) {
           const ch = line[i];
           const next = line[i + 1];
-
           if (ch === '"') {
             if (inQuotes && next === '"') {
               current += '"';
@@ -736,13 +873,13 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
             current += ch;
           }
         }
-
         cells.push(current);
         return cells;
       };
 
       const parseCsv = (text) => {
-        const lines = splitCsvRows(text);
+        const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        const lines = normalized.split('\n').filter(line => line.trim() !== '');
         if (!lines.length) return { headers: [], rows: [] };
 
         const headers = parseCsvLine(lines[0]);
@@ -754,39 +891,53 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
           });
           return obj;
         });
-
         return { headers, rows };
       };
 
       const csvEscape = (value) => {
         const str = String(value ?? '');
-        return /[",\n]/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str;
+        if (/[",\n]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
+        return str;
       };
 
-      const toCsv = (headers, rows) =>
-        '\uFEFF' + [headers.map(csvEscape).join(','), ...rows.map(row => headers.map(h => csvEscape(row[h])).join(','))].join('\r\n');
+      const toCsv = (headers, rows) => {
+        const head = headers.map(csvEscape).join(',');
+        const body = rows.map(row => headers.map(h => csvEscape(row[h])).join(',')).join('\r\n');
+        return '\uFEFF' + [head, body].filter(Boolean).join('\r\n');
+      };
 
       const parseDateFlexible = (value) => {
         if (!value) return null;
         const text = String(value).trim();
         const m = text.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
         if (!m) return null;
-
         const y = Number(m[1]);
         const mo = Number(m[2]) - 1;
         const d = Number(m[3]);
         const dt = new Date(y, mo, d);
-
         if (dt.getFullYear() !== y || dt.getMonth() !== mo || dt.getDate() !== d) return null;
         dt.setHours(0, 0, 0, 0);
         return dt;
       };
 
-      const formatDateJP = (date) =>
-        `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+      const formatDateJP = (date) => {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}/${m}/${d}`;
+      };
 
-      const diffDays = (from, to) =>
-        Math.round((to.getTime() - from.getTime()) / (24 * 60 * 60 * 1000));
+      const formatDateISO = (date) => {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      };
+
+      const diffDays = (from, to) => {
+        const ms = 24 * 60 * 60 * 1000;
+        return Math.round((to.getTime() - from.getTime()) / ms);
+      };
 
       const addDays = (date, days) => {
         const d = new Date(date);
@@ -795,11 +946,13 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         return d;
       };
 
-      const findBaseStartDate = (rows) =>
-        rows
-          .map(r => parseDateFlexible(r['date:期間:start']))
+      const findBaseStartDate = (rows) => {
+        const dates = rows
+          .map(row => parseDateFlexible(row['date:期間:start']))
           .filter(Boolean)
-          .sort((a, b) => a - b)[0] || null;
+          .sort((a, b) => a - b);
+        return dates[0] || null;
+      };
 
       const renderPreview = (headers, rows) => {
         els.previewHead.innerHTML = '';
@@ -811,7 +964,7 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
           return;
         }
 
-        const previewHeaders = headers.slice(0, 6);
+        const previewHeaders = headers.slice(0, 7);
         els.previewHead.innerHTML = `<tr>${previewHeaders.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
 
         rows.slice(0, 20).forEach(row => {
@@ -821,15 +974,187 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         });
       };
 
-      const updateMetrics = (rows, baseDate, newDate) => {
+      const updateMetrics = (rows, baseDate, newDate, barCount = 0) => {
         els.metricRows.textContent = String(rows.length);
         els.metricTasks.textContent = String(rows.filter(r => String(r['タスク名'] || '').trim() !== '').length);
         els.metricBaseDate.textContent = baseDate ? formatDateJP(baseDate) : '-';
         els.metricNewDate.textContent = newDate ? formatDateJP(newDate) : '-';
+        els.metricBars.textContent = String(barCount);
       };
 
-      const generateSchedule = () => {
+      const normalizeGanttRows = (rows) => {
+        return rows
+          .map((row, index) => {
+            const start = parseDateFlexible(row['date:期間:start']);
+            const end = parseDateFlexible(row['date:期間:end']);
+            const task = String(row['タスク名'] || '').trim();
+            if (!task || !start || !end) return null;
+
+            return {
+              task,
+              phase: String(row['フェーズ'] || '未分類').trim() || '未分類',
+              category: String(row['カテゴリ'] || '未分類').trim() || '未分類',
+              owner: String(row['担当者'] || '未設定').trim() || '未設定',
+              status: String(row['ステータス'] || '未設定').trim() || '未設定',
+              start,
+              end,
+              startISO: formatDateISO(start),
+              endISO: formatDateISO(end),
+              duration: Math.max(1, diffDays(start, end) + 1),
+              note: String(row['備考'] || '').trim(),
+              output: String(row['アウトプット'] || '').trim(),
+              priority: String(row['優先度'] || '').trim(),
+              order: index
+            };
+          })
+          .filter(Boolean)
+          .sort((a, b) => a.start - b.start || a.order - b.order);
+      };
+
+      const buildColorMap = (items, mode) => {
+        const unique = [...new Set(items)];
+        const palette = COLORSETS[mode] || COLORSETS.phase;
+        const map = new Map();
+        unique.forEach((key, idx) => map.set(key, palette[idx % palette.length]));
+        return map;
+      };
+
+      const getColorKey = (item, mode) => {
+        if (mode === 'category') return item.category;
+        if (mode === 'owner') return item.owner;
+        if (mode === 'status') return item.status;
+        return item.phase;
+      };
+
+      const renderGantt = async (rows) => {
+        const items = normalizeGanttRows(rows);
+        if (!items.length) {
+          els.ganttBadge.textContent = '未描画';
+          els.ganttBadge.className = 'badge badge-neutral';
+          updateMetrics(rows, findBaseStartDate(rows), parseDateFlexible(els.startDate.value.replace(/-/g, '/')), 0);
+          return;
+        }
+
+        const mode = els.colorMode.value;
+        const keys = items.map(item => getColorKey(item, mode));
+        const colorMap = buildColorMap(keys, mode);
+
+        const traces = items.map(item => {
+          const key = getColorKey(item, mode);
+          return {
+            type: 'bar',
+            orientation: 'h',
+            x: [item.duration],
+            y: [item.task],
+            base: item.startISO,
+            marker: {
+              color: colorMap.get(key),
+              line: { color: colorMap.get(key), width: 1 }
+            },
+            hovertemplate:
+              `<b>${escapeHtml(item.task)}</b><br>` +
+              `開始: ${item.startISO}<br>` +
+              `終了: ${item.endISO}<br>` +
+              `${mode === 'phase' ? 'フェーズ' : mode === 'category' ? 'カテゴリ' : mode === 'owner' ? '担当者' : 'ステータス'}: ${escapeHtml(key)}<br>` +
+              `期間: ${item.duration}日<br>` +
+              (item.output ? `アウトプット: ${escapeHtml(item.output)}<br>` : '') +
+              (item.note ? `備考: ${escapeHtml(item.note)}<br>` : '') +
+              `<extra></extra>`,
+            name: key,
+            showlegend: false,
+            customdata: [[key, item.phase, item.category, item.owner, item.status]]
+          };
+        });
+
+        const paperBg = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const plotBg = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const fontColor = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--color-divider').trim();
+
+        const legendKeys = [...new Set(keys)];
+        legendKeys.forEach(key => {
+          traces.push({
+            type: 'scatter',
+            mode: 'markers',
+            x: [items[0].startISO],
+            y: [items[0].task],
+            marker: { size: 10, color: colorMap.get(key) },
+            name: key,
+            visible: 'legendonly',
+            hoverinfo: 'skip'
+          });
+        });
+
+        const layout = {
+          title: {
+            text: '研究計画ガントチャート',
+            font: { size: 20, color: fontColor, family: 'Satoshi, Inter, sans-serif' },
+            x: 0,
+            xanchor: 'left'
+          },
+          barmode: 'overlay',
+          paper_bgcolor: paperBg,
+          plot_bgcolor: plotBg,
+          font: { color: fontColor, family: 'Satoshi, Inter, sans-serif' },
+          margin: { l: 180, r: 40, t: 70, b: 50 },
+          xaxis: {
+            type: 'date',
+            title: { text: '日付' },
+            gridcolor: gridColor,
+            tickformat: '%Y-%m-%d'
+          },
+          yaxis: {
+            automargin: true,
+            autorange: 'reversed',
+            gridcolor: 'rgba(0,0,0,0)'
+          },
+          legend: {
+            orientation: 'h',
+            x: 0,
+            y: 1.12
+          },
+          height: Math.max(720, items.length * 48 + 180),
+          hoverlabel: { align: 'left' }
+        };
+
+        const config = {
+          responsive: true,
+          displaylogo: false,
+          toImageButtonOptions: {
+            format: 'png',
+            filename: 'research_gantt_chart',
+            width: 1600,
+            height: Math.max(900, items.length * 52 + 220),
+            scale: 2
+          }
+        };
+
+        currentGanttData = traces;
+        currentGanttLayout = layout;
+        currentGanttConfig = config;
+
+        await Plotly.newPlot(els.ganttChart, traces, layout, config);
+
+        els.ganttBadge.textContent = '描画済み';
+        els.ganttBadge.className = 'badge badge-success';
+        els.saveGanttHtmlBtn.disabled = false;
+        els.saveGanttPngBtn.disabled = false;
+
+        updateMetrics(
+          rows,
+          findBaseStartDate(rows),
+          parseDateFlexible(els.startDate.value.replace(/-/g, '/')),
+          items.length
+        );
+      };
+
+      const generateSchedule = async () => {
         clearMessages();
+
+        if (!rawCsvText) {
+          showError('先にテンプレートCSVを読み込んでください。');
+          return;
+        }
 
         if (!els.startDate.value) {
           showError('研究開始日を入力してください。');
@@ -848,7 +1173,7 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
           return;
         }
 
-        const newStartDate = parseDateFlexible(els.startDate.value);
+        const newStartDate = parseDateFlexible(els.startDate.value.replace(/-/g, '/'));
         if (!newStartDate) {
           showError('研究開始日の形式が正しくありません。');
           return;
@@ -861,7 +1186,6 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
 
           if (s) next['date:期間:start'] = formatDateJP(addDays(newStartDate, diffDays(baseDate, s)));
           if (e) next['date:期間:end'] = formatDateJP(addDays(newStartDate, diffDays(baseDate, e)));
-
           return next;
         });
 
@@ -870,14 +1194,15 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         generatedCsvText = toCsv(parsed.headers, nextRows);
 
         renderPreview(generatedHeaders, generatedRows);
-        updateMetrics(generatedRows, baseDate, newStartDate);
+        await renderGantt(generatedRows);
 
         els.downloadBtn.disabled = false;
         els.previewBadge.textContent = '生成済み';
-        els.modeBadge.textContent = 'CSV生成完了';
+        els.previewBadge.className = 'badge badge-success';
+        els.modeBadge.textContent = 'CSV・ガント生成完了';
         els.modeBadge.className = 'badge badge-success';
 
-        showSuccess(`CSVを生成しました。${generatedRows.length} 行を変換済みです。`);
+        showSuccess(`CSVとガントチャートを生成しました。${generatedRows.length} 行を変換済みです。`);
       };
 
       const downloadCsv = () => {
@@ -892,7 +1217,6 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         const blob = new Blob([generatedCsvText], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-
         a.href = url;
         a.download = safeName;
         document.body.appendChild(a);
@@ -903,31 +1227,159 @@ AE/SAE報告,追跡,安全性,未着手,2026/9/1,2027/9/15,PI/CRC,登録開始,F
         showSuccess(`CSVを保存しました。ファイル名: ${safeName}`);
       };
 
-      const loadBuiltinTemplate = () => {
-        rawCsvText = BUILTIN_CSV;
-        els.csvFile.value = '';
-        els.modeBadge.textContent = '内蔵テンプレート使用中';
+      const getPlotlyScriptText = async () => {
+        const res = await fetch('https://cdn.plot.ly/plotly-2.35.2.min.js');
+        return await res.text();
+      };
+
+      const buildStandaloneHtml = async () => {
+        const plotlyScript = await getPlotlyScriptText();
+        const htmlTheme = html.getAttribute('data-theme') || 'light';
+
+        return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>研究ガントチャート</title>
+  <style>
+    :root {
+      color-scheme: ${htmlTheme === 'dark' ? 'dark' : 'light'};
+      --bg: ${htmlTheme === 'dark' ? '#171614' : '#f7f6f2'};
+      --surface: ${htmlTheme === 'dark' ? '#1c1b19' : '#f9f8f5'};
+      --text: ${htmlTheme === 'dark' ? '#e0dfdc' : '#28251d'};
+      --muted: ${htmlTheme === 'dark' ? '#a09e99' : '#67655f'};
+      --border: ${htmlTheme === 'dark' ? '#393836' : '#d4d1ca'};
+      --font: Satoshi, Inter, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+    #chart {
+      width: 100%;
+      min-height: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>研究ガントチャート</h1>
+    <p>保存時点のインタラクティブ表示です。</p>
+    <div id="chart"></div>
+  </div>
+  <script type="text/javascript">${plotlyScript}<\/script>
+  <script type="text/javascript">
+    const data = ${JSON.stringify(currentGanttData)};
+    const layout = ${JSON.stringify(currentGanttLayout)};
+    const config = ${JSON.stringify({ responsive: true, displaylogo: false })};
+    Plotly.newPlot('chart', data, layout, config);
+  <\/script>
+</body>
+</html>`;
+      };
+
+      const saveGanttHtml = async () => {
+        if (!currentGanttData.length) {
+          showError('先にガントチャートを生成してください。');
+          return;
+        }
+
+        try {
+          const htmlText = await buildStandaloneHtml();
+          const blob = new Blob([htmlText], { type: 'text/html;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'research_gantt_chart.html';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          showSuccess('ガントHTMLを保存しました。');
+        } catch (error) {
+          showError('ガントHTML保存に失敗しました。ネットワーク接続を確認してください。');
+        }
+      };
+
+      const saveGanttPng = async () => {
+        if (!currentGanttData.length) {
+          showError('先にガントチャートを生成してください。');
+          return;
+        }
+
+        try {
+          await Plotly.downloadImage(els.ganttChart, {
+            format: 'png',
+            filename: 'research_gantt_chart',
+            width: 1600,
+            height: Math.max(900, normalizeGanttRows(generatedRows).length * 52 + 220),
+            scale: 2
+          });
+          showSuccess('ガントPNGを保存しました。');
+        } catch (error) {
+          showError('ガントPNG保存に失敗しました。');
+        }
+      };
+
+      const loadSelectedFile = async (file) => {
+        clearMessages();
+        if (!file) return;
+        rawCsvText = await file.text();
+        els.modeBadge.textContent = 'テンプレート読込済み';
         els.modeBadge.className = 'badge badge-warn';
-        showSuccess('内蔵テンプレートを読み込みました。');
+        showSuccess(`テンプレートCSVを読み込みました。ファイル名: ${file.name}`);
+      };
+
+      const loadSample = () => {
+        rawCsvText = SAMPLE_CSV;
+        els.modeBadge.textContent = 'サンプル読込中';
+        els.modeBadge.className = 'badge badge-warn';
+        showSuccess('内蔵サンプルCSVを読み込みました。');
       };
 
       els.csvFile.addEventListener('change', async (event) => {
         const file = event.target.files?.[0];
-        if (!file) return;
-
-        rawCsvText = await file.text();
-        els.modeBadge.textContent = '外部CSV読込済み';
-        els.modeBadge.className = 'badge badge-warn';
-        showSuccess(`テンプレートCSVを読み込みました。ファイル名: ${file.name}`);
+        await loadSelectedFile(file);
       });
 
       els.generateBtn.addEventListener('click', generateSchedule);
       els.downloadBtn.addEventListener('click', downloadCsv);
-      els.resetBtn.addEventListener('click', loadBuiltinTemplate);
+      els.saveGanttHtmlBtn.addEventListener('click', saveGanttHtml);
+      els.saveGanttPngBtn.addEventListener('click', saveGanttPng);
+      els.sampleBtn.addEventListener('click', loadSample);
+      els.colorMode.addEventListener('change', async () => {
+        if (generatedRows.length) await renderGantt(generatedRows);
+      });
 
-      renderPreview([], []);
-      updateMetrics([], null, null);
-      loadBuiltinTemplate();
+      const initEmpty = () => {
+        els.previewHead.innerHTML = '<tr><th>データなし</th></tr>';
+        els.previewBody.innerHTML = '<tr><td>まだCSVは生成されていません。</td></tr>';
+        updateMetrics([], null, null, 0);
+      };
+
+      initEmpty();
     })();
   </script>
 </body>
