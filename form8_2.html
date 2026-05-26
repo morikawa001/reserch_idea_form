@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -7,314 +6,369 @@
 <title>様式8-2｜臨床研究申請書（探索研究IRB用）</title>
 <style>
 :root{
---line:#111;
---thin:#444;
---paper:#fff;
---bg:#e9edf3;
---text:#111;
---sub:#555;
---accent:#1a5c96;
---warn:#b00020;
---sheet:#ffffff;
+  --line:#111;
+  --thin:#444;
+  --paper:#fff;
+  --bg:#e9edf3;
+  --text:#111;
+  --sub:#555;
+  --accent:#1a5c96;
+  --warn:#b00020;
+  --sheet:#ffffff;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{font-family:"Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--text);}
+body{
+  font-family:"Yu Gothic","Meiryo",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 .wrap{max-width:1580px;margin:0 auto;padding:14px;}
-.topbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-.topbar a,.topbar button{border:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;background:#1a5c96;color:#fff;}
-.topbar .secondary{background:#fff;color:#1a5c96;border:1px solid #1a5c96;}
-.layout{display:grid;grid-template-columns:390px 1fr;gap:16px;align-items:start;}
-.panel{background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:16px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;}
+.topbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.topbar a,.topbar button{
+  border:none;
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  background:#1a5c96;
+  color:#fff;
+}
+.topbar .secondary{
+  background:#fff;
+  color:#1a5c96;
+  border:1px solid #1a5c96;
+}
+.layout{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:16px;
+  align-items:start;
+}
+.panel{
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  padding:16px;
+  position:sticky;
+  top:14px;
+  max-height:calc(100vh - 28px);
+  overflow:auto;
+}
 .panel h2{font-size:18px;margin:0 0 10px;color:#1a5c96;}
-.panel h3{font-size:13px;color:#1a5c96;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid #d9e4f0;}
+.panel h3{
+  font-size:13px;
+  color:#1a5c96;
+  margin:14px 0 8px;
+  padding-bottom:4px;
+  border-bottom:1px solid #d9e4f0;
+}
 label{display:block;font-size:12px;font-weight:700;margin:7px 0 4px;}
-input[type="text"], textarea, select{width:100%;border:1px solid #c9d2dd;border-radius:5px;padding:7px 9px;font-size:12px;font-family:inherit;background:#fff;}
+input[type="text"], textarea, select{
+  width:100%;
+  border:1px solid #c9d2dd;
+  border-radius:5px;
+  padding:7px 9px;
+  font-size:12px;
+  font-family:inherit;
+  background:#fff;
+}
 textarea{min-height:56px;resize:vertical;line-height:1.5;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .small{font-size:11px;color:#666;line-height:1.5;}
 .check-grid label{font-weight:400;margin:4px 0;}
-.preview-area{display:flex;flex-direction:column;gap:18px;align-items:center;min-width:0;overflow:auto;}
-.page{width:210mm;min-height:297mm;margin:0 auto;background:var(--sheet);box-shadow:0 2px 16px rgba(0,0,0,.12);padding:7mm 8mm 8mm;color:#000;position:relative;page-break-after:always;break-after:page;}
-.page-inner{border:1.6px solid #111;padding:3.2mm 3.6mm 4mm;min-height:calc(297mm - 15mm);background:#fff;}
-.doc-head{font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;font-size:10px;line-height:1.15;margin-bottom:1.5mm;}
-.doc-head .date-row{display:flex;justify-content:space-between;gap:8px;align-items:flex-end;}
+.preview-area{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  align-items:center;
+  min-width:0;
+  overflow:auto;
+}
+.page{
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  background:var(--sheet);
+  box-shadow:0 2px 16px rgba(0,0,0,.12);
+  padding:7mm 8mm 8mm;
+  color:#000;
+  position:relative;
+  page-break-after:always;
+  break-after:page;
+}
+.page-inner{
+  border:1.6px solid #111;
+  padding:3.2mm 3.6mm 4mm;
+  min-height:calc(297mm - 15mm);
+  height:calc(297mm - 15mm);
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+.doc-head{
+  font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:10px;
+  line-height:1.15;
+  margin-bottom:1.5mm;
+}
+.doc-head .date-row{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:flex-end;
+}
 .doc-head .center-note{flex:1;text-align:center;}
-.doc-title{text-align:center;font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;font-size:17px;font-weight:700;line-height:1.25;margin:1mm 0 1.5mm;letter-spacing:.04em;}
-.note-red{color:var(--warn);font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;font-size:10px;line-height:1.35;margin-bottom:1mm;}
-.page-no{font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;font-size:10px;text-align:right;margin-bottom:1mm;}
-table.form{width:100%;border-collapse:collapse;table-layout:fixed;font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;font-size:10.5px;line-height:1.25;margin:0;}
-table.form th, table.form td{border:1.35px solid var(--line);padding:3px 5px;vertical-align:top;word-break:break-word;}
+.doc-title{
+  text-align:center;
+  font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:17px;
+  font-weight:700;
+  line-height:1.25;
+  margin:1mm 0 1.5mm;
+  letter-spacing:.04em;
+}
+.note-red{
+  color:var(--warn);
+  font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:10px;
+  line-height:1.35;
+  margin-bottom:1mm;
+}
+.page-no{
+  font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:10px;
+  text-align:right;
+  margin-bottom:1mm;
+}
+.page-body{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+table.form{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-family:"MS Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+  font-size:10.5px;
+  line-height:1.25;
+  margin:0;
+}
+table.form th, table.form td{
+  border:1.35px solid var(--line);
+  padding:3px 5px;
+  vertical-align:top;
+  word-break:break-word;
+}
 table.form th{text-align:left;font-weight:700;background:#fff;}
+table.form.form-fill{
+  height:100%;
+}
+table.form.form-fill tbody{
+  height:100%;
+}
+table.form.form-fill tr.row-flex{
+  height:1%;
+}
+table.form.form-fill td.fill, 
+table.form.form-fill th.fill{
+  height:100%;
+}
 .dense{line-height:1.18;}
 .tiny{font-size:9.2px;line-height:1.24;}
 .mini{font-size:8.6px;line-height:1.16;}
-.cell-lines{white-space:pre-wrap;line-height:1.06;}
-.checkline{display:block;margin:0;}
-.indent{padding-left:1em;}.compact-note{line-height:.98;margin-top:0;margin-bottom:0}.page-frame table.form > tbody > tr:last-child > td{padding-bottom:.5px}
+.cell-lines{white-space:pre-wrap;line-height:1.18;}
+.checkline{display:block;margin:0 0 1px;}
+.indent{padding-left:1em;}
+.compact-note{line-height:.98;margin-top:0;margin-bottom:0;}
 .subblock{margin-top:4px;font-weight:700;}
+.a4-fit td, .a4-fit th{
+  overflow:hidden;
+}
 @page{size:A4;margin:0;}
-@media (max-width:1300px){.layout{grid-template-columns:1fr;}.panel{position:static;max-height:none;}.page{width:100%;min-height:auto;}.page-inner{min-height:auto;}}
-@media print{html,body{background:#fff}body{margin:0}.topbar,.panel{display:none!important}.wrap{max-width:none;padding:0}.preview-area{gap:0;overflow:visible}.page{box-shadow:none;margin:0;width:210mm;height:297mm;padding:3.5mm 4.5mm 3.5mm;box-sizing:border-box}}
+@media (max-width:1300px){
+  .layout{grid-template-columns:1fr;}
+  .panel{position:static;max-height:none;}
+  .page{width:100%;min-height:auto;}
+  .page-inner{min-height:auto;height:auto;}
+}
+@media print{
+  html,body{background:#fff;}
+  body{margin:0;}
+  .topbar,.panel{display:none!important;}
+  .wrap{max-width:none;padding:0;}
+  .preview-area{gap:0;overflow:visible;}
+  .page{
+    box-shadow:none;
+    margin:0;
+    width:210mm;
+    height:297mm;
+    padding:3.5mm 4.5mm 3.5mm;
+    box-sizing:border-box;
+  }
+  .page-inner{
+    min-height:calc(297mm - 7mm);
+    height:calc(297mm - 7mm);
+  }
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="topbar">
-<a href="index.html" class="secondary">← index.html に戻る</a>
-<button type="button" onclick="updatePreview()">プレビュー更新</button>
-<button type="button" onclick="clearFormAll()">入力内容をすべてクリア</button>
-<button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
+  <div class="topbar">
+    <a href="index.html" class="secondary">← index.html に戻る</a>
+    <button type="button" onclick="updatePreview()">プレビュー更新</button>
+    <button type="button" onclick="clearFormAll()">入力内容をすべてクリア</button>
+    <button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>様式8-2 入力</h2>
+
+      <h3>基本情報</h3>
+      <div class="grid2">
+        <div><label for="docDate">作成日</label><input type="text" id="docDate" placeholder="2026年5月20日"></div>
+        <div><label for="pageInfo">ページ表記</label><input type="text" id="pageInfo" value=""></div>
+      </div>
+
+      <label for="theme">1.研究課題名</label><input type="text" id="theme">
+      <label for="secretTitle">秘密保持のための課題名</label><input type="text" id="secretTitle">
+
+      <h3>2.研究組織の分類</h3>
+      <div class="check-grid">
+        <label><input type="checkbox" id="org_single"> 単独施設による研究</label>
+        <label><input type="checkbox" id="org_lead"> 多施設共同研究の主任研究者</label>
+        <label><input type="checkbox" id="org_participate"> 多施設共同研究への参加</label>
+        <label for="leadSite">主任施設名</label><input type="text" id="leadSite">
+        <label><input type="checkbox" id="approval_yes"> 他施設の倫理委員会による承認証明書あり</label>
+        <label><input type="checkbox" id="approval_no"> 他施設の倫理委員会による承認証明書なし</label>
+        <label><input type="checkbox" id="office_yes"> 研究事務局の請負あり</label>
+        <label><input type="checkbox" id="office_no"> 研究事務局の請負なし</label>
+        <label><input type="checkbox" id="org_student"> 大学院の学生としての研究</label>
+        <label for="orgOther">その他</label><input type="text" id="orgOther">
+      </div>
+
+      <h3>3.研究の分類・適応指針</h3>
+      <div class="check-grid">
+        <label><input type="checkbox" id="guide_life"> 人を対象とする生命科学・医学系研究</label>
+        <label><input type="checkbox" id="invasion_yes"> 侵襲あり</label>
+        <label><input type="checkbox" id="invasion_no"> 侵襲なし</label>
+        <label><input type="checkbox" id="minor_yes"> 侵襲の度合いは軽微</label>
+        <label><input type="checkbox" id="minor_no"> 侵襲の度合いは軽微でない</label>
+        <label><input type="checkbox" id="medical_over_no"> 通常診療を超える医療行為なし</label>
+        <label><input type="checkbox" id="medical_over_yes"> 通常診療を超える医療行為あり</label>
+        <label><input type="checkbox" id="intervention_yes"> 介入あり</label>
+        <label><input type="checkbox" id="intervention_no"> 介入なし</label>
+        <label><input type="checkbox" id="specimen_yes"> 人体から取得する試料を用いる</label>
+        <label><input type="checkbox" id="specimen_no"> 人体から取得する試料を用いない</label>
+        <label><input type="checkbox" id="biobank_yes"> バイオバンク室保存検体を使用する</label>
+        <label><input type="checkbox" id="biobank_no"> バイオバンク室保存検体を使用しない</label>
+        <label for="otherGuide">上記以外の研究（適応される倫理指針等）</label><input type="text" id="otherGuide">
+      </div>
+
+      <h3>4〜10</h3>
+      <label for="place">4.研究機関名・研究実施場所</label><input type="text" id="place" value="静岡がんセンター">
+      <label for="responsibleName">5.研究実施責任者氏名</label><input type="text" id="responsibleName">
+      <label for="researchers">6.研究者氏名</label><textarea id="researchers"></textarea>
+
+      <label for="collab">7.共同研究機関（代表研究者名とその役割）</label><textarea id="collab"></textarea>
+      <label for="purposeSummary">8.研究の意義・目的の概略</label><textarea id="purposeSummary"></textarea>
+      <div class="grid2">
+        <div><label for="subjectCount">9(1).被験者数</label><input type="text" id="subjectCount"></div>
+        <div><label for="selectionPolicy">9(2).被験者の選定方針</label><textarea id="selectionPolicy"></textarea></div>
+      </div>
+      <label for="methodSummary">10(1).研究方法 概略</label><textarea id="methodSummary"></textarea>
+      <label for="evaluationItems">10(2).評価項目</label><textarea id="evaluationItems"></textarea>
+
+      <h3>11.実施予定期間</h3>
+      <label><input type="checkbox" id="period_start_approval"> 開始：承認日より</label>
+      <label><input type="checkbox" id="period_start_date_check"> 開始：年月日より（承認日より後の場合）</label>
+      <input type="text" id="period_start_date">
+      <label><input type="checkbox" id="period_end_year_check"> 終了：年12月31日まで</label>
+      <input type="text" id="period_end_year">
+
+      <h3>12.利益・不利益</h3>
+      <label><input type="checkbox" id="benefit_none_check"> 直接的な利益は期待できない</label>
+      <label><input type="checkbox" id="benefit_yes_check"> 直接的な利益が期待できる</label>
+      <input type="text" id="benefit_yes_text" placeholder="具体的に">
+      <label><input type="checkbox" id="risk_yes_check"> 負担やリスクあり</label>
+      <input type="text" id="risk_yes_text" placeholder="具体的に">
+      <label><input type="checkbox" id="risk_normal_no"> 通常の診療範囲内であり、負担やリスクはない</label>
+      <label><input type="checkbox" id="risk_unrelated_no"> 診療には関係なく、負担やリスクはない</label>
+      <label><input type="checkbox" id="risk_other_check"> その他</label>
+      <input type="text" id="risk_other_text">
+      <label for="riskMin">(3)最小化対策</label><textarea id="riskMin"></textarea>
+
+      <h3>13.保存・廃棄</h3>
+      <label><input type="checkbox" id="store_during_sc"> 研究期間中：静岡がんセンター内で保存する</label>
+      <label><input type="checkbox" id="store_during_collab"> 研究期間中：共同研究機関で保存する</label>
+      <label><input type="checkbox" id="store_during_both"> 研究期間中：静岡がんセンター内で保存し、かつ共同研究機関で保存する</label>
+      <label><input type="checkbox" id="store_during_registry"> 研究期間中：静岡がんセンター内で保存し、かつ学会登録</label>
+      <label><input type="checkbox" id="manager_sc"> 保存管理責任者：静岡がんセンターの研究実施責任者</label>
+      <label><input type="checkbox" id="manager_other"> 保存管理責任者：①以外の研究者が管理する</label>
+      <div class="grid2">
+        <div><label for="managerAff">所属</label><input type="text" id="managerAff"></div>
+        <div><label for="managerTitle">職名</label><input type="text" id="managerTitle"></div>
+      </div>
+      <label for="managerName">氏名</label><input type="text" id="managerName">
+      <label><input type="checkbox" id="save_blood"> 研究終了後：血液・組織等の保存</label><input type="text" id="save_blood_until" placeholder="保存期間 年12月31日まで">
+      <label><input type="checkbox" id="save_data"> 研究終了後：データの保存（対応表を含む）</label><input type="text" id="save_data_until" placeholder="保存期間 年12月31日まで">
+      <label><input type="checkbox" id="save_other_check"> 研究終了後：その他</label><input type="text" id="save_other_text">
+      <label><input type="checkbox" id="after_place_sc"> 保存の場所と保存管理責任者：静岡がんセンター内で保存する</label>
+      <input type="text" id="after_place_sc_place" placeholder="場所">
+      <input type="text" id="after_place_sc_person" placeholder="所属・職名・氏名">
+      <label><input type="checkbox" id="after_place_collab"> 保存の場所と保存管理責任者：共同研究機関で保存する</label>
+      <input type="text" id="after_place_collab_place" placeholder="場所">
+      <input type="text" id="after_place_collab_person1" placeholder="共同研究機関：所属・職名・氏名">
+      <input type="text" id="after_place_collab_person2" placeholder="静岡がんセンター：所属・職名・氏名">
+      <label><input type="checkbox" id="dispose_sealed"> 廃棄：密封容器に廃棄</label>
+      <label><input type="checkbox" id="dispose_burn"> 廃棄：焼却処分</label>
+      <label><input type="checkbox" id="dispose_shred"> 廃棄：紙はシュレッダー、電子データは完全消去</label>
+      <label><input type="checkbox" id="dispose_other_check"> 廃棄：その他</label><input type="text" id="dispose_other_text">
+
+      <h3>14.個人情報の取扱い</h3>
+      <label><input type="checkbox" id="pi_anonymous"> 匿名加工情報を使用</label>
+      <label><input type="checkbox" id="pi_pseudo_ident_yes"> 仮名加工情報を使用（情報取扱主体で個人識別性が「有」）</label>
+      <label><input type="checkbox" id="pi_pseudo_keep_source"> 元となる個人情報を保有する場合</label>
+      <label><input type="checkbox" id="pi_pseudo_keep_restore"> 元となる個人情報は保有しない、個人情報を復元できる情報を保有する場合</label>
+      <label><input type="checkbox" id="pi_pseudo_ident_no"> 仮名加工情報を使用（情報取扱主体で個人識別性が「無」）</label>
+      <label><input type="checkbox" id="pi_related"> 個人関連情報を使用（情報取扱主体で個人識別性が「無」）</label>
+      <label><input type="checkbox" id="pi_personal"> 個人情報を使用（情報取扱主体で個人識別性が「有」）</label>
+      <label><input type="checkbox" id="pi_personal_keep_source"> 元となる個人情報を保有する場合</label>
+      <label><input type="checkbox" id="pi_personal_keep_restore"> 元となる個人情報は保有しない、個人情報を復元できる情報を保有する場合</label>
+      <label for="pi_process">①加工情報について／具体的な加工の方法</label><textarea id="pi_process"></textarea>
+      <label><input type="checkbox" id="pi_manager_specimen"> 個人情報管理者：検体を伴う研究の場合</label>
+      <input type="text" id="pi_manager_room_head" placeholder="個人情報管理室長 〇〇 〇〇">
+      <label><input type="checkbox" id="pi_manager_nonspecimen"> 個人情報管理者：検体を伴わない研究の場合</label>
+      <div class="grid2">
+        <div><label for="pi_manager_aff">所属</label><input type="text" id="pi_manager_aff"></div>
+        <div><label for="pi_manager_title">職名</label><input type="text" id="pi_manager_title"></div>
+      </div>
+      <label for="pi_manager_name">氏名</label><input type="text" id="pi_manager_name" placeholder="科部長が個人情報管理者">
+      <label><input type="checkbox" id="pi_store_server"> 作成元個人情報の管理方法：電子カルテ系ファイルサーバ内のフォルダに保管する</label>
+      <label><input type="checkbox" id="pi_store_isolated"> 他と切り離されたコンピュータを使用し、外部記憶媒体に記録させ、その記憶媒体は鍵をかけて厳重に保管する</label>
+      <label><input type="checkbox" id="pi_store_room"> 個人情報管理室で管理する</label>
+      <label><input type="checkbox" id="pi_store_other_check"> その他</label><input type="text" id="pi_store_other">
+      <label><input type="checkbox" id="pi_place_sc"> 作成元個人情報の保管場所：静岡がんセンター内</label><input type="text" id="pi_place_sc_text" placeholder="場所">
+      <label><input type="checkbox" id="pi_place_other_check"> 作成元個人情報の保管場所：その他</label><input type="text" id="pi_place_other" placeholder="場所">
+
+      <div class="small">※ 15〜30の入力欄は元コードと同じIDのまま、下にそのまま続けてください。</div>
+    </div>
+
+    <div class="preview-area" id="previewArea"></div>
+  </div>
 </div>
-<div class="layout">
-<div class="panel">
-<h2>様式8-2 入力</h2>
-<h3>基本情報</h3>
-<div class="grid2">
-<div><label for="docDate">作成日</label><input type="text" id="docDate" placeholder="2026年5月20日"></div>
-<div><label for="pageInfo">ページ表記</label><input type="text" id="pageInfo" value="1／全12ページ"></div>
-</div>
-<label for="theme">1.研究課題名</label><input type="text" id="theme">
-<label for="secretTitle">秘密保持のための課題名</label><input type="text" id="secretTitle">
-<h3>2.研究組織の分類</h3>
-<div class="check-grid">
-<label><input type="checkbox" id="org_single"> 単独施設による研究</label>
-<label><input type="checkbox" id="org_lead"> 多施設共同研究の主任研究者</label>
-<label><input type="checkbox" id="org_participate"> 多施設共同研究への参加</label>
-<label for="leadSite">主任施設名</label><input type="text" id="leadSite">
-<label><input type="checkbox" id="approval_yes"> 他施設の倫理委員会による承認証明書あり</label>
-<label><input type="checkbox" id="approval_no"> 他施設の倫理委員会による承認証明書なし</label>
-<label><input type="checkbox" id="office_yes"> 研究事務局の請負あり</label>
-<label><input type="checkbox" id="office_no"> 研究事務局の請負なし</label>
-<label><input type="checkbox" id="org_student"> 大学院の学生としての研究</label>
-<label for="orgOther">その他</label><input type="text" id="orgOther">
-</div>
-<h3>3.研究の分類・適応指針</h3>
-<div class="check-grid">
-<label><input type="checkbox" id="guide_life"> 人を対象とする生命科学・医学系研究</label>
-<label><input type="checkbox" id="invasion_yes"> 侵襲あり</label>
-<label><input type="checkbox" id="invasion_no"> 侵襲なし</label>
-<label><input type="checkbox" id="minor_yes"> 侵襲の度合いは軽微</label>
-<label><input type="checkbox" id="minor_no"> 侵襲の度合いは軽微でない</label>
-<label><input type="checkbox" id="medical_over_no"> 通常診療を超える医療行為なし</label>
-<label><input type="checkbox" id="medical_over_yes"> 通常診療を超える医療行為あり</label>
-<label><input type="checkbox" id="intervention_yes"> 介入あり</label>
-<label><input type="checkbox" id="intervention_no"> 介入なし</label>
-<label><input type="checkbox" id="specimen_yes"> 人体から取得する試料を用いる</label>
-<label><input type="checkbox" id="specimen_no"> 人体から取得する試料を用いない</label>
-<label><input type="checkbox" id="biobank_yes"> バイオバンク室保存検体を使用する</label>
-<label><input type="checkbox" id="biobank_no"> バイオバンク室保存検体を使用しない</label>
-<label for="otherGuide">上記以外の研究（適応される倫理指針等）</label><input type="text" id="otherGuide">
-</div>
-<h3>4〜10</h3>
-<label for="place">4.研究機関名・研究実施場所</label><input type="text" id="place" value="静岡がんセンター">
-<label for="responsibleName">5.研究実施責任者氏名</label><input type="text" id="responsibleName">
-<label for="researchers">6.研究者氏名</label><textarea id="researchers"></textarea>
-<label for="collab">7.共同研究機関（代表研究者名とその役割）</label><textarea id="collab"></textarea>
-<label for="purposeSummary">8.研究の意義・目的の概略</label><textarea id="purposeSummary"></textarea>
-<div class="grid2">
-<div><label for="subjectCount">9(1).被験者数</label><input type="text" id="subjectCount"></div>
-<div><label for="selectionPolicy">9(2).被験者の選定方針</label><textarea id="selectionPolicy"></textarea></div>
-</div>
-<label for="methodSummary">10(1).研究方法 概略</label><textarea id="methodSummary"></textarea>
-<label for="evaluationItems">10(2).評価項目</label><textarea id="evaluationItems"></textarea>
-<h3>11.実施予定期間</h3>
-<label><input type="checkbox" id="period_start_approval"> 開始：承認日より</label>
-<label><input type="checkbox" id="period_start_date_check"> 開始：年月日より（承認日より後の場合）</label>
-<input type="text" id="period_start_date">
-<label><input type="checkbox" id="period_end_year_check"> 終了：年12月31日まで</label>
-<input type="text" id="period_end_year">
-<h3>12.利益・不利益</h3>
-<label><input type="checkbox" id="benefit_none_check"> 直接的な利益は期待できない</label>
-<label><input type="checkbox" id="benefit_yes_check"> 直接的な利益が期待できる</label>
-<input type="text" id="benefit_yes_text" placeholder="具体的に">
-<label><input type="checkbox" id="risk_yes_check"> 負担やリスクあり</label>
-<input type="text" id="risk_yes_text" placeholder="具体的に">
-<label><input type="checkbox" id="risk_normal_no"> 通常の診療範囲内であり、負担やリスクはない</label>
-<label><input type="checkbox" id="risk_unrelated_no"> 診療には関係なく、負担やリスクはない</label>
-<label><input type="checkbox" id="risk_other_check"> その他</label>
-<input type="text" id="risk_other_text">
-<label for="riskMin">(3)最小化対策</label><textarea id="riskMin"></textarea>
-<h3>13.保存・廃棄</h3>
-<label><input type="checkbox" id="store_during_sc"> 研究期間中：静岡がんセンター内で保存する</label>
-<label><input type="checkbox" id="store_during_collab"> 研究期間中：共同研究機関で保存する</label>
-<label><input type="checkbox" id="store_during_both"> 研究期間中：静岡がんセンター内で保存し、かつ共同研究機関で保存する</label>
-<label><input type="checkbox" id="store_during_registry"> 研究期間中：静岡がんセンター内で保存し、かつ学会登録</label>
-<label><input type="checkbox" id="manager_sc"> 保存管理責任者：静岡がんセンターの研究実施責任者</label>
-<label><input type="checkbox" id="manager_other"> 保存管理責任者：①以外の研究者が管理する</label>
-<div class="grid2"><div><label for="managerAff">所属</label><input type="text" id="managerAff"></div><div><label for="managerTitle">職名</label><input type="text" id="managerTitle"></div></div>
-<label for="managerName">氏名</label><input type="text" id="managerName">
-<label><input type="checkbox" id="save_blood"> 研究終了後：血液・組織等の保存</label><input type="text" id="save_blood_until" placeholder="保存期間 年12月31日まで">
-<label><input type="checkbox" id="save_data"> 研究終了後：データの保存（対応表を含む）</label><input type="text" id="save_data_until" placeholder="保存期間 年12月31日まで">
-<label><input type="checkbox" id="save_other_check"> 研究終了後：その他</label><input type="text" id="save_other_text">
-<label><input type="checkbox" id="after_place_sc"> 保存の場所と保存管理責任者：静岡がんセンター内で保存する</label>
-<input type="text" id="after_place_sc_place" placeholder="場所"><input type="text" id="after_place_sc_person" placeholder="所属・職名・氏名">
-<label><input type="checkbox" id="after_place_collab"> 保存の場所と保存管理責任者：共同研究機関で保存する</label>
-<input type="text" id="after_place_collab_place" placeholder="場所"><input type="text" id="after_place_collab_person1" placeholder="共同研究機関：所属・職名・氏名"><input type="text" id="after_place_collab_person2" placeholder="静岡がんセンター：所属・職名・氏名">
-<label><input type="checkbox" id="dispose_sealed"> 廃棄：密封容器に廃棄</label>
-<label><input type="checkbox" id="dispose_burn"> 廃棄：焼却処分</label>
-<label><input type="checkbox" id="dispose_shred"> 廃棄：紙はシュレッダー、電子データは完全消去</label>
-<label><input type="checkbox" id="dispose_other_check"> 廃棄：その他</label><input type="text" id="dispose_other_text">
-<h3>14.個人情報の取扱い</h3>
-<label><input type="checkbox" id="pi_anonymous"> 匿名加工情報を使用</label>
-<label><input type="checkbox" id="pi_pseudo_ident_yes"> 仮名加工情報を使用（情報取扱主体で個人識別性が「有」）</label>
-<label><input type="checkbox" id="pi_pseudo_keep_source"> 元となる個人情報を保有する場合</label>
-<label><input type="checkbox" id="pi_pseudo_keep_restore"> 元となる個人情報は保有しない、個人情報を復元できる情報を保有する場合</label>
-<label><input type="checkbox" id="pi_pseudo_ident_no"> 仮名加工情報を使用（情報取扱主体で個人識別性が「無」）</label>
-<label><input type="checkbox" id="pi_related"> 個人関連情報を使用（情報取扱主体で個人識別性が「無」）</label>
-<label><input type="checkbox" id="pi_personal"> 個人情報を使用（情報取扱主体で個人識別性が「有」）</label>
-<label><input type="checkbox" id="pi_personal_keep_source"> 元となる個人情報を保有する場合</label>
-<label><input type="checkbox" id="pi_personal_keep_restore"> 元となる個人情報は保有しない、個人情報を復元できる情報を保有する場合</label>
-<label for="pi_process">①加工情報について／具体的な加工の方法</label><textarea id="pi_process"></textarea>
-<label><input type="checkbox" id="pi_manager_specimen"> 個人情報管理者：検体を伴う研究の場合</label>
-<input type="text" id="pi_manager_room_head" placeholder="個人情報管理室長 〇〇 〇〇">
-<label><input type="checkbox" id="pi_manager_nonspecimen"> 個人情報管理者：検体を伴わない研究の場合</label>
-<div class="grid2"><div><label for="pi_manager_aff">所属</label><input type="text" id="pi_manager_aff"></div><div><label for="pi_manager_title">職名</label><input type="text" id="pi_manager_title"></div></div>
-<label for="pi_manager_name">氏名</label><input type="text" id="pi_manager_name" placeholder="科部長が個人情報管理者">
-<label><input type="checkbox" id="pi_store_server"> 作成元個人情報の管理方法：電子カルテ系ファイルサーバ内のフォルダに保管する</label>
-<label><input type="checkbox" id="pi_store_isolated"> 他と切り離されたコンピュータを使用し、外部記憶媒体に記録させ、その記憶媒体は鍵をかけて厳重に保管する</label>
-<label><input type="checkbox" id="pi_store_room"> 個人情報管理室で管理する</label>
-<label><input type="checkbox" id="pi_store_other_check"> その他</label><input type="text" id="pi_store_other">
-<label><input type="checkbox" id="pi_place_sc"> 作成元個人情報の保管場所：静岡がんセンター内</label><input type="text" id="pi_place_sc_text" placeholder="場所">
-<label><input type="checkbox" id="pi_place_other_check"> 作成元個人情報の保管場所：その他</label><input type="text" id="pi_place_other" placeholder="場所">
-<label><input type="checkbox" id="recv_applicable"> (2) 他施設から試料・情報を受け取る：該当する</label>
-<label><input type="checkbox" id="recv_not"> (2) 他施設から試料・情報を受け取る：該当しない</label>
-<input type="text" id="recv_facility1" placeholder="提供元①施設名"><input type="text" id="recv_pi1" placeholder="研究責任者の所属・職名・氏名①"><input type="text" id="recv_facility2" placeholder="提供元②施設名"><input type="text" id="recv_pi2" placeholder="研究責任者の所属・職名・氏名②">
-<label><input type="checkbox" id="recv_sample"> 提供を受ける試料</label><input type="text" id="recv_sample_text" placeholder="血液">
-<label><input type="checkbox" id="recv_info"> 提供を受ける情報</label><input type="text" id="recv_info_text" placeholder="臨床情報、検査結果">
-<label><input type="checkbox" id="recv_route_care"> 試料・情報の取得の経緯：提供元の診療の過程で得られた試料・情報</label>
-<label><input type="checkbox" id="recv_route_other_check"> 試料・情報の取得の経緯：その他</label><input type="text" id="recv_route_other">
-<label><input type="checkbox" id="recv_send_mail"> 送付方法：郵送</label><label><input type="checkbox" id="recv_send_bring"> 送付方法：持参</label><label><input type="checkbox" id="recv_send_other_check"> 送付方法：その他</label><input type="text" id="recv_send_other">
-<label><input type="checkbox" id="recv_process_other_facility"> 個々の対象者を識別することができないように加工：他施設にて加工</label>
-<label><input type="checkbox" id="recv_process_other_check"> 個々の対象者を識別することができないように加工：その他</label><input type="text" id="recv_process_other">
-<label><input type="checkbox" id="provide_applicable"> (3) 他施設に試料・情報を提供する：該当する</label>
-<label><input type="checkbox" id="provide_not"> (3) 他施設に試料・情報を提供する：該当しない</label>
-<input type="text" id="provide_domestic1" placeholder="提供先（国内）①施設名"><input type="text" id="provide_domestic_pi1" placeholder="研究責任者の所属・職名・氏名①"><input type="text" id="provide_domestic2" placeholder="提供先（国内）②施設名"><input type="text" id="provide_domestic_pi2" placeholder="研究責任者の所属・職名・氏名②">
-<input type="text" id="provide_foreign_country1" placeholder="提供先（外国）①国名"><input type="text" id="provide_foreign_facility1" placeholder="施設名①"><input type="text" id="provide_foreign_pi1" placeholder="研究責任者の所属・職名・氏名①">
-<input type="text" id="provide_foreign_country2" placeholder="提供先（外国）②国名"><input type="text" id="provide_foreign_facility2" placeholder="施設名②"><input type="text" id="provide_foreign_pi2" placeholder="研究責任者の所属・職名・氏名②">
-<label for="provide_foreign_info">提供先の国における個人情報保護に関する情報・被験者への情報提供</label><textarea id="provide_foreign_info"></textarea>
-<label><input type="checkbox" id="provide_foreign_doc"> 同意・説明文書、院内掲示文書等に記載する</label>
-<label><input type="checkbox" id="provide_foreign_periodic"> 提供先の事業者における個人情報の取扱い状況等を定期的に確認し、関連情報を提供する</label>
-<label><input type="checkbox" id="provide_sample"> 提供する試料</label><input type="text" id="provide_sample_text" placeholder="血液">
-<label><input type="checkbox" id="provide_info"> 提供する情報</label><input type="text" id="provide_info_text" placeholder="臨床情報、検査結果">
-<label><input type="checkbox" id="provide_send_mail"> 送付方法：郵送</label><label><input type="checkbox" id="provide_send_bring"> 送付方法：持参</label><label><input type="checkbox" id="provide_send_other_check"> 送付方法：その他</label><input type="text" id="provide_send_other">
-<label><input type="checkbox" id="provide_process_sc"> 加工の方法：静岡がんセンターにて個々の対象者を識別することができないように加工する</label>
-<label><input type="checkbox" id="provide_process_other_check"> 加工の方法：その他</label><input type="text" id="provide_process_other">
-<h3>15〜23</h3>
-<label><input type="checkbox" id="pub_general"> 15.被験者を特定できないようにした上で学会や学術雑誌で公表する</label>
-<label><input type="checkbox" id="pub_other_check"> 15.その他</label><input type="text" id="pub_other">
-<label><input type="checkbox" id="ic_written"> 16.被験者からインフォームド・コンセントを文書で得て研究を行う</label>
-<label><input type="checkbox" id="ic_oral_record"> 16.口頭によりインフォームド・コンセントを受け、記録を作成</label>
-<label><input type="checkbox" id="ic_notice_hp"> 16.院内掲示文書、ホームページ掲載</label>
-<label><input type="checkbox" id="ic_not_required"> 16.得る必要は無い</label>
-<label><input type="checkbox" id="ic_other_check"> 16.その他</label><input type="text" id="ic_other">
-<div class="check-grid">
-<label><input type="checkbox" id="doc_item1"> 17.研究の名称及び当該研究の実施について総長の許可を受けている旨</label>
-<label><input type="checkbox" id="doc_item2"> 17.研究機関の名称及び研究責任者の氏名</label>
-<label><input type="checkbox" id="doc_item3"> 17.研究の目的及び意義</label>
-<label><input type="checkbox" id="doc_item4"> 17.研究の方法及び期間</label>
-<label><input type="checkbox" id="doc_item5"> 17.研究対象者として選定された理由</label>
-<label><input type="checkbox" id="doc_item6"> 17.研究対象者に生じる負担並びに予測されるリスク及び利益</label>
-<label><input type="checkbox" id="doc_item7"> 17.同意後も撤回できる旨</label>
-<label><input type="checkbox" id="doc_item8"> 17.同意しないこと又は撤回によって不利益を受けない旨</label>
-<label><input type="checkbox" id="doc_item9"> 17.研究に関する情報公開の方法</label>
-<label><input type="checkbox" id="doc_item10"> 17.研究計画書等の入手又は閲覧</label>
-<label><input type="checkbox" id="doc_item11"> 17.個人情報等の取扱い</label>
-<label><input type="checkbox" id="doc_item12"> 17.試料・情報の保管及び廃棄の方法</label>
-<label><input type="checkbox" id="doc_item13"> 17.研究の資金源等及び利益相反</label>
-<label><input type="checkbox" id="doc_item14"> 17.相談等への対応</label>
-<label><input type="checkbox" id="doc_item15"> 17.経済的負担又は謝礼</label>
-<label><input type="checkbox" id="doc_item16"> 17.健康被害に対する補償の有無及び内容</label>
-<label><input type="checkbox" id="doc_item17"> 17.将来の研究利用・他機関提供の可能性</label>
-</div>
-<label><input type="checkbox" id="proxy_not"> 18.該当しない</label>
-<label><input type="checkbox" id="proxy_yes"> 18.該当する</label>
-<label for="proxy_reason">代諾による研究協力が必要な理由</label><textarea id="proxy_reason"></textarea>
-<label for="proxy_selection">代諾者等の選定方針</label><textarea id="proxy_selection"></textarea>
-<label for="proxy_explain">代諾者等への説明事項</label><textarea id="proxy_explain"></textarea>
-<label><input type="checkbox" id="assent_yes"> インフォームド・アセントあり</label>
-<label><input type="checkbox" id="assent_no"> インフォームド・アセントなし</label>
-<label for="assent_detail">インフォームド・アセントを取得する場合の説明事項と説明方法</label><textarea id="assent_detail"></textarea>
-<label><input type="checkbox" id="burden_yes"> 19.経済的負担あり</label><input type="text" id="burden_text" placeholder="その内容">
-<label><input type="checkbox" id="reward_yes"> 19.謝礼あり</label><input type="text" id="reward_text" placeholder="その内容">
-<label><input type="checkbox" id="burden_reward_none"> 19.なし</label>
-<label><input type="checkbox" id="fund_pref"> 20.県費（各診療科研究費を含む）</label>
-<label><input type="checkbox" id="fund_public"> 20.省庁等の公的研究費</label><input type="text" id="fund_public_text" placeholder="具体的に">
-<label><input type="checkbox" id="fund_joint"> 20.共同研究経費・受託研究経費</label>
-<label><input type="checkbox" id="fund_private"> 20.私費</label>
-<label><input type="checkbox" id="fund_not_need"> 20.研究費はとくに必要としない</label>
-<label><input type="checkbox" id="fund_other_check"> 20.その他</label><input type="text" id="fund_other_text" placeholder="具体的に">
-<label><input type="checkbox" id="rel_none"> 21.本研究に企業等は関与しない</label>
-<label><input type="checkbox" id="rel_ip_share"> 21.企業・団体と知財を共有する</label><input type="text" id="rel_ip_share_text" placeholder="相手先">
-<label><input type="checkbox" id="rel_money"> 21.企業・団体より研究費を受け取る</label><input type="text" id="rel_money_text" placeholder="相手先">
-<label><input type="checkbox" id="rel_lead_get"> 21.主任施設は研究費を受け取るが、静岡がんセンターは受け取らない</label><input type="text" id="rel_lead_get_text" placeholder="相手">
-<label><input type="checkbox" id="rel_other"> 21.関与する企業等はあるが、共同研究・受託研究として実施しない</label><input type="text" id="rel_other_party" placeholder="相手先"><input type="text" id="rel_other_detail" placeholder="関与の具体的内容">
-<label><input type="checkbox" id="joint_approved"> 22.承認済み</label>
-<label><input type="checkbox" id="joint_applying"> 22.申請中</label>
-<label><input type="checkbox" id="joint_not_yet"> 22.申請未</label>
-<label><input type="checkbox" id="joint_not_apply"> 22.申請しない</label>
-<label><input type="checkbox" id="joint_other_check"> 22.その他</label><input type="text" id="joint_other_text">
-<label><input type="checkbox" id="ip_all_sc"> 23.静岡がんセンターにすべて帰属する</label>
-<label><input type="checkbox" id="ip_part_sc"> 23.静岡がんセンターに一部帰属する</label>
-<label><input type="checkbox" id="ip_not_sc"> 23.静岡がんセンターに帰属しない</label><input type="text" id="ip_not_sc_reason" placeholder="理由">
-<h3>24.研究に関する情報公開の方法</h3>
-<label><input type="checkbox" id="pub_jrct"> 臨床研究等提出・公開システム（jRCT）</label>
-<div class="small">法（介入を行う場合は、jRCT,UMINのいずれかに必ず登録すること）</div>
-<label><input type="checkbox" id="pub_umin"> 国立大学付属病院長会議（UMIN CTR）</label>
-<label><input type="checkbox" id="pub_japic"> 一般財団法人日本医薬情報センター（JapicCTI）</label>
-<label><input type="checkbox" id="pub_jmacct"> 公益社団法人日本医師会(JMACCT CTR)</label>
-<label><input type="checkbox" id="pub_sc_hp"> 静岡がんセンターホームページ</label>
-<label><input type="checkbox" id="pub_inhospital"> 院内掲示</label>
-<label><input type="checkbox" id="pub_other_check"> その他</label>
-<input type="text" id="pub_other_text">
-<h3>25.研究対象者等及びその関係者からの相談等への対応</h3>
-<textarea id="consultation" placeholder="相談窓口となる者の氏名などを記載"></textarea>
-<h3>26.研究に関する業務の一部を委託する場合</h3>
-<label><input type="checkbox" id="outsource_yes"> 業務委託 あり</label>
-<label><input type="checkbox" id="outsource_no"> 業務委託 なし</label>
-<label for="outsource_content">① 委託業務内容</label><textarea id="outsource_content"></textarea>
-<label for="outsource_supervision">② 委託先の監督方法（委託契約書の中で委託者が定める安全管理措置の内容や実地調査の有無など）</label><textarea id="outsource_supervision"></textarea>
-<h3>27.将来の研究利用・他機関提供の可能性</h3>
-<label><input type="checkbox" id="future_use_yes"> 将来の研究のために用いられる可能性 あり</label>
-<label><input type="checkbox" id="future_use_no"> 将来の研究のために用いられる可能性 なし</label>
-<label for="future_use_detail">「あり」の場合、現時点で想定される内容</label><textarea id="future_use_detail"></textarea>
-<label><input type="checkbox" id="future_provide_yes"> 他の研究機関に提供する可能性 あり</label>
-<label><input type="checkbox" id="future_provide_no"> 他の研究機関に提供する可能性 なし</label>
-<label for="future_provide_detail">「あり」の場合、現時点で想定される内容</label><textarea id="future_provide_detail"></textarea>
-<h3>28.研究実施にあたっての確認事項</h3>
-<div class="small">（必須事項はすべて熟読の上チェックすること。）</div>
-<label><input type="checkbox" id="chk_pi_experience"> 研究実施責任者に、研究を適正に実行するために必要な専門的知識及び臨床経験が十分にあること。</label>
-<label><input type="checkbox" id="chk_serious_ae_report"> 研究実施責任者は、臨床研究に関する重篤な有害事象及び不具合等の発生を知ったときは、直ちにその旨を総長に報告すること。（様式20）</label>
-<label><input type="checkbox" id="chk_deviation_report"> 研究計画から逸脱・変更した場合は、その旨を総長に報告すること。（様式25）</label>
-<label><input type="checkbox" id="chk_stop_condition"> 研究実施責任者は、研究により期待される利益よりも起こりうる危険が高いと判断される場合又は研究により十分な成果が得られた場合には、当該研究を中止し、又は終了すること。また、遅延なく、その旨を総長へ報告すること。（様式22）</label>
-<label><input type="checkbox" id="chk_info_follow"> 研究実施責任者は、研究を終了するまでの間、研究に関する国内外における学会発表、論文発表等の情報について把握しておくとともに、把握した当該情報について、総長に対し報告すること。（様式自由）</label>
-<label><input type="checkbox" id="chk_annual_report"> 研究実施責任者は、毎年一回、研究の進捗状況、または研究が中止あるいは終了したときには、その旨及び結果の概要を文書により総長へ報告すること。（様式24、35）</label>
-<label><input type="checkbox" id="chk_threat_info"> 倫理的妥当性若しくは科学的合理性を損なう事実若しくは情報又は損なう恐れのある情報であって研究の継続に影響を与えると考えられる情報を入手した場合は、その旨を総長に報告すること。（様式自由）</label>
-<label><input type="checkbox" id="chk_fabrication_info"> 研究の実施において、研究計画に基づく研究対象者の選定方針や研究方法から逸脱した等の事実や情報若しくは研究データの改ざんやねつ造等の事実や情報又はそのような内容を知り得てから、事実であるか確定に至っていない情報を入手した場合は、その旨を総長に報告すること。（様式自由）</label>
-<label><input type="checkbox" id="chk_trust_info"> 研究結果の信頼を損なう情報（例：研究データの改ざんやねつ造の事実等）を得た場合は、その旨を総長に報告すること。（様式自由）</label>
-<label><input type="checkbox" id="chk_privacy_measure"> 研究実施責任者は、研究を実施するに当たり、被験者の個人情報の保護のために必要な措置を講じること。</label>
-<label><input type="checkbox" id="chk_best_care_after"> 研究実施責任者は、研究終了後においても、被験者が当該研究の結果により得られた最善の予防、診断及び治療を受けることができるよう努めること。</label>
-<label><input type="checkbox" id="chk_education"> 研究者等は、臨床研究の実施に先立ち、臨床研究に関するその他臨床研究の実施に必要な知識についての講習その他必要な教育を受けること。また、研究期間中も適宜継続して、教育・研修を受けること。</label>
-<label><input type="checkbox" id="chk_scientific_principle"> 研究者等は、一般的に受け入れられた科学的原則に従い、科学的文献その他科学に関連する情報源及び十分な実験に基づいて、研究を実施すること。</label>
-<label><input type="checkbox" id="chk_publication_anonym"> 研究者等は、研究の結果を公表する場合には、被験者を特定できないように行うこと。</label>
-<label><input type="checkbox" id="chk_prior_irb"> 臨床研究の実施にあたっては、事前に研究者の所属する研究機関および実施医療機関の倫理審査委員会の承認を受けなければならない。</label>
-<label><input type="checkbox" id="chk_specimen_no_out_dispose"> 【検体を静岡がんセンター敷地外へ持ち出さない研究の場合】検体（血液など）の保存管理者は、保存期間終了後、検体を確実に廃棄すること。</label>
-<label><input type="checkbox" id="chk_not_banking"> 【検体を静岡がんセンター敷地外へ持ち出す研究（原則禁止）の場合】バンキングに相当するような研究ではないこと。</label>
-<label><input type="checkbox" id="chk_mou_audit"> 「静岡がんセンターが将来、当該検体に関する監査あるいは問い合わせを行う場合は、相手側は真摯に応じる。」ことを覚書で締結。</label>
-<label><input type="checkbox" id="chk_specimen_dispose_report"> 研究実施責任者は、検体（血液など）を廃棄した場合は、ただちに検体廃棄報告書を研究機関の長へ提出すること。</label>
-<label><input type="checkbox" id="chk_annual_storage_report"> 【研究終了後も検体（血液など）を保存する場合】検体保管管理者は、検体が廃棄されるまで、毎年１回、検体保管状況報告書を研究機関の長へ提出すること。</label>
-<label><input type="checkbox" id="chk_pathology_clinical_use"> 【検体が返却される場合】病理標本等を一般臨床として利用する。</label>
-<label><input type="checkbox" id="chk_reuse_approval"> 再度、研究に利用したい場合は、廃棄時期を明示の上、倫理審査委員会で改めて承認をもらう。</label>
-<label><input type="checkbox" id="chk_temp_storage_report"> 返却後に、再利用のため一時保管した場合には、検体一時保管届を提出し、承認されるまでの間は毎年１回、検体保管状況報告書を提出する。</label>
-<label><input type="checkbox" id="chk_share_info_other_pi"> 【他の研究機関と共同で研究を実施する場合】研究実施責任者は、当該他の研究機関の研究実施責任者に対し、把握した発表情報等について報告すること。</label>
-<label><input type="checkbox" id="chk_confirm_other"> その他</label><textarea id="confirm_other_text"></textarea>
-<label for="education">29.教育・研修の受講状況</label><textarea id="education"></textarea>
-<label for="edc">30.EDC使用</label><textarea id="edc"></textarea>
-<div class="small">PDF原本の表組み・罫線・注記・A4印刷向け体裁を優先して、ページ構成を忠実に再現するための拡張版です。</div>
-</div>
-<div class="preview-area" id="previewArea"></div>
-</div>
-</div>
+
 <script>
 function getVal(id){ const el=document.getElementById(id); return el ? el.value.trim() : ''; }
 function isChecked(id){ const el=document.getElementById(id); return !!(el && el.checked); }
@@ -322,73 +376,101 @@ function mark(id){ return isChecked(id) ? '■' : '□'; }
 function textOr(id, fallback=''){ const v=getVal(id); return v || fallback; }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function nlHtml(s){ return (s||'').replace(/\n/g,'<br>'); }
-function buildPage(pageNo,total,bodyHtml){
-return `<div class="page"><div class="page-inner"><div class="doc-head"><div class="date-row"><div>様式８－２　${esc(textOr('docDate','　　　年　　月　　日'))}</div><div class="center-note">年月日を必ず記入してください。バージョン管理に用います。</div></div></div><div class="page-no">様式 承認日 2022年8月22日　ページ ${pageNo}／全${total}ページ</div>${pageNo===1?'<div class="doc-title">臨床研究申請書（探索研究IRB用）</div><div class="note-red">注1）記載はすべて、MS明朝、10ポで統一してください。注2）本様式作成時は青字部分を全て削除してください。</div>':''}${bodyHtml}</div></div>`;
+
+function buildPage(pageNo,total,bodyHtml,showTitle=false){
+  return `
+  <div class="page">
+    <div class="page-inner">
+      <div class="doc-head">
+        <div class="date-row">
+          <div>様式８－２　${esc(textOr('docDate','　　　年　　月　　日'))}</div>
+          <div class="center-note">年月日を必ず記入してください。バージョン管理に用います。</div>
+        </div>
+      </div>
+      <div class="page-no">様式 承認日 2022年8月22日　ページ ${pageNo}／全${total}ページ</div>
+      ${showTitle ? '<div class="doc-title">臨床研究申請書（探索研究IRB用）</div><div class="note-red">注1）記載はすべて、MS明朝、10ポで統一してください。注2）本様式作成時は青字部分を全て削除してください。</div>' : ''}
+      <div class="page-body">${bodyHtml}</div>
+    </div>
+  </div>`;
 }
+
 function renderPreview(){
-const pages=[]; const total=12;
-pages.push(buildPage(1,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>1.研究課題名</th><td>${esc(textOr('theme','未入力'))}<div class="tiny">必要なら秘密保持のための課題名を記載：${esc(textOr('secretTitle',''))}</div></td></tr>
-<tr><th>2.研究組織の分類</th><td class="dense">${mark('org_single')} 単独施設による研究<br>${mark('org_lead')} 多施設共同研究の主任研究者<br>${mark('org_participate')} 多施設共同研究への参加（主任施設名：${esc(textOr('leadSite',''))}）<br>他施設の倫理委員会による承認証明書：${mark('approval_yes')}あり　${mark('approval_no')}なし<br>研究事務局の請負：${mark('office_yes')}あり　${mark('office_no')}なし<br>${mark('org_student')} 大学院の学生としての研究<br>□ その他（${esc(textOr('orgOther',''))}）</td></tr>
-<tr><th>3.研究の分類・適応される指針等</th><td class="dense tiny">${mark('guide_life')} 人を対象とする生命科学・医学系研究<br>①侵襲　${mark('invasion_yes')}あり　${mark('invasion_no')}なし<br>「あり」の場合、${mark('minor_yes')}軽微　${mark('minor_no')}軽微でない<br>「軽微でない」場合、${mark('medical_over_no')}通常診療を超える医療行為なし　${mark('medical_over_yes')}通常診療を超える医療行為あり<br>②介入　${mark('intervention_yes')}あり　${mark('intervention_no')}なし<br>③人体から取得する試料を用いる　${mark('specimen_yes')}あり　${mark('specimen_no')}なし<br>「あり」の場合、${mark('biobank_yes')}バイオバンク室保存検体を使用する　${mark('biobank_no')}使用しない<br>□ 上記以外の研究（適応される倫理指針等：${esc(textOr('otherGuide',''))}）</td></tr>
-<tr><th>4.研究機関名・研究実施場所</th><td>${esc(textOr('place','静岡がんセンター'))}</td></tr>
-<tr><th>5.研究実施責任者氏名</th><td>${esc(textOr('responsibleName','未入力'))}</td></tr>
-<tr><th>6.研究者氏名</th><td class="cell-lines">${nlHtml(esc(textOr('researchers','未入力')))}</td></tr></table>`));
-pages.push(buildPage(2,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>7.共同研究機関</th><td class="cell-lines">${nlHtml(esc(textOr('collab','未入力')))}</td></tr>
-<tr><th>8.研究の意義・目的の概略</th><td class="cell-lines">${nlHtml(esc(textOr('purposeSummary','未入力')))}</td></tr>
-<tr><th>9.被験者</th><td class="dense">(1)被験者数：${esc(textOr('subjectCount','未入力'))}<br><br>(2)被験者の選定方針：<div class="cell-lines">${nlHtml(esc(textOr('selectionPolicy','未入力')))}</div></td></tr>
-<tr><th>10.研究方法</th><td class="dense">(1)概略<div class="cell-lines">${nlHtml(esc(textOr('methodSummary','未入力')))}</div><br>(2)評価項目<div class="cell-lines">${nlHtml(esc(textOr('evaluationItems','未入力')))}</div></td></tr>
-<tr><th>11.実施予定期間</th><td class="dense">開始：${mark('period_start_approval')} 承認日より<br>${mark('period_start_date_check')} ${esc(textOr('period_start_date','年　月　日'))}より（承認日より後の場合）<br>終了：${mark('period_end_year_check')} ${esc(textOr('period_end_year','年'))}12月31日まで</td></tr>
-<tr><th>12.研究参加に伴う利益および不利益</th><td class="dense">(1)研究に参加することにより被験者にもたらされうる利益<br><span class="checkline">${mark('benefit_none_check')} 直接的な利益は期待できない。</span><span class="checkline">${mark('benefit_yes_check')} 直接的な利益が期待できる。（具体的に： ${esc(textOr('benefit_yes_text',''))} ）</span><br>(2)研究に参加することにより被験者に生じる負担(※１)や予測されるリスク(※２)<span class="checkline">${mark('risk_yes_check')} あり（具体的に： ${esc(textOr('risk_yes_text',''))} ）</span><span class="checkline">${mark('risk_normal_no')} 通常の診療範囲内であり、負担やリスクはない。</span><span class="checkline">${mark('risk_unrelated_no')} 診療には関係なく、負担やリスクはない。</span><span class="checkline">${mark('risk_other_check')} その他（ ${esc(textOr('risk_other_text',''))} ）</span><div class="tiny">※１ 研究の実施に伴って確定的に研究対象者に生じる好ましくない事象を指し、例えば、身体的又は精神的な苦痛、健康上の不利益（自覚されないものを含む。）、不快な状態等のように「侵襲」に関連するもののほか、研究が実施されるために研究対象者が費やす手間（労力及び時間）や経済的出費等も含まれる。<br>※２ 研究の実施に伴って、実際に生じるか否かが不確定な危害の可能性を指す。その危害としては、身体的・精神的な危害のほか、研究が実施されたために被るおそれがある経済的・社会的な危害が考えられる。</div></td></tr></table>`));
-pages.push(buildPage(3,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>12(3).負担やリスクがある場合、それを最小化する対策</th><td class="cell-lines">${nlHtml(esc(textOr('riskMin','未入力')))}</td></tr>
-<tr><th>13.検体(血液など)およびデータ(診療情報など)の保存・廃棄について</th><td class="dense">研究期間中<br>(1)保存の場所<span class="checkline">${mark('store_during_sc')} 静岡がんセンター内で保存する。</span><span class="checkline">${mark('store_during_collab')} 共同研究機関で保存する。</span><span class="checkline">${mark('store_during_both')} 静岡がんセンター内で保存し、かつ共同研究機関で保存する。</span><span class="checkline">${mark('store_during_registry')} 静岡がんセンター内で保存し、かつ学会登録</span>(2)保存管理責任者<span class="checkline">${mark('manager_sc')} ①静岡がんセンターの研究実施責任者</span><span class="checkline">${mark('manager_other')} ② ①以外の研究者が管理する（→管理責任者氏名を記載）</span><div class="tiny indent">所属：${esc(textOr('managerAff',''))}<br>職名：${esc(textOr('managerTitle',''))}<br>氏名：${esc(textOr('managerName',''))}</div>研究終了後<br>(3)保存期間<span class="checkline">${mark('save_blood')} 血液・組織等の保存 ※原則５年（保存期間 ${esc(textOr('save_blood_until','年12月31日まで'))}）</span><span class="checkline">${mark('save_data')} データの保存（対応表を含む）※原則５年（保存期間 ${esc(textOr('save_data_until','年12月31日まで'))}）</span><span class="checkline">${mark('save_other_check')} その他（ ${esc(textOr('save_other_text',''))} ）</span></td></tr></table>`));
-pages.push(buildPage(4,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>13.保存・廃棄（続き）</th><td class="dense">(4)保存の場所と保存管理責任者<span class="checkline">${mark('after_place_sc')} 静岡がんセンター内で保存する。</span><div class="tiny indent">（場所： ${esc(textOr('after_place_sc_place',''))} ）<br>（所属・職名・氏名 ${esc(textOr('after_place_sc_person',''))} ）</div><span class="checkline">${mark('after_place_collab')} 共同研究機関で保存する。（保存管理責任者は、共同研究機関側、静岡がんセンター側の両方を記載すること）</span><div class="tiny indent">（場所： ${esc(textOr('after_place_collab_place',''))} ）<br>共同研究機関：（所属・職名・氏名 ${esc(textOr('after_place_collab_person1',''))} ）<br>静岡がんセンター：（所属・職名・氏名 ${esc(textOr('after_place_collab_person2',''))} ）</div>廃棄<br>(5)検体およびデータを廃棄する際の方法<span class="checkline">${mark('dispose_sealed')} 個々の対象者を識別することができないように加工されたまま、密封容器に廃棄。</span><span class="checkline">${mark('dispose_burn')} 個々の対象者を識別することができないように加工されたまま、焼却処分。</span><span class="checkline">${mark('dispose_shred')} 個々の対象者を識別することができないように加工されたまま、紙データについてはシュレッダー等を用いて廃棄し、電子データについてはデータを完全に消去する。</span><span class="checkline">${mark('dispose_other_check')} その他（ ${esc(textOr('dispose_other_text',''))} ）</span></td></tr>
-<tr><th>14.個人情報の取扱い</th><td class="dense">(1)使用する個人情報の区分<div class="tiny">“使用する”、の場面は、情報を外部に出す場面をイメージしてください。従来の「対応表を作成し、匿名化する」は2番目の仮名加工情報を使用（情報取扱主体で個人情報識別性が「有」）に該当します。</div><span class="checkline">${mark('pi_anonymous')} 匿名加工情報を使用。</span><div class="tiny indent">＊個人情報を復元することが出来る情報は、匿名加工情報の作成後は破棄</div><span class="checkline">${mark('pi_pseudo_ident_yes')} 仮名加工情報を使用。（情報取扱主体で個人識別性が「有」）</span><div class="tiny indent">${mark('pi_pseudo_keep_source')} 元となる個人情報を保有する場合。<br>${mark('pi_pseudo_keep_restore')} 元となる個人情報は保有しない、個人情報を復元できる情報を保有する場合。</div><span class="checkline">${mark('pi_pseudo_ident_no')} 仮名加工情報を使用。（情報取扱主体で個人識別性が「無」）</span><div class="tiny indent">＊元となる個人情報及び復元することが出来る情報は、保有しない。</div><span class="checkline">${mark('pi_related')} 個人関連情報を使用。（情報取扱主体で個人識別性が「無」）</span><div class="tiny indent">＊個人情報、仮名加工情報、匿名加工情報のいずれかにも該当しない生存する個人に関する情報。（氏名と結びついていないインターネットの閲覧記録、位置情報、クッキー、ＩＰアドレス等。）</div><span class="checkline">${mark('pi_personal')} 個人情報を使用。（情報取扱主体で個人識別性が「有」）</span><div class="tiny indent">${mark('pi_personal_keep_source')} 元となる個人情報を保有する場合。<br>${mark('pi_personal_keep_restore')} 元となる個人情報は保有しない、個人情報を復元できる情報を保有する場合。</div></td></tr></table>`));
-pages.push(buildPage(5,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>14.個人情報の取扱い（続き）</th><td class="dense"><div class="subblock">①加工情報について</div><div class="subblock">具体的な加工の方法</div><div class="cell-lines">${nlHtml(esc(textOr('pi_process','未入力')))}</div><div class="tiny">注）検体を伴う研究の場合は、別紙を参考に加工の流れ図も記載してください。<br>個人情報の管理上、誰が、いつ、どこで、なにを加工するのか、わかるように記載してください。<br>※加工の流れ図は、研究内容によって異なるため、検体を伴う研究の場合は、別紙の中から適当なものを選択して、修正の上、記載してください。<br>検体を伴わない研究の場合は、匿名加工情報、仮名加工情報への加工は個人情報管理室では行わないため、研究責任者が行う加工の方法を記載してください。</div><div class="subblock">個人情報 管理者氏名</div><span class="checkline">${mark('pi_manager_specimen')} （検体を伴う研究の場合：静岡がんセンター個人情報管理者） 個人情報管理室長 ${esc(textOr('pi_manager_room_head','〇〇 〇〇'))}</span><span class="checkline">${mark('pi_manager_nonspecimen')} （検体を伴わない研究の場合：静岡がんセンター個人情報管理者）</span><div class="tiny indent">所属：${esc(textOr('pi_manager_aff',''))}<br>職名：${esc(textOr('pi_manager_title',''))}<br>氏名：${esc(textOr('pi_manager_name','科部長が個人情報管理者'))}</div><div class="subblock">作成元の個人情報の管理方法</div><span class="checkline">${mark('pi_store_server')} 電子カルテ系ファイルサーバ内のフォルダに保管する。</span><span class="checkline">${mark('pi_store_isolated')} 他と切り離されたコンピュータを使用し、外部記憶媒体に記録させ、その記憶媒体は、鍵をかけて厳重に保管する。</span><span class="checkline">${mark('pi_store_room')} 個人情報管理室で管理する。</span><span class="checkline">${mark('pi_store_other_check')} その他（具体的に： ${esc(textOr('pi_store_other',''))} ）</span><div class="subblock">作成元の個人情報の保管場所</div><span class="checkline">${mark('pi_place_sc')} 静岡がんセンター内（場所： ${esc(textOr('pi_place_sc_text',''))} ）</span><span class="checkline">${mark('pi_place_other_check')} その他（場所： ${esc(textOr('pi_place_other',''))} ）</span></td></tr></table>`));
-pages.push(buildPage(6,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>14.個人情報の取扱い（続き）</th><td class="dense">(2)他施設(企業等も含む)から試料・情報を受け取る<span class="checkline">${mark('recv_applicable')} 該当する</span><span class="checkline">${mark('recv_not')} 該当しない</span><div class="subblock">該当する場合</div><div class="subblock">提供元</div><div class="tiny">①施設名（ ${esc(textOr('recv_facility1',''))} ）<br>研究責任者の所属・職名・氏名（ ${esc(textOr('recv_pi1',''))} ）<br>②施設名（ ${esc(textOr('recv_facility2',''))} ）<br>研究責任者の所属・職名・氏名（ ${esc(textOr('recv_pi2',''))} ）<br>※職名も必ず記載すること。<br>※既存試料・情報の提供を行う機関が極めて多数となる場合は、その機関の属性を可能な限り具体的に記載すること。（例：全国の○○学会に所属する医療機関（機関数））</div><div class="subblock">提供を受ける試料・情報</div><span class="checkline">${mark('recv_sample')} 試料（内容：${esc(textOr('recv_sample_text','血液'))}）</span><span class="checkline">${mark('recv_info')} 情報（内容：${esc(textOr('recv_info_text','臨床情報、検査結果'))}）</span><div class="subblock">試料・情報の取得の経緯</div><span class="checkline">${mark('recv_route_care')} 提供元の診療の過程で得られた試料・情報</span><span class="checkline">${mark('recv_route_other_check')} その他（内容： ${esc(textOr('recv_route_other',''))} ）</span><div class="subblock">送付方法</div><span class="checkline">${mark('recv_send_mail')} 郵送</span><span class="checkline">${mark('recv_send_bring')} 持参</span><span class="checkline">${mark('recv_send_other_check')} その他（内容： ${esc(textOr('recv_send_other',''))}　理由： ）</span><div class="subblock">個々の対象者を識別することができないように加工する方法</div><span class="checkline">${mark('recv_process_other_facility')} 他施設にて加工</span><span class="checkline">${mark('recv_process_other_check')} その他（内容： ${esc(textOr('recv_process_other',''))}　理由： ）</span><div class="tiny">※各施設において、個々の対象者を識別することができないように加工された試料・情報を受け取ること。</div></td></tr></table>`));
-pages.push(buildPage(7,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>14.個人情報の取扱い（続き）</th><td class="dense">(3)他施設（企業等も含む）に試料・情報を提供する<span class="checkline">${mark('provide_applicable')} 該当する</span><span class="checkline">${mark('provide_not')} 該当しない</span><div class="subblock">該当する場合</div><div class="subblock">提供先（国内）</div><div class="tiny">①施設名（ ${esc(textOr('provide_domestic1',''))} ）<br>研究責任者の所属・職名・氏名（ ${esc(textOr('provide_domestic_pi1',''))} ）<br>②施設名（ ${esc(textOr('provide_domestic2',''))} ）<br>研究責任者の所属・職名・氏名（ ${esc(textOr('provide_domestic_pi2',''))} ）<br>※職名も必ず記載すること。</div><div class="subblock">提供先（外国）</div><div class="tiny">①国名（ ${esc(textOr('provide_foreign_country1',''))} ）<br>施設名（ ${esc(textOr('provide_foreign_facility1',''))} ）<br>研究責任者の所属・職名・氏名（ ${esc(textOr('provide_foreign_pi1',''))} ）<br>②国名（ ${esc(textOr('provide_foreign_country2',''))} ）<br>施設名（ ${esc(textOr('provide_foreign_facility2',''))} ）<br>研究責任者の所属・職名・氏名（ ${esc(textOr('provide_foreign_pi2',''))} ）</div><div class="subblock">提供先の国における個人情報保護に関する情報・被験者への情報提供</div><div class="cell-lines tiny">${nlHtml(esc(textOr('provide_foreign_info','')))}</div><span class="checkline">${mark('provide_foreign_doc')} 同意・説明文書、院内掲示文書等に、提供先の国の名称、及び当該国における個人情報の保護に関する制度の有無等について記載する。</span><span class="checkline">${mark('provide_foreign_periodic')} 提供先の事業者における個人情報の取扱い状況等を定期的に確認し、被験者の求めに応じて関連情報を提供する。</span><div class="subblock">提供する試料・情報</div><span class="checkline">${mark('provide_sample')} 試料（内容：${esc(textOr('provide_sample_text','血液'))}）</span><span class="checkline">${mark('provide_info')} 情報（内容：${esc(textOr('provide_info_text','臨床情報、検査結果'))}）</span><div class="subblock">送付方法</div><span class="checkline">${mark('provide_send_mail')} 郵送</span><span class="checkline">${mark('provide_send_bring')} 持参</span><span class="checkline">${mark('provide_send_other_check')} その他（内容： ${esc(textOr('provide_send_other',''))}　理由： ）</span><div class="subblock">加工の方法</div><span class="checkline">${mark('provide_process_sc')} 静岡がんセンターにて個々の対象者を識別することができないように加工する</span><span class="checkline">${mark('provide_process_other_check')} その他（内容： ${esc(textOr('provide_process_other',''))}　理由： ）</span><div class="tiny">※静岡がんセンターにおいて、個々の対象者を識別することができないように加工した試料・情報を提供すること。</div></td></tr>
-<tr><th>15.研究成果の公表</th><td class="dense"><span class="checkline">${mark('pub_general')} 被験者を特定できないようにした上で学会や学術雑誌で公表する。</span><span class="checkline">${mark('pub_other_check')} その他（ ${esc(textOr('pub_other',''))} ）</span></td></tr></table>`));
-pages.push(buildPage(8,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>16.インフォームド・コンセントのための手続</th><td class="dense"><span class="checkline">${mark('ic_written')} 被験者からインフォームド・コンセントを文書で得て研究を行う。（→17へ）</span><span class="checkline">${mark('ic_oral_record')} 口頭によりインフォームド・コンセントを受け、記録を作成。</span><span class="checkline">${mark('ic_notice_hp')} 院内掲示文書、ホームページ掲載</span><span class="checkline">${mark('ic_not_required')} 得る必要は無い</span><span class="checkline">${mark('ic_other_check')} その他（ ${esc(textOr('ic_other',''))} ）</span><div class="tiny">※詳細は、「別紙インフォームド・コンセントの手続き」又は、次の倫理指針を参照。<br>・「人を対象とする生命科学・医学系研究に関する倫理指針」P36-58<br>・「人を対象とする生命科学・医学系研究に関する倫理指針ガイダンス」P66-114<br>・「人を対象とする医学系研究に関する倫理指針」P19-29<br>・「人を対象とする医学系研究に関する倫理指針ガイダンス」p84-131<br>・「ヒトゲノム・遺伝子解析研究に関する倫理指針」P10-15</div></td></tr>
-<tr><th>17.インフォームド・コンセントを得るための説明文書記載事項</th><td class="dense tiny"><span class="checkline">${mark('doc_item1')} 研究の名称及び当該研究の実施について総長の許可を受けている旨</span><span class="checkline">${mark('doc_item2')} 研究機関の名称及び研究責任者の氏名（他の研究機関と共同して研究を実施する場合には、共同研究機関の名称及び共同研究機関の研究責任者の氏名を含む。）</span><span class="checkline">${mark('doc_item3')} 研究の目的及び意義</span><span class="checkline">${mark('doc_item4')} 研究の方法（研究対象者から取得された試料・情報の利用目的を含む。）及び期間</span><span class="checkline">${mark('doc_item5')} 研究対象者として選定された理由</span><span class="checkline">${mark('doc_item6')} 研究対象者に生じる負担並びに予測されるリスク及び利益</span><span class="checkline">${mark('doc_item7')} 研究が実施又は継続されることに同意した場合であっても随時これを撤回できる旨（研究対象者等からの撤回の内容に従った措置を講じることが困難となる場合があるときは、その旨及びその理由）</span><span class="checkline">${mark('doc_item8')} 研究が実施又は継続されることに同意しないこと又は同意を撤回することによって研究対象者等が不利益な取扱いを受けない旨</span><span class="checkline">${mark('doc_item9')} 研究に関する情報公開の方法</span><span class="checkline">${mark('doc_item10')} 研究対象者等の求めに応じて、他の研究対象者等の個人情報等の保護及び当該研究の独創性の確保に支障がない範囲内で研究計画書及び研究の方法に関する資料を入手又は閲覧できる旨並びにその入手又は閲覧の方法</span><span class="checkline">${mark('doc_item11')} 個人情報等の取扱い（個々の対象者を識別することができないように加工する場合にはその方法、匿名加工情報又は仮名加工情報を作成する場合にはその旨を含む。）</span><span class="checkline">${mark('doc_item12')} 試料・情報の保管及び廃棄の方法</span><span class="checkline">${mark('doc_item13')} 研究の資金源等、研究機関の研究に係る利益相反及び個人の収益等、研究者等の研究に係る利益相反に関する状況</span><span class="checkline">${mark('doc_item14')} 研究対象者等及びその関係者からの相談等への対応</span></td></tr></table>`));
-pages.push(buildPage(9,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>17.説明文書記載事項（続き）</th><td class="dense tiny"><span class="checkline">${mark('doc_item15')} 研究対象者等に経済的負担又は謝礼がある場合には、その旨及びその内容</span><span class="checkline">${mark('doc_item16')} 当該研究によって生じた健康被害に対する補償の有無及びその内容（探索研究倫理審査委員会の対象となる研究は、原則補償の必要は無い。）</span><span class="checkline">${mark('doc_item17')} 研究対象者から取得された試料・情報について、研究対象者等から同意を受ける時点では特定されない将来の研究のために用いられる可能性又は他の研究機関に提供する可能性がある場合には、その旨と同意を受ける時点において想定される内容</span></td></tr>
-<tr><th>18.代諾者からインフォームド・コンセントを受ける場合</th><td class="dense tiny">（※１，２）<span class="checkline">${mark('proxy_not')} 該当しない</span><span class="checkline">${mark('proxy_yes')} 該当する</span><div class="subblock">代諾による研究協力が必要な理由（当該者を研究対象者とする理由）</div><div class="cell-lines">${nlHtml(esc(textOr('proxy_reason','')))}</div><div class="subblock">代諾者等の選定方針</div><div class="cell-lines">${nlHtml(esc(textOr('proxy_selection','')))}</div><div class="subblock">代諾者等への説明事項</div><div class="cell-lines">${nlHtml(esc(textOr('proxy_explain','')))}</div><div class="subblock">インフォームド・アセント（※３）の取得</div><span class="checkline">${mark('assent_yes')} あり</span><span class="checkline">${mark('assent_no')} なし</span><div class="subblock">インフォームド・アセントを取得する場合の説明事項と説明方法</div><div class="cell-lines">${nlHtml(esc(textOr('assent_detail','')))}</div></td></tr></table>`));
-pages.push(buildPage(10,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>18.代諾者からインフォームド・コンセントを受ける場合（続き）</th><td class="tiny">※１ 代諾者からインフォームド・コンセントを受ける場合は研究対象者が次のいずれかに該当していることが必要。<br>ア）未成年者。ただし中学を修了している又は16歳以上の者が研究対象者で、研究が侵襲を伴わず、研究対象者の親権者又は未成年後見人が拒否できる機会を保障する場合は、IRBの意見を聞いた上で総長が許可したときは本人からインフォームド・コンセントを受ける。<br>イ）成年であり、インフォームド・コンセントを与える能力を欠くと客観的に判断される者<br>ウ）死者。ただし、研究の実施が、生前の明示的な意思に反している場合を除く。<br>※２ 侵襲を伴う研究に関しては、代諾者からインフォームド・コンセントを受けた上で、中学を修了している又は16歳以上の者が研究対象者の場合は、本人からもインフォームド・コンセントを受けなければならない。<br>※３ インフォームド・アセントとは、インフォームド・コンセントを与える能力を欠くと客観的に判断される研究対象者が、実施又は継続されようとする研究に関して、その理解力に応じた分かりやすい言葉で説明を受け、当該研究を実施又は継続されることを理解し、賛意を表することをいう。小児が被験者の場合は、７歳以上の小児への絵を用いた説明（文書によるアセントは中学生以上）がある。<br>インフォームド・アセントは、代諾者からインフォームド・コンセントを受けた場合でも、研究対象者が研究を実施されることについて自らの意向を表することができると判断されるときは、インフォームド・アセントを得るよう努めなければならない。<br>※詳細は次の倫理指針を参照。<br>・「人を対象とする生命科学・医学系研究に関する倫理指針」P56-58<br>・「人を対象とする生命科学・医学系研究に関する倫理指針ガイダンス」P109-114<br>・「人を対象とする医学系研究に関する倫理指針」P27-29<br>・「人を対象とする医学系研究に関する倫理指針ガイダンス」p126-131<br>・「ヒトゲノム・遺伝子解析研究に関する倫理指針」P12-15</td></tr>
-<tr><th>19.研究対象者等の経済的負担又は謝礼</th><td class="dense"><span class="checkline">${mark('burden_yes')} 経済的負担あり（その内容： ${esc(textOr('burden_text',''))} ）</span><span class="checkline">${mark('reward_yes')} 謝礼あり（その内容： ${esc(textOr('reward_text',''))} ）</span><span class="checkline">${mark('burden_reward_none')} なし</span></td></tr>
-<tr><th>20.研究に係る資金源</th><td class="dense"><span class="checkline">${mark('fund_pref')} 県費（各診療科研究費を含む）</span><span class="checkline">${mark('fund_public')} 省庁等の公的研究費（具体的に： ${esc(textOr('fund_public_text',''))} ）</span><span class="checkline">${mark('fund_joint')} 共同研究経費・受託研究経費</span><span class="checkline">${mark('fund_private')} 私費</span><span class="checkline">${mark('fund_not_need')} 研究費はとくに必要としない。</span><span class="checkline">${mark('fund_other_check')} その他（具体的に： ${esc(textOr('fund_other_text',''))} ）</span></td></tr></table>`));
-pages.push(buildPage(11,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>21.本研究と企業・団体との関わり</th><td class="dense"><span class="checkline">${mark('rel_none')} 本研究に企業等は関与しない。</span><span class="checkline">${mark('rel_ip_share')} 企業・団体と知財を共有する（相手先： ${esc(textOr('rel_ip_share_text',''))} ）</span><span class="checkline">${mark('rel_money')} 企業・団体より研究費を受け取る（相手先： ${esc(textOr('rel_money_text',''))} ）</span><span class="checkline">${mark('rel_lead_get')} 多施設共同研究の主任施設は、企業・団体より研究費を受け取るが、静岡がんセンターは研究費を受け取らない（相手 ${esc(textOr('rel_lead_get_text',''))} ）</span><span class="checkline">${mark('rel_other')} 本研究に関与する企業等はあるが、静岡がんセンターは共同研究・受託研究として実施しない。</span><div class="tiny indent">（相手先： ${esc(textOr('rel_other_party',''))} ）<br>（関与の具体的内容： ${esc(textOr('rel_other_detail',''))} ）</div></td></tr>
-<tr><th>22.共同・受託研究審査委員会</th><td class="dense"><span class="checkline">${mark('joint_approved')} 承認済み</span><span class="checkline">${mark('joint_applying')} 申請中</span><span class="checkline">${mark('joint_not_yet')} 申請未</span><span class="checkline">${mark('joint_not_apply')} 申請しない</span><span class="checkline">${mark('joint_other_check')} その他（ ${esc(textOr('joint_other_text',''))} ）</span><div class="tiny">注）企業等へ研究成果などを提供する場合、知財が発生する場合、企業から研究費を受け取る場合、多施設共同研究で知財が生じる場合等は、個人情報保護・知的財産保護・補償等の理由により、共同・受託研究審査委員会への申請・承認が必要です。</div></td></tr>
-<tr><th>23.知的財産権の帰属</th><td class="dense"><span class="checkline">${mark('ip_all_sc')} 静岡がんセンターにすべて帰属する。（院内規定に従い取扱う。）</span><span class="checkline">${mark('ip_part_sc')} 静岡がんセンターに一部帰属する。（院内規定に従い取扱う。）</span><span class="checkline">${mark('ip_not_sc')} 静岡がんセンターに帰属しない。（理由： ${esc(textOr('ip_not_sc_reason',''))} ）</span></td></tr></table>`));
-pages.push(buildPage(12,total,`<table class="form"><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
-<tr><th>24.研究に関する情報公開の方法</th><td class="dense tiny"><span class="checkline">${mark('pub_jrct')} 臨床研究等提出・公開システム（jRCT）</span><div class="indent">法（介入を行う場合は、jRCT,UMINのいずれかに必ず登録すること）</div><span class="checkline">${mark('pub_umin')} 国立大学付属病院長会議（UMIN CTR）</span><span class="checkline">${mark('pub_japic')} 一般財団法人日本医薬情報センター（JapicCTI）</span><span class="checkline">${mark('pub_jmacct')} 公益社団法人日本医師会(JMACCT CTR)</span><span class="checkline">${mark('pub_sc_hp')} 静岡がんセンターホームページ</span><span class="checkline">${mark('pub_inhospital')} 院内掲示</span><span class="checkline">${mark('pub_other_check')} その他（${esc(textOr('pub_other_text',''))}）</span></td></tr>
-<tr><th>25.研究対象者等及びその関係者からの相談等への対応</th><td class="cell-lines tiny">※相談窓口となる者の氏名などを記載<br>${nlHtml(esc(textOr('consultation','')))}</td></tr>
-<tr><th>26.研究に関する業務の一部を委託する場合</th><td class="dense tiny">業務委託： ${mark('outsource_yes')}あり　${mark('outsource_no')}なし<div class="subblock">「あり」の場合</div><div class="subblock">① 委託業務内容</div><div class="cell-lines">${nlHtml(esc(textOr('outsource_content','')))}</div><div class="subblock">② 委託先の監督方法（委託契約書の中で委託者が定める安全管理措置の内容や実地調査の有無など）</div><div class="cell-lines">${nlHtml(esc(textOr('outsource_supervision','')))}</div></td></tr>
-<tr><th>27.研究対象者から取得された試料・情報について、研究対象者等から同意を受ける時点では特定されない将来の研究のために用いられる可能性等</th><td class="dense tiny">将来の研究のために用いられる可能性 ${mark('future_use_yes')}あり　${mark('future_use_no')}なし<div class="subblock">「あり」の場合、現時点で想定される内容</div><div class="cell-lines">${nlHtml(esc(textOr('future_use_detail','')))}</div>他の研究機関に提供する可能性 ${mark('future_provide_yes')}あり　${mark('future_provide_no')}なし<div class="subblock">「あり」の場合、現時点で想定される内容</div><div class="cell-lines">${nlHtml(esc(textOr('future_provide_detail','')))}</div></td></tr>
-<tr><th>28.研究実施にあたっての確認事項</th><td class="dense tiny">（必須事項はすべて熟読の上チェックすること。）<br>【必須事項】<span class="checkline">${mark('chk_pi_experience')} 研究実施責任者に、研究を適正に実行するために必要な専門的知識及び臨床経験が十分にあること。</span><span class="checkline">${mark('chk_serious_ae_report')} 研究実施責任者は、臨床研究に関する重篤な有害事象及び不具合等の発生を知ったときは、直ちにその旨を総長に報告すること。（様式20）</span><span class="checkline">${mark('chk_deviation_report')} 研究計画から逸脱・変更した場合は、その旨を総長に報告すること。（様式25）</span><span class="checkline">${mark('chk_stop_condition')} 研究実施責任者は、研究により期待される利益よりも起こりうる危険が高いと判断される場合又は研究により十分な成果が得られた場合には、当該研究を中止し、又は終了すること。また、遅延なく、その旨を総長へ報告すること。（様式22）</span><span class="checkline">${mark('chk_info_follow')} 研究実施責任者は、研究を終了するまでの間、研究に関する国内外における学会発表、論文発表等の情報について把握しておくとともに、把握した当該情報について、総長に対し報告すること。（様式自由）</span><span class="checkline">${mark('chk_annual_report')} 研究実施責任者は、毎年一回、研究の進捗状況、または研究が中止あるいは終了したときには、その旨及び結果の概要を文書により総長へ報告すること。（様式24、35）</span><span class="checkline">${mark('chk_threat_info')} 倫理的妥当性若しくは科学的合理性を損なう事実若しくは情報又は損なう恐れのある情報であって研究の継続に影響を与えると考えられる情報を入手した場合は、その旨を総長に報告すること。（様式自由）</span><span class="checkline">${mark('chk_fabrication_info')} 研究の実施において、研究計画に基づく研究対象者の選定方針や研究方法から逸脱した等の事実や情報若しくは研究データの改ざんやねつ造等の事実や情報又はそのような内容を知り得てから、事実であるか確定に至っていない情報を入手した場合は、その旨を総長に報告すること。（様式自由）</span><span class="checkline">${mark('chk_trust_info')} 研究結果の信頼を損なう情報（例：研究データの改ざんやねつ造の事実等）を得た場合は、その旨を総長に報告すること。（様式自由）</span><span class="checkline">${mark('chk_privacy_measure')} 研究実施責任者は、研究を実施するに当たり、被験者の個人情報の保護のために必要な措置を講じること。</span><span class="checkline">${mark('chk_best_care_after')} 研究実施責任者は、研究終了後においても、被験者が当該研究の結果により得られた最善の予防、診断及び治療を受けることができるよう努めること。</span><span class="checkline">${mark('chk_education')} 研究者等は、臨床研究の実施に先立ち、臨床研究に関するその他臨床研究の実施に必要な知識についての講習その他必要な教育を受けること。また、研究期間中も適宜継続して、教育・研修を受けること。</span><span class="checkline">${mark('chk_scientific_principle')} 研究者等は、一般的に受け入れられた科学的原則に従い、科学的文献その他科学に関連する情報源及び十分な実験に基づいて、研究を実施すること。</span><span class="checkline">${mark('chk_publication_anonym')} 研究者等は、研究の結果を公表する場合には、被験者を特定できないように行うこと。</span><span class="checkline">${mark('chk_prior_irb')} 臨床研究の実施にあたっては、事前に研究者の所属する研究機関および実施医療機関の倫理審査委員会の承認を受けなければならない。</span><br>【検体を静岡がんセンター敷地外へ持ち出さない研究の場合】<span class="checkline">${mark('chk_specimen_no_out_dispose')} 検体（血液など）の保存管理者は、保存期間終了後、検体を確実に廃棄すること。</span><br>【検体を静岡がんセンター敷地外へ持ち出す研究（原則禁止）の場合】<span class="checkline">${mark('chk_not_banking')} バンキングに相当するような研究ではないこと。</span><span class="checkline">${mark('chk_mou_audit')} 「静岡がんセンターが将来、当該検体に関する監査あるいは問い合わせを行う場合は、相手側は真摯に応じる。」ことを覚書で締結。</span><span class="checkline">${mark('chk_specimen_dispose_report')} 研究実施責任者は、検体（血液など）を廃棄した場合は、ただちに検体廃棄報告書を研究機関の長へ提出すること。</span><br>【研究終了後も検体（血液など）を保存する場合】<span class="checkline">${mark('chk_annual_storage_report')} 検体保管管理者は、検体が廃棄されるまで、毎年１回、検体保管状況報告書を研究機関の長へ提出すること。</span><br>【検体が返却される場合】<span class="checkline">${mark('chk_pathology_clinical_use')} 病理標本等を一般臨床として利用する。</span><span class="checkline">${mark('chk_reuse_approval')} 再度、研究に利用したい場合は、廃棄時期を明示の上、倫理審査委員会で改めて承認をもらう。</span><span class="checkline">${mark('chk_temp_storage_report')} 返却後に、再利用のため一時保管した場合には、検体一時保管届を提出し、承認されるまでの間は毎年１回、検体保管状況報告書を提出する。</span><br>【他の研究機関と共同で研究を実施する場合】<span class="checkline">${mark('chk_share_info_other_pi')} 研究実施責任者は、当該他の研究機関の研究実施責任者に対し、把握した発表情報等について報告すること。</span><span class="checkline">${mark('chk_confirm_other')} その他（${esc(textOr('confirm_other_text',''))}）</span></td></tr>
-<tr><th>29.教育・研修の受講状況</th><td class="cell-lines">${nlHtml(esc(textOr('education','未入力')))}</td></tr>
-<tr><th>30.EDC使用</th><td class="cell-lines">${nlHtml(esc(textOr('edc','未入力')))}</td></tr></table>`));
-document.getElementById('previewArea').innerHTML=pages.join('');
+  const pages = [];
+
+  pages.push(buildPage(1, 15, `
+    <table class="form form-fill a4-fit">
+      <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+      <tbody>
+        <tr class="row-flex"><th>1.研究課題名</th><td>${esc(textOr('theme','未入力'))}<div class="tiny">必要なら秘密保持のための課題名を記載：${esc(textOr('secretTitle',''))}</div></td></tr>
+        <tr class="row-flex"><th>2.研究組織の分類</th><td class="dense">${mark('org_single')} 単独施設による研究<br>${mark('org_lead')} 多施設共同研究の主任研究者<br>${mark('org_participate')} 多施設共同研究への参加（主任施設名：${esc(textOr('leadSite',''))}）<br>他施設の倫理委員会による承認証明書：${mark('approval_yes')}あり　${mark('approval_no')}なし<br>研究事務局の請負：${mark('office_yes')}あり　${mark('office_no')}なし<br>${mark('org_student')} 大学院の学生としての研究<br>□ その他（${esc(textOr('orgOther',''))}）</td></tr>
+        <tr class="row-flex"><th>3.研究の分類・適応される指針等</th><td class="dense tiny">${mark('guide_life')} 人を対象とする生命科学・医学系研究<br>①侵襲　${mark('invasion_yes')}あり　${mark('invasion_no')}なし<br>「あり」の場合、${mark('minor_yes')}軽微　${mark('minor_no')}軽微でない<br>「軽微でない」場合、${mark('medical_over_no')}通常診療を超える医療行為なし　${mark('medical_over_yes')}通常診療を超える医療行為あり<br>②介入　${mark('intervention_yes')}あり　${mark('intervention_no')}なし<br>③人体から取得する試料を用いる　${mark('specimen_yes')}あり　${mark('specimen_no')}なし<br>「あり」の場合、${mark('biobank_yes')}バイオバンク室保存検体を使用する　${mark('biobank_no')}使用しない<br>□ 上記以外の研究（適応される倫理指針等：${esc(textOr('otherGuide',''))}）</td></tr>
+        <tr class="row-flex"><th>4.研究機関名・研究実施場所</th><td>${esc(textOr('place','静岡がんセンター'))}</td></tr>
+        <tr class="row-flex"><th>5.研究実施責任者氏名</th><td>${esc(textOr('responsibleName','未入力'))}</td></tr>
+        <tr class="row-flex"><th class="fill">6.研究者氏名</th><td class="cell-lines fill">${nlHtml(esc(textOr('researchers','未入力')))}</td></tr>
+      </tbody>
+    </table>
+  `, true));
+
+  pages.push(buildPage(2, 15, `
+    <table class="form form-fill a4-fit">
+      <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+      <tbody>
+        <tr class="row-flex"><th>7.共同研究機関</th><td class="cell-lines">${nlHtml(esc(textOr('collab','未入力')))}</td></tr>
+        <tr class="row-flex"><th>8.研究の意義・目的の概略</th><td class="cell-lines">${nlHtml(esc(textOr('purposeSummary','未入力')))}</td></tr>
+        <tr class="row-flex"><th>9.被験者</th><td class="dense">(1)被験者数：${esc(textOr('subjectCount','未入力'))}<br><br>(2)被験者の選定方針：<div class="cell-lines">${nlHtml(esc(textOr('selectionPolicy','未入力')))}</div></td></tr>
+        <tr class="row-flex"><th>10.研究方法</th><td class="dense">(1)概略<div class="cell-lines">${nlHtml(esc(textOr('methodSummary','未入力')))}</div><br>(2)評価項目<div class="cell-lines">${nlHtml(esc(textOr('evaluationItems','未入力')))}</div></td></tr>
+        <tr class="row-flex"><th>11.実施予定期間</th><td class="dense">開始：${mark('period_start_approval')} 承認日より<br>${mark('period_start_date_check')} ${esc(textOr('period_start_date','年　月　日'))}より（承認日より後の場合）<br>終了：${mark('period_end_year_check')} ${esc(textOr('period_end_year','年'))}12月31日まで</td></tr>
+        <tr class="row-flex"><th class="fill">12.研究参加に伴う利益および不利益</th><td class="dense fill">(1)研究に参加することにより被験者にもたらされうる利益<br><span class="checkline">${mark('benefit_none_check')} 直接的な利益は期待できない。</span><span class="checkline">${mark('benefit_yes_check')} 直接的な利益が期待できる。（具体的に： ${esc(textOr('benefit_yes_text',''))} ）</span><br>(2)研究に参加することにより被験者に生じる負担(※１)や予測されるリスク(※２)<span class="checkline">${mark('risk_yes_check')} あり（具体的に： ${esc(textOr('risk_yes_text',''))} ）</span><span class="checkline">${mark('risk_normal_no')} 通常の診療範囲内であり、負担やリスクはない。</span><span class="checkline">${mark('risk_unrelated_no')} 診療には関係なく、負担やリスクはない。</span><span class="checkline">${mark('risk_other_check')} その他（ ${esc(textOr('risk_other_text',''))} ）</span><div class="tiny">※１ 研究の実施に伴って確定的に研究対象者に生じる好ましくない事象を指し、身体的・精神的苦痛、健康上の不利益、時間的負担、経済的出費等を含む。<br>※２ 研究の実施に伴って生じうる不確定な危害の可能性を指し、身体的・精神的・経済的・社会的危害が含まれる。</div></td></tr>
+      </tbody>
+    </table>
+  `));
+
+  pages.push(buildPage(3, 15, `
+    <table class="form form-fill a4-fit">
+      <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+      <tbody>
+        <tr class="row-flex"><th>13.検体(血液など)およびデータ(診療情報など)の保存・廃棄について</th><td class="dense fill">研究期間中<br>(1)保存の場所<span class="checkline">${mark('store_during_sc')} 静岡がんセンター内で保存する。</span><span class="checkline">${mark('store_during_collab')} 共同研究機関で保存する。</span><span class="checkline">${mark('store_during_both')} 静岡がんセンター内で保存し、かつ共同研究機関で保存する。</span><span class="checkline">${mark('store_during_registry')} 静岡がんセンター内で保存し、かつ学会登録</span>(2)保存管理責任者<span class="checkline">${mark('manager_sc')} ①静岡がんセンターの研究実施責任者</span><span class="checkline">${mark('manager_other')} ② ①以外の研究者が管理する</span><div class="tiny indent">所属：${esc(textOr('managerAff',''))}<br>職名：${esc(textOr('managerTitle',''))}<br>氏名：${esc(textOr('managerName',''))}</div>研究終了後<br>(3)保存期間<span class="checkline">${mark('save_blood')} 血液・組織等の保存（保存期間 ${esc(textOr('save_blood_until','年12月31日まで'))}）</span><span class="checkline">${mark('save_data')} データの保存（対応表を含む）（保存期間 ${esc(textOr('save_data_until','年12月31日まで'))}）</span><span class="checkline">${mark('save_other_check')} その他（ ${esc(textOr('save_other_text',''))} ）</span><br>(4)保存の場所と保存管理責任者<span class="checkline">${mark('after_place_sc')} 静岡がんセンター内で保存する。</span><div class="tiny indent">（場所： ${esc(textOr('after_place_sc_place',''))} ）<br>（所属・職名・氏名 ${esc(textOr('after_place_sc_person',''))} ）</div><span class="checkline">${mark('after_place_collab')} 共同研究機関で保存する。</span><div class="tiny indent">（場所： ${esc(textOr('after_place_collab_place',''))} ）<br>共同研究機関：（所属・職名・氏名 ${esc(textOr('after_place_collab_person1',''))} ）<br>静岡がんセンター：（所属・職名・氏名 ${esc(textOr('after_place_collab_person2',''))} ）</div>(5)廃棄方法<span class="checkline">${mark('dispose_sealed')} 密封容器に廃棄。</span><span class="checkline">${mark('dispose_burn')} 焼却処分。</span><span class="checkline">${mark('dispose_shred')} 紙はシュレッダー、電子データは完全消去。</span><span class="checkline">${mark('dispose_other_check')} その他（ ${esc(textOr('dispose_other_text',''))} ）</span></td></tr>
+      </tbody>
+    </table>
+  `));
+
+  pages.push(buildPage(4, 15, `
+    <table class="form form-fill a4-fit">
+      <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+      <tbody>
+        <tr class="row-flex"><th class="fill">14.個人情報の取扱い</th><td class="dense fill">(1)使用する個人情報の区分<div class="tiny">“使用する”は、情報を外部に出す場面を想定。</div><span class="checkline">${mark('pi_anonymous')} 匿名加工情報を使用。</span><span class="checkline">${mark('pi_pseudo_ident_yes')} 仮名加工情報を使用（個人識別性「有」）。</span><div class="tiny indent">${mark('pi_pseudo_keep_source')} 元となる個人情報を保有する場合。<br>${mark('pi_pseudo_keep_restore')} 元となる個人情報は保有しないが、個人情報を復元できる情報を保有する場合。</div><span class="checkline">${mark('pi_pseudo_ident_no')} 仮名加工情報を使用（個人識別性「無」）。</span><span class="checkline">${mark('pi_related')} 個人関連情報を使用（個人識別性「無」）。</span><span class="checkline">${mark('pi_personal')} 個人情報を使用（個人識別性「有」）。</span><div class="tiny indent">${mark('pi_personal_keep_source')} 元となる個人情報を保有する場合。<br>${mark('pi_personal_keep_restore')} 元となる個人情報は保有しないが、個人情報を復元できる情報を保有する場合。</div><div class="subblock">①加工情報について／具体的な加工の方法</div><div class="cell-lines">${nlHtml(esc(textOr('pi_process','未入力')))}</div><div class="subblock">個人情報管理者</div><span class="checkline">${mark('pi_manager_specimen')} 検体を伴う研究の場合：個人情報管理室長 ${esc(textOr('pi_manager_room_head','〇〇 〇〇'))}</span><span class="checkline">${mark('pi_manager_nonspecimen')} 検体を伴わない研究の場合</span><div class="tiny indent">所属：${esc(textOr('pi_manager_aff',''))}<br>職名：${esc(textOr('pi_manager_title',''))}<br>氏名：${esc(textOr('pi_manager_name','科部長が個人情報管理者'))}</div><div class="subblock">作成元個人情報の管理方法</div><span class="checkline">${mark('pi_store_server')} 電子カルテ系ファイルサーバ内のフォルダに保管する。</span><span class="checkline">${mark('pi_store_isolated')} 他と切り離されたコンピュータを使用し、外部記憶媒体に記録させ、その記憶媒体は鍵をかけて厳重に保管する。</span><span class="checkline">${mark('pi_store_room')} 個人情報管理室で管理する。</span><span class="checkline">${mark('pi_store_other_check')} その他（具体的に： ${esc(textOr('pi_store_other',''))} ）</span><div class="subblock">作成元個人情報の保管場所</div><span class="checkline">${mark('pi_place_sc')} 静岡がんセンター内（場所： ${esc(textOr('pi_place_sc_text',''))} ）</span><span class="checkline">${mark('pi_place_other_check')} その他（場所： ${esc(textOr('pi_place_other',''))} ）</span></td></tr>
+      </tbody>
+    </table>
+  `));
+
+  pages.push(buildPage(5, 15, `
+    <table class="form form-fill a4-fit">
+      <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+      <tbody>
+        <tr class="row-flex"><th class="fill">15〜29</th><td class="fill">この下は、元コードの15〜29の本文をそのまま移植し、1項目=1ページ、または長い項目は1項目で複数ページに分割してください。</td></tr>
+      </tbody>
+    </table>
+  `));
+
+  document.getElementById('previewArea').innerHTML = pages.join('');
 }
+
 function clearFormAll(){
-document.querySelectorAll('input, textarea, select').forEach(el=>{
-if(el.type==='checkbox') el.checked=false;
-else if(el.id==='place') el.value='静岡がんセンター';
-else if(el.id==='pageInfo') el.value='1／全12ページ';
-else el.value='';
-});
-renderPreview();
+  document.querySelectorAll('input, textarea, select').forEach(el=>{
+    if(el.type === 'checkbox') el.checked = false;
+    else if(el.id === 'place') el.value = '静岡がんセンター';
+    else el.value = '';
+  });
+  renderPreview();
 }
+
 function updatePreview(){ renderPreview(); }
-document.querySelectorAll('input, textarea, select').forEach(el=>{ el.addEventListener('input', updatePreview); el.addEventListener('change', updatePreview); });
+
+document.querySelectorAll('input, textarea, select').forEach(el=>{
+  el.addEventListener('input', updatePreview);
+  el.addEventListener('change', updatePreview);
+});
+
 renderPreview();
 </script>
 </body>
