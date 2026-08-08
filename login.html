@@ -193,8 +193,12 @@
     <form id="loginForm" autocomplete="off">
       <div class="fields">
         <div class="row">
-          <div class="cell">氏名・所属</div>
-          <div class="cell"><input type="text" id="user" placeholder="記入してください（誰でも入室できます）" /></div>
+          <div class="cell">氏名</div>
+          <div class="cell"><input type="text" id="user" placeholder="記入してください（未入力でも可）" /></div>
+        </div>
+        <div class="row">
+          <div class="cell">所属</div>
+          <div class="cell"><input type="text" id="affiliation" placeholder="例：腫瘍内科、看護部 等（未入力でも可）" /></div>
         </div>
         <div class="row">
           <div class="cell">利用日</div>
@@ -204,7 +208,7 @@
 
       <div class="note">
         本システムは院内の研究支援ツールとして、氏名・所属を任意入力して利用します。
-        <br />入力内容の照合は行いません（デモ用の簡易ログイン）。
+        未入力のままでもログインできます。入力内容の照合は行いません（デモ用の簡易ログイン）。
       </div>
       <div class="error" id="errMsg"></div>
 
@@ -233,13 +237,11 @@
 
       // 前回の利用者情報をプリフィル
       var saved = loadSaved();
-      if (saved && saved.user) {
+      if (saved) {
         var userInput = document.getElementById('user');
-        if (userInput) userInput.value = saved.user;
-        var affil = saved.affiliation;
-        if (affil && userInput && userInput.placeholder) {
-          userInput.placeholder = affil;
-        }
+        if (userInput && saved.user) userInput.value = saved.user;
+        var affilInput = document.getElementById('affiliation');
+        if (affilInput && saved.affiliation) affilInput.value = saved.affiliation;
       }
 
       // 利用日（自動生成）
@@ -254,17 +256,14 @@
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var user = document.getElementById('user').value.trim();
+        var affiliation = document.getElementById('affiliation').value.trim();
         var err = document.getElementById('errMsg');
-        if (!user) {
-          if (err) err.textContent = '氏名・所属を入力してください。';
-          return;
-        }
         if (err) err.textContent = '';
 
         try {
           localStorage.setItem(KEY, JSON.stringify({
             user: user,
-            affiliation: '',
+            affiliation: affiliation,
             loggedAt: new Date().toISOString()
           }));
         } catch (ex) { /* ストレージ不可でも遷移 */ }

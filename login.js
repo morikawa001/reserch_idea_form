@@ -11,7 +11,8 @@
       var raw = localStorage.getItem(KEY);
       if (!raw) return null;
       var data = JSON.parse(raw);
-      return data && data.user ? data : null;
+      // 氏名・所属は任意入力。保存データが存在すればログイン扱いとする。
+      return data && data.loggedAt ? data : null;
     } catch (e) {
       return null;
     }
@@ -53,7 +54,10 @@
       if (!el) return;
       var data = getLogin();
       if (data) {
-        el.textContent = data.user + (data.affiliation ? ' ／ ' + data.affiliation : '');
+        var parts = [];
+        if (data.user) parts.push(data.user);
+        if (data.affiliation) parts.push(data.affiliation);
+        el.textContent = parts.length ? parts.join(' ／ ') : '利用者';
         el.style.display = '';
       } else {
         el.style.display = 'none';
