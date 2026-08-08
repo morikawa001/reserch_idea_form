@@ -19,6 +19,7 @@
   <div class="header-actions">
     <span class="user-chip" id="paperUser"></span>
     <a class="paper-csv" href="#" onclick="downloadCSV();return false;">CSV出力</a>
+    <a class="paper-csv" href="#" onclick="openCsvPicker();return false;">CSV読込</a>
     <a class="paper-logout" href="#" onclick="ResearchAuth.logout();return false;">ログアウト</a>
   </div>
 </header>
@@ -65,6 +66,23 @@
 
   <!-- ===== STEP 1: 基本情報入力 ===== -->
   <div class="tab-panel active" id="panel-1">
+    <div class="card csv-import-card">
+      <h2>📂 CSV読み込み</h2>
+      <div class="info-box">出力したCSVを読み込むと、入力内容を復元できます（氏名・所属を除く）。</div>
+      <div id="csv-drop-area" class="csv-drop">
+        <div class="csv-drop-inner">
+          <div class="csv-drop-icon">📄</div>
+          <div class="csv-drop-text">
+            <strong>CSVファイルをここにドラッグ＆ドロップ</strong>
+            <span>または下のボタンでファイルを選択</span>
+          </div>
+          <button type="button" class="btn btn-secondary" id="csv-select-btn" onclick="event.stopPropagation();openCsvPicker()">📁 ファイルを選択</button>
+        </div>
+      </div>
+      <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none;" />
+      <div id="csv-status"></div>
+    </div>
+
     <div class="card">
       <h2>📝 研究の基本情報を入力</h2>
       <div class="info-box">すべての項目は任意です。入力内容が多いほど、後続の判定・提案が精度よく行われます。</div>

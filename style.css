@@ -105,6 +105,37 @@ header .header-actions {
 }
 .paper-csv:hover { background: var(--primary); color: #fff; }
 
+/* ── CSV読み込み ── */
+.csv-import-card { margin-bottom: 18px; }
+.csv-drop {
+  margin-top: 14px;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 26px 18px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.csv-drop:hover, .csv-drop.dragover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+.csv-drop-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.csv-drop-icon { font-size: 2rem; }
+.csv-drop-text { display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: var(--text-sub); }
+#csv-status {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: none;
+}
+
 /* ── Progress bar ── */
 .progress-wrap {
   background: var(--card);

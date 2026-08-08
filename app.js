@@ -272,6 +272,238 @@ function openForm5WithData(event) {
   window.open('https://morikawa001.github.io/reserch_idea_form/study-plan-outline.html', '_blank', 'noopener,noreferrer');
 }
 
+// ============================================================
+// ── CSV読込 ──
+// ============================================================
+function openCsvPicker() {
+  const input = document.getElementById('csv-file-input');
+  if (input) input.click();
+}
+
+// RFC4180に近いCSVパーサ（引用符・改行・BOM対応）
+function parseCsvText(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else {
+        field += c;
+      }
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\r') { /* LFと一緒に処理 */ }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else field += c;
+    }
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+
+  // 空行除去とBOM除去
+  return rows
+    .filter(r => r.some(c => String(c).replace(/^\uFEFF/, '').trim() !== ''))
+    .map(r => r.map(c => String(c).replace(/^\uFEFF/, '')));
+}
+
+// CSVヘッダ名 → フォーム要素の対応表
+const CSV_FIELD_MAP = [
+  { csv: '研究テーマ', key: 'theme', type: 'field', id: 'theme' },
+  { csv: '研究の背景・動機', key: 'background', type: 'field', id: 'background' },
+  { csv: '研究目的', key: 'purpose', type: 'field', id: 'purpose' },
+  { csv: '研究デザイン', key: 'design', type: 'field', id: 'design' },
+  { csv: '研究対象の疾患・領域', key: 'disease', type: 'field', id: 'disease' },
+  { csv: '研究対象者', key: 'subjects', type: 'field', id: 'subjects' },
+  { csv: '研究対象施設・部署', key: 'setting', type: 'field', id: 'setting' },
+
+  { csv: '介入の有無', key: 'intervention', type: 'radio', name: 'intervention' },
+  { csv: '未承認薬・機器', key: 'unapproved', type: 'radio', name: 'unapproved' },
+  { csv: '企業からの資金提供', key: 'funding', type: 'radio', name: 'funding' },
+  { csv: '臨床研究法の対象', key: 'clinicalTrial', type: 'radio', name: 'clinicalTrial' },
+  { csv: '侵襲の程度', key: 'invasiveness', type: 'radio', name: 'invasiveness' },
+  { csv: '多施設共同研究', key: 'multicenter', type: 'radio', name: 'multicenter' },
+  { csv: '後ろ向き研究', key: 'retrospective', type: 'radio', name: 'retrospective' },
+  { csv: '研究種別（判定結果）', key: 'researchType', type: 'researchType' },
+
+  { csv: '主要評価項目', key: 'sapPrimaryEndpoint', type: 'field', id: 'sap-primary-endpoint' },
+  { csv: 'データの型', key: 'sapDatatype', type: 'radio', name: 'sap-datatype' },
+  { csv: '測定タイミング', key: 'sapTiming', type: 'field', id: 'sap-timing' },
+  { csv: '副次評価項目', key: 'sapSecondaryEndpoints', type: 'secondary' },
+  { csv: '解析対象集団', key: 'sapAnalysisSet', type: 'radio', name: 'sap-analysisset' },
+  { csv: '除外・中断の対処方針', key: 'sapExclusionPlan', type: 'field', id: 'sap-exclusion-plan' },
+  { csv: '主要解析手法', key: 'sapPrimaryMethod', type: 'field', id: 'sap-primary-method' },
+  { csv: '共変量調整', key: 'sapCovariate', type: 'radio', name: 'sap-covariate' },
+  { csv: '調整する共変量', key: 'sapCovariates', type: 'field', id: 'sap-covariates' },
+  { csv: '有意水準', key: 'sapAlpha', type: 'field', id: 'sap-alpha' },
+  { csv: '検定の方向性', key: 'sapSided', type: 'field', id: 'sap-sided' },
+  { csv: '統計ソフト', key: 'sapSoftware', type: 'field', id: 'sap-software' },
+  { csv: '感度分析', key: 'sapSensitivityChecks', type: 'sensitivity' },
+  { csv: '感度分析（その他）', key: 'sapSensitivityOther', type: 'field', id: 'sap-sensitivity-other' },
+  { csv: '欠損値の対処法', key: 'sapMissing', type: 'radio', name: 'sap-missing' },
+  { csv: '中止・脱落時の方針', key: 'sapDropoutPlan', type: 'field', id: 'sap-dropout-plan' },
+  { csv: '想定ドロップアウト率', key: 'sapDropoutRate', type: 'field', id: 'sap-dropout-rate' },
+
+  { csv: '倫理委員会開催日', key: 'startDate', type: 'field', id: 'start-date' },
+
+  { csv: 'ブラッシュアップ対象：基本情報', key: 'aiIncludeBasic', type: 'checkchk', id: 'ai-include-basic' },
+  { csv: 'ブラッシュアップ対象：デザイン', key: 'aiIncludeDesign', type: 'checkchk', id: 'ai-include-design' },
+  { csv: 'ブラッシュアップ対象：症例数', key: 'aiIncludeSamplesize', type: 'checkchk', id: 'ai-include-samplesize' },
+  { csv: 'ブラッシュアップ対象：SAP', key: 'aiIncludeSap', type: 'checkchk', id: 'ai-include-sap' },
+  { csv: '出力形式', key: 'aiOutputType', type: 'radio', name: 'ai-output-type' },
+  { csv: '追加の指示', key: 'aiExtraInstruction', type: 'field', id: 'ai-extra-instruction' },
+  { csv: 'SAPひな型全文', key: 'sapDraft', type: 'sapdraft' }
+];
+
+function applyCsvRow(row) {
+  const get = (k) => (row[k] == null ? '' : String(row[k]));
+
+  CSV_FIELD_MAP.forEach(item => {
+    const v = get(item.csv);
+    if (v === '') return;
+
+    switch (item.type) {
+      case 'field': {
+        const el = document.getElementById(item.id);
+        if (el) el.value = v;
+        break;
+      }
+      case 'radio': {
+        const el = document.querySelector(`input[name="${item.name}"][value="${v}"]`);
+        if (el) el.checked = true;
+        break;
+      }
+      case 'researchType': {
+        window._researchType = v;
+        break;
+      }
+      case 'checkchk': {
+        const el = document.getElementById(item.id);
+        if (el) el.checked = (v === '有');
+        break;
+      }
+      case 'sensitivity': {
+        v.split(/[;；、]/).forEach(s => {
+          const chk = document.querySelector(`.sap-sensitivity-chk[value="${s}"]`);
+          if (chk) chk.checked = true;
+        });
+        break;
+      }
+      case 'secondary': {
+        if (!v.trim()) break;
+        const list = document.getElementById('sap-secondary-list');
+        if (list) list.innerHTML = '';
+        v.split(/[;；]/).forEach(part => {
+          const m = part.trim().match(/^(.*?)（(.*?)）$/);
+          if (m) sapAddImportSecondary(m[1], m[2]);
+        });
+        break;
+      }
+      case 'sapdraft': {
+        window._sapDraft = v;
+        break;
+      }
+    }
+  });
+}
+
+function sapAddImportSecondary(name, type) {
+  const list = document.getElementById('sap-secondary-list');
+  if (!list) return;
+  const row = document.createElement('div');
+  row.className = 'sap-endpoint-row';
+  row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
+  row.innerHTML = `
+    <input type="text" class="sap-secondary-ep" value="${(name || '').replace(/"/g, '&quot;')}" style="flex:1;" />
+    <select class="sap-secondary-type" style="width:140px;">
+      <option value="">データ型</option>
+      <option value="continuous">連続変数</option>
+      <option value="count">カウント変数</option>
+      <option value="binary">二値変数</option>
+      <option value="survival">生存時間</option>
+      <option value="ordinal">順序変数</option>
+    </select>
+    <button class="btn btn-secondary" onclick="this.parentElement.remove(); saveResearchIdeaData();" style="padding:6px 10px;font-size:0.8rem;">削除</button>
+  `;
+  const sel = row.querySelector('.sap-secondary-type');
+  if (sel && type) sel.value = type;
+  list.appendChild(row);
+
+  row.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', saveResearchIdeaData);
+    el.addEventListener('change', saveResearchIdeaData);
+  });
+}
+
+async function handleCsvFile(file) {
+  const statusEl = document.getElementById('csv-status');
+  const setStatus = (msg, isErr) => {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.style.color = isErr ? 'var(--danger)' : 'var(--secondary)';
+    statusEl.style.display = 'block';
+  };
+
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const parsed = parseCsvText(text);
+    if (!parsed.length) { setStatus('CSVのデータが空です。', true); return; }
+
+    const header = parsed[0].map(h => h);
+    const hasHeader = header.some(h => /研究テーマ|研究目的/.test(h));
+    const dataRowIndex = hasHeader ? 1 : 0;
+    if (dataRowIndex >= parsed.length) { setStatus('データ行が見つかりません。', true); return; }
+
+    const row = {};
+    parsed[dataRowIndex].forEach((val, i) => { row[header[i]] = val; });
+
+    applyCsvRow(row);
+    saveResearchIdeaData();
+    setStatus(`CSVを読み込みました。「${file.name}」の内容をフォームに反映しました。`, false);
+    goToStep(1);
+  } catch (e) {
+    setStatus('CSVの読み込みに失敗しました: ' + e.message, true);
+  }
+}
+
+function bindCsvImport() {
+  const area = document.getElementById('csv-drop-area');
+  const input = document.getElementById('csv-file-input');
+
+  if (!area || !input) return;
+
+  ['dragenter', 'dragover'].forEach(evt => {
+    area.addEventListener(evt, (e) => {
+      e.preventDefault();
+      area.classList.add('dragover');
+    });
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    area.addEventListener(evt, (e) => {
+      e.preventDefault();
+      area.classList.remove('dragover');
+    });
+  });
+  area.addEventListener('drop', (e) => {
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handleCsvFile(file);
+  });
+  input.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) handleCsvFile(file);
+  });
+
+  input.addEventListener('click', (e) => e.stopPropagation());
+  area.addEventListener('click', openCsvPicker);
+}
+
 function bindAutoSave() {
   const selectors = [
     '#theme', '#background', '#purpose', '#design', '#disease', '#subjects', '#setting',
@@ -1244,6 +1476,7 @@ window.addEventListener('DOMContentLoaded', () => {
   window._selectedKwJa = new Set();
   renderDbList();
   bindAutoSave();
+  bindCsvImport();
   saveResearchIdeaData();
 });
 
