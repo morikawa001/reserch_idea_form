@@ -26,16 +26,6 @@ function goToStep(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── 各ステップへのショートカット関数（HTMLのonclick属性対応）──
-function goToStep1() { goToStep(1); }
-function goToStep2() { goToStep(2); }
-function goToStep3() { goToStep(3); }
-function goToStep4() { goToStep(4); }
-function goToStep5() { goToStep(5); }
-function goToStep6() { goToStep(6); }
-function goToStep7() { goToStep(7); }
-function goToStep8() { goToStep(8); }
-
 // ── Get form values ──
 function getVal(id) {
   const el = document.getElementById(id);
@@ -47,25 +37,33 @@ function getRadio(name) {
   return el ? el.value : '';
 }
 
+// 表示中の症例数計算結果（hiddenでない最初のパネル）を返す
+function getActiveCalcResult() {
+  for (let i = 1; i <= 5; i++) {
+    const res = document.getElementById('c' + i + '-result');
+    if (res && !res.classList.contains('hidden')) return res;
+  }
+  return null;
+}
+
+// 表示中の症例数計算結果を「ラベル：値」形式のテキストとして返す
+function calcResultSummary() {
+  const res = getActiveCalcResult();
+  if (!res) return '';
+  const lines = [];
+  res.querySelectorAll('.calc-num').forEach(item => {
+    const val = item.querySelector('.val')?.textContent || '';
+    const lbl = item.querySelector('.lbl')?.textContent || '';
+    if (val || lbl) lines.push(`${lbl}：${val}`);
+  });
+  return lines.join('\n');
+}
+
 // ============================================================
 // ── Form5連携用データ保存 ──
 // ============================================================
 function collectResearchIdeaData() {
-  let sampleSizeSummary = '';
-  for (let i = 1; i <= 5; i++) {
-    const res = document.getElementById('c' + i + '-result');
-    if (res && !res.classList.contains('hidden')) {
-      const items = res.querySelectorAll('.calc-num');
-      const lines = [];
-      items.forEach(item => {
-        const val = item.querySelector('.val')?.textContent || '';
-        const lbl = item.querySelector('.lbl')?.textContent || '';
-        if (val || lbl) lines.push(`${lbl}：${val}`);
-      });
-      sampleSizeSummary = lines.join('\n');
-      break;
-    }
-  }
+  const sampleSizeSummary = calcResultSummary();
 
   const secondaryEndpoints = Array.from(document.querySelectorAll('.sap-secondary-ep')).map((el, i) => {
     const type = el.parentElement?.querySelector('.sap-secondary-type')?.value || '';
@@ -172,7 +170,7 @@ function saveResearchIdeaData() {
 function openForm5WithData(event) {
   if (event) event.preventDefault();
   saveResearchIdeaData();
-  window.open('https://morikawa001.github.io/reserch_idea_form/form5.html', '_blank', 'noopener,noreferrer');
+  window.open('https://morikawa001.github.io/reserch_idea_form/study-plan-outline.html', '_blank', 'noopener,noreferrer');
 }
 
 function bindAutoSave() {
@@ -650,7 +648,7 @@ function renderDocuments() {
         <div class="doc-item">
           <span class="doc-num">様式5</span>
           <span>
-            <a href="https://morikawa001.github.io/reserch_idea_form/form5.html"
+            <a href="https://morikawa001.github.io/reserch_idea_form/study-plan-outline.html"
                target="_blank"
                rel="noopener noreferrer"
                onclick="openForm5WithData(event)">
@@ -1015,106 +1013,6 @@ function markdownToHtml(md) {
 }
 
 // ── AI Brushup ──
-function buildBrushupPrompt(info) {
-  const focus = info.focusAreas && info.focusAreas.length ? info.focusAreas.join('、') : 'PICO/PECOの整理';
-  return `あなたは臨床研究支援の専門家AIです。
-以下の研究アイデアをもとに、研究計画をブラッシュアップしてください。
-
-研究テーマ：${info.theme}
-研究背景：${info.background}
-研究目的：${info.purpose}
-研究デザイン：${info.design}
-対象疾患：${info.disease}
-研究対象者：${info.subjects}
-研究対象施設・部署：${info.setting}
-研究種別：${info.type}
-介入の有無：${info.intervention}
-侵襲の程度：${info.invasiveness}
-重点確認事項：${focus}
-
-以下の観点で改善提案をしてください：
-1. PICO/PECOの明確化
-2. 研究目的の具体化
-3. デザインの妥当性
-4. 主要評価項目の明確化
-5. 実施可能性
-6. 倫理的配慮
-7. バイアス・限界
-8. 必要な追加情報
-9. 研究計画書にそのまま使える文章案
-
-Markdown形式で出力してください。`;
-}
-
-function doBrushup() {
-  return runAI();
-}
-
-async function doBrushupLegacy() {
-  const theme = getVal('theme');
-  if (!theme) {
-    alert('ステップ1の研究テーマを入力してください。');
-    return;
-  }
-
-  const background = getVal('background');
-  const purpose = getVal('purpose');
-  const design = getVal('design');
-  const disease = getVal('disease');
-  const subjects = getVal('subjects');
-  const setting = getVal('setting');
-  const type = window._researchType;
-  const focusAreas = Array.from(document.querySelectorAll('#panel-7 .checkbox-group input:checked')).map(c => c.value);
-  const intervention = getRadio('intervention');
-  const invasiveness = getRadio('invasiveness');
-
-  const btn = document.getElementById('brushup-btn');
-  const loading = document.getElementById('ai-loading');
-  const result = document.getElementById('ai-result');
-  const aibtns = document.getElementById('ai-btns');
-
-  if (!btn || !loading || !result || !aibtns) return;
-
-  btn.disabled = true;
-  loading.style.display = 'flex';
-  result.style.display = 'none';
-  aibtns.style.display = 'none';
-
-  const prompt = buildBrushupPrompt({
-    theme, background, purpose, design, disease, subjects, setting, type, intervention, invasiveness, focusAreas
-  });
-
-  try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.5, topP: 0.9, maxOutputTokens: 8192 }
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || 'APIエラー ' + res.status);
-    }
-
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) throw new Error('レスポンスが空です。');
-
-    result.innerHTML = markdownToHtml(text);
-    result.style.display = 'block';
-    aibtns.style.display = 'flex';
-  } catch (e) {
-    result.innerHTML = `<div style="color:#f87171;">エラー: ${e.message}</div>`;
-    result.style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    loading.style.display = 'none';
-  }
-}
-
 function copyAiResult() {
   const el = document.getElementById('ai-result');
   if (!el) return;
@@ -1402,18 +1300,17 @@ function sapCalcAdjusted() {
   const el = document.getElementById('sap-adjusted-n');
   if (!el) return;
 
-  let baseN = null;
-  for (let i = 1; i <= 5; i++) {
-    const res = document.getElementById('c' + i + '-result');
-    if (res && !res.classList.contains('hidden')) {
-      const vals = res.querySelectorAll('.val');
-      vals.forEach(v => {
-        const n = parseInt(v.textContent, 10);
-        if (!isNaN(n) && (baseN === null || n > baseN)) baseN = n;
-      });
-      break;
-    }
+  const res = getActiveCalcResult();
+  if (!res) {
+    el.textContent = '─';
+    return;
   }
+
+  let baseN = null;
+  res.querySelectorAll('.val').forEach(v => {
+    const n = parseInt(v.textContent, 10);
+    if (!isNaN(n) && (baseN === null || n > baseN)) baseN = n;
+  });
 
   if (baseN === null) {
     el.textContent = '─';
@@ -1429,24 +1326,19 @@ function sapUpdateSampleSizeSummary() {
   const el = document.getElementById('sap-samplesize-summary');
   if (!el) return;
 
-  let found = false;
-  for (let i = 1; i <= 5; i++) {
-    const res = document.getElementById('c' + i + '-result');
-    if (res && !res.classList.contains('hidden')) {
-      const items = res.querySelectorAll('.calc-num');
-      let text = '';
-      items.forEach(item => {
-        const val = item.querySelector('.val')?.textContent || '';
-        const lbl = item.querySelector('.lbl')?.textContent || '';
-        text += `${lbl} ${val}\n`;
-      });
-      el.textContent = text.trim() || 'Step 3 の結果がありません。';
-      found = true;
-      break;
-    }
+  const res = getActiveCalcResult();
+  if (!res) {
+    el.textContent = 'Step 3 の結果がありません。';
+    return;
   }
 
-  if (!found) el.textContent = 'Step 3 の結果がありません。';
+  let text = '';
+  res.querySelectorAll('.calc-num').forEach(item => {
+    const val = item.querySelector('.val')?.textContent || '';
+    const lbl = item.querySelector('.lbl')?.textContent || '';
+    text += `${lbl} ${val}\n`;
+  });
+  el.textContent = text.trim() || 'Step 3 の結果がありません。';
 }
 
 function generateSAPDraft() {
@@ -1580,22 +1472,7 @@ function buildAIPrompt() {
   const includeSamplesize = document.getElementById('ai-include-samplesize')?.checked;
   const includeSAP = document.getElementById('ai-include-sap')?.checked;
 
-  let sampleSizeSummary = '';
-  if (includeSamplesize) {
-    for (let i = 1; i <= 5; i++) {
-      const res = document.getElementById('c' + i + '-result');
-      if (res && !res.classList.contains('hidden')) {
-        const items = res.querySelectorAll('.calc-num');
-        items.forEach(item => {
-          const val = item.querySelector('.val')?.textContent;
-          const lbl = item.querySelector('.lbl')?.textContent;
-          sampleSizeSummary += `${lbl}：${val}\n`;
-        });
-        break;
-      }
-    }
-  }
-  if (!sampleSizeSummary) sampleSizeSummary = '';
+  const sampleSizeSummary = includeSamplesize ? calcResultSummary() : '';
 
   const outputInstructions = {
     protocol: '研究計画書ひな型（全体）を作成してください。背景・目的・方法・統計解析・倫理的配慮・参考文献リストの構成でお願いします。',
