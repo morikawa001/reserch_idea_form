@@ -1033,7 +1033,7 @@ function printAiResult() {
   if (!el) return;
 
   const win = window.open('', '_blank');
-  win.document.write('<html><head><title>AIブラッシュアップ結果</title></head><body>');
+  win.document.write('<html><head><title>ブラッシュアップ結果</title></head><body>');
   win.document.write(el.innerHTML);
   win.document.write('</body></html>');
   win.document.close();
@@ -1442,15 +1442,6 @@ function copySAPDraft() {
   }).catch(() => {
     window.prompt('以下をコピーしてください:', text);
   });
-}
-
-function goToAIWithSAP() {
-  goToStep(8);
-  const extra = document.getElementById('ai-extra-instruction');
-  if (extra && window._sapDraft) {
-    extra.value = window._sapDraft;
-  }
-  saveResearchIdeaData();
 }
 
 function buildAIPrompt() {

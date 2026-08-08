@@ -55,7 +55,7 @@
     </div>
     <div class="step-item" id="step-nav-8" onclick="goToStep(8)">
       <div class="step-num">8</div>
-      <div class="step-label">AIブラッシュアップ</div>
+      <div class="step-label">ブラッシュアップ</div>
     </div>
   </div>
 </div>
@@ -379,7 +379,7 @@
       <h2>📐 統計解析計画書 作成ガイド</h2>
       <div class="info-box">
         対話形式で一つずつ確認しながら進めることで、統計解析計画書のひな型が完成します。
-        最後にAIブラッシュアップへデータを渡して計画書の形に仕上げます。
+        最後にブラッシュアップへデータを渡して計画書の形に仕上げます。
       </div>
 
       <!-- SAP Progress -->
@@ -742,7 +742,7 @@
         <!-- Generate SAP Draft -->
         <div style="margin-top:20px;padding:16px;background:linear-gradient(135deg,#e8f0fb,#f0f7ff);border-radius:10px;border:1.5px solid var(--primary);">
           <h3 style="color:var(--primary);margin:0 0 8px;">📄 統計解析計画書ひな型を生成</h3>
-          <p style="font-size:0.85rem;color:var(--text-sub);margin-bottom:12px;">これまでの入力内容をもとに統計解析計画書のひな型テキストを生成します。AIブラッシュアップへ渡して仕上げることができます。</p>
+          <p style="font-size:0.85rem;color:var(--text-sub);margin-bottom:12px;">これまでの入力内容をもとに統計解析計画書のひな型テキストを生成します。ブラッシュアップへ渡して仕上げることができます。</p>
           <button class="btn btn-success btn-lg" onclick="generateSAPDraft()">📐 解析計画書ひな型を生成する</button>
         </div>
 
@@ -753,9 +753,6 @@
               <button class="btn btn-secondary" onclick="copySAPDraft()" style="font-size:0.8rem;padding:6px 12px;">📋 コピー</button>
             </div>
             <div id="sap-draft-content" style="white-space:pre-wrap;font-size:0.83rem;line-height:1.8;color:var(--text);font-family:monospace;max-height:400px;overflow-y:auto;"></div>
-          </div>
-          <div style="margin-top:12px;text-align:right;">
-            <button class="btn btn-warn btn-lg" onclick="goToAIWithSAP()">✨ AIブラッシュアップで仕上げる →</button>
           </div>
         </div>
 
@@ -838,14 +835,13 @@
 
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="goToStep(6)">← 戻る</button>
-      <button class="btn btn-warn btn-lg" onclick="goToStep(8)">✨ AIブラッシュアップへ →</button>
     </div>
   </div>
 
-  <!-- ===== STEP 8: AIブラッシュアップ ===== -->
+  <!-- ===== STEP 8: ブラッシュアップ ===== -->
   <div class="tab-panel" id="panel-8">
     <div class="ai-panel">
-      <h2 style="color:#7dd3fc;border-bottom:1px solid rgba(125,211,252,0.2);padding-bottom:10px;margin-bottom:16px;">✨ AIブラッシュアップ</h2>
+      <h2 style="color:#7dd3fc;border-bottom:1px solid rgba(125,211,252,0.2);padding-bottom:10px;margin-bottom:16px;">✨ ブラッシュアップ</h2>
       <div class="info-box" style="background:rgba(125,211,252,0.1);border-color:#7dd3fc;color:#e2e8f0;">
         入力した研究情報をAIが整理し、研究計画書・統計解析計画書の形に仕上げます。
         生成されたテキストは参考用です。最終的な内容は専門家と相談のうえ確認してください。
@@ -883,7 +879,6 @@
       </div>
 
       <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-warn btn-lg" onclick="runAI()">✨ AIブラッシュアップを実行</button>
         <button class="btn btn-secondary" onclick="copyAiPrompt()" style="color:#7dd3fc;border-color:#7dd3fc;">📋 プロンプトをコピー（ChatGPT等へ）</button>
       </div>
 
