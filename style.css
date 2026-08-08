@@ -68,6 +68,13 @@ header .header-extra {
   gap: 12px;
   flex-wrap: wrap;
 }
+header .header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .user-chip {
   font-size: 0.74rem;
   color: var(--primary);
@@ -85,6 +92,18 @@ header .header-extra {
   cursor: pointer;
 }
 .paper-logout:hover { color: var(--danger); border-bottom-color: var(--danger); }
+.paper-csv {
+  font-size: 0.74rem;
+  color: var(--primary);
+  text-decoration: none;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+  background: #fff;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+.paper-csv:hover { background: var(--primary); color: #fff; }
 
 /* ── Progress bar ── */
 .progress-wrap {
@@ -514,7 +533,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
 
 /* ── Print ── */
 @media print {
-  header, .progress-wrap, .btn-row, .user-chip, .paper-logout,
+  header, .progress-wrap, .btn-row, .user-chip, .paper-logout, .paper-csv,
   .ai-panel input, .ai-panel button { display: none; }
   body { background: #fff; }
   .card { box-shadow: none; }

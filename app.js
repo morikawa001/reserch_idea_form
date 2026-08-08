@@ -167,6 +167,105 @@ function saveResearchIdeaData() {
   }
 }
 
+// ============================================================
+// ── CSV出力 ──
+// ============================================================
+function collectCsvRows() {
+  const data = collectResearchIdeaData();
+  const login = window.ResearchAuth && typeof window.ResearchAuth.getLogin === 'function'
+    ? (window.ResearchAuth.getLogin() || {})
+    : {};
+
+  const fmtBool = (v) => (v === true ? '有' : v === false ? '無' : v === '' ? '' : v);
+  const joinArr = (arr, sep) => (Array.isArray(arr) ? arr.map(String).join(sep || '；') : '');
+  const s = (str) => (str == null ? '' : String(str));
+
+  return {
+    '登録日時': s(data.savedAt),
+    '利用者（氏名）': s(login.user),
+    '所属': s(login.affiliation),
+    '研究テーマ': s(data.theme),
+    '研究の背景・動機': s(data.background),
+    '研究目的': s(data.purpose),
+    '研究デザイン': s(data.design),
+    '研究対象の疾患・領域': s(data.disease),
+    '研究対象者': s(data.subjects),
+    '研究対象施設・部署': s(data.setting),
+
+    '介入の有無': s(data.intervention),
+    '未承認薬・機器': s(data.unapproved),
+    '企業からの資金提供': s(data.funding),
+    '臨床研究法の対象': s(data.clinicalTrial),
+    '侵襲の程度': s(data.invasiveness),
+    '多施設共同研究': s(data.multicenter),
+    '後ろ向き研究': s(data.retrospective),
+    '研究種別（判定結果）': s(data.researchType),
+
+    '症例数計算サマリ': s(data.sampleSizeSummary).replace(/[\r\n]+/g, ' / '),
+
+    '主要評価項目': s(data.sapPrimaryEndpoint),
+    'データの型': s(data.sapDatatype),
+    '測定タイミング': s(data.sapTiming),
+    '副次評価項目': joinArr((data.sapSecondaryEndpoints || []).map(e => `${e.name}（${e.type}）`)),
+    '解析対象集団': s(data.sapAnalysisSet),
+    '除外・中断の対処方針': s(data.sapExclusionPlan),
+    '主要解析手法': s(data.sapPrimaryMethod),
+    '共変量調整': s(data.sapCovariate),
+    '調整する共変量': s(data.sapCovariates),
+    '有意水準': s(data.sapAlpha),
+    '検定の方向性': s(data.sapSided),
+    '統計ソフト': s(data.sapSoftware),
+    '感度分析': joinArr(data.sapSensitivityChecks),
+    '感度分析（その他）': s(data.sapSensitivityOther),
+    '欠損値の対処法': s(data.sapMissing),
+    '中止・脱落時の方針': s(data.sapDropoutPlan),
+    '想定ドロップアウト率': s(data.sapDropoutRate),
+    '補正後の必要症例数': s(data.sapAdjustedN),
+
+    '倫理委員会開催日': s(data.startDate),
+
+    'ブラッシュアップ対象：基本情報': fmtBool(data.aiIncludeBasic),
+    'ブラッシュアップ対象：デザイン': fmtBool(data.aiIncludeDesign),
+    'ブラッシュアップ対象：症例数': fmtBool(data.aiIncludeSamplesize),
+    'ブラッシュアップ対象：SAP': fmtBool(data.aiIncludeSap),
+    '出力形式': s(data.aiOutputType),
+    '追加の指示': s(data.aiExtraInstruction),
+    'SAPひな型全文': s(data.sapDraft).replace(/[\r\n]+/g, ' ')
+  };
+}
+
+function csvEscape(value) {
+  const str = value == null ? '' : String(value);
+  if (/[",\r\n]/.test(str)) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
+}
+
+function downloadCSV() {
+  saveResearchIdeaData();
+  const row = collectCsvRows();
+  const header = Object.keys(row);
+  const rows = [header, header.map(key => row[key])];
+  const output = '\uFEFF' + rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+
+  const now = new Date();
+  const pad = (n) => ('0' + n).slice(-2);
+  const fileName = `研究アイデア_${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.csv`;
+
+  const blob = new Blob([output], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  alert('入力内容をCSVファイルとして出力しました。');
+}
+
 function openForm5WithData(event) {
   if (event) event.preventDefault();
   saveResearchIdeaData();
