@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>研究アイデア支援システム｜静岡がんセンター</title>
   <link rel="stylesheet" href="style.css">
+  <script src="login.js"></script>
+  <script>ResearchAuth.requireLogin();</script>
 </head>
 <body>
 
@@ -13,6 +15,10 @@
   <div>
     <h1>研究アイデア支援システム</h1>
     <p>静岡県立静岡がんセンター 臨床研究支援センター準拠</p>
+  </div>
+  <div class="header-actions">
+    <span class="user-chip" id="paperUser"></span>
+    <a class="paper-logout" href="#" onclick="ResearchAuth.logout();return false;">ログアウト</a>
   </div>
 </header>
 

@@ -4,20 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>様式8｜臨床研究申請書</title>
+  <script src="login.js"></script>
+  <script>ResearchAuth.requireLogin();</script>
   <style>
     :root{
       --line:#111;
       --paper:#fff;
-      --bg:#eef2f7;
+      --bg:#efece3;
       --text:#111;
-      --sub:#666;
+      --sub:#6f6a55;
       --blue:#1a5c96;
     }
     *{box-sizing:border-box;}
     html,body{margin:0;padding:0;}
     body{
-      font-family:"Yu Gothic","Meiryo",sans-serif;
-      background:var(--bg);
+      font-family:"Yu Mincho","Hiragino Mincho ProN","MS Mincho","Yu Gothic","Meiryo",sans-serif;
+      background:
+        repeating-linear-gradient(to bottom, transparent 0 26px, rgba(120,100,60,0.04) 26px 27px),
+        var(--bg);
       color:var(--text);
     }
     .wrap{
@@ -30,22 +34,37 @@
       gap:10px;
       flex-wrap:wrap;
       margin-bottom:14px;
+      padding-bottom:12px;
+      border-bottom:2px solid var(--blue);
     }
     .topbar a,.topbar button{
-      border:none;
-      border-radius:8px;
-      padding:10px 14px;
+      border:1.5px solid var(--blue);
+      border-radius:4px;
+      padding:9px 14px;
       font-size:14px;
       font-weight:700;
       cursor:pointer;
       text-decoration:none;
-      background:var(--blue);
-      color:#fff;
-    }
-    .topbar .secondary{
-      background:#fff;
+      background:#fdfcf8;
       color:var(--blue);
-      border:1px solid var(--blue);
+      font-family:inherit;
+      letter-spacing:.04em;
+      transition:all .15s;
+    }
+    .topbar a:hover,.topbar button:hover{ background:var(--blue); color:#fff; }
+    .topbar .primary{ background:var(--blue); color:#fff; }
+    .topbar .primary:hover{ background:#0f2238; }
+    .topbar .paper-user{
+      align-self:center;
+      margin-left:auto;
+      font-size:12px;
+      font-weight:700;
+      color:#6f6a55;
+      background:#fff;
+      border:1px solid #d8d0c0;
+      border-radius:4px;
+      padding:5px 10px;
+      letter-spacing:.04em;
     }
 
     .layout{
@@ -56,9 +75,10 @@
     }
 
     .panel{
-      background:#fff;
-      border-radius:10px;
-      box-shadow:0 2px 12px rgba(0,0,0,.08);
+      background:#fdfcf8;
+      border:1px solid #d8d0c0;
+      border-radius:6px;
+      box-shadow:0 1px 4px rgba(50,30,10,.08);
       padding:16px;
       position:sticky;
       top:14px;
@@ -69,13 +89,17 @@
       font-size:18px;
       margin:0 0 10px;
       color:var(--blue);
+      font-family:"Yu Mincho","Hiragino Mincho ProN",serif;
+      letter-spacing:.08em;
+      border-bottom:1.5px solid var(--blue);
+      padding-bottom:6px;
     }
     .panel h3{
       font-size:13px;
       color:var(--blue);
       margin:14px 0 8px;
       padding-bottom:4px;
-      border-bottom:1px solid #d9e4f0;
+      border-bottom:1px solid #d8d0c0;
     }
     label{
       display:block;
@@ -311,6 +335,8 @@
       <button type="button" onclick="updatePreview()">プレビュー更新</button>
       <button type="button" onclick="clearForm8All()">入力内容をすべてクリア</button>
       <button type="button" class="secondary" onclick="window.print()">印刷 / PDF保存</button>
+      <span class="paper-user" id="paperUser"></span>
+      <a href="#" onclick="ResearchAuth.logout();return false;">ログアウト</a>
     </div>
 
     <div class="layout">

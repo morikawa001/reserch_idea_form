@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>研究スケジュールCSV＋ガントチャート生成ツール</title>
 
+  <script src="login.js"></script>
+  <script>ResearchAuth.requireLogin();</script>
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
@@ -28,22 +30,22 @@
       --space-12: 3rem;
       --space-16: 4rem;
 
-      --color-bg: #f7f6f2;
-      --color-surface: #f9f8f5;
-      --color-surface-2: #fbfbf9;
-      --color-surface-offset: #f3f0ec;
-      --color-border: #d4d1ca;
-      --color-divider: #dcd9d5;
-      --color-text: #28251d;
-      --color-text-muted: #67655f;
-      --color-text-faint: #9f9d97;
-      --color-text-inverse: #f9f8f4;
-      --color-primary: #01696f;
-      --color-primary-hover: #0c4e54;
-      --color-primary-highlight: #dbe8e4;
-      --color-success: #437a22;
-      --color-warning: #964219;
-      --color-error: #a12c7b;
+      --color-bg: #efece3;
+      --color-surface: #fdfcf8;
+      --color-surface-2: #fffdfa;
+      --color-surface-offset: #f3efe6;
+      --color-border: #d8d0c0;
+      --color-divider: #ddd6c8;
+      --color-text: #26221b;
+      --color-text-muted: #6f6a55;
+      --color-text-faint: #a49a84;
+      --color-text-inverse: #fdfcf8;
+      --color-primary: #1f3a5c;
+      --color-primary-hover: #0f2238;
+      --color-primary-highlight: #e8edf3;
+      --color-success: #37684a;
+      --color-warning: #a06d14;
+      --color-error: #b3202e;
 
       --radius-sm: 0.375rem;
       --radius-md: 0.5rem;
@@ -279,6 +281,17 @@
       background: transparent;
       border-color: color-mix(in oklab, var(--color-text) 14%, transparent);
       color: var(--color-text-muted);
+    }
+
+    .paper-user {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.375rem 0.75rem;
+      letter-spacing: 0.04em;
     }
 
     .header-card {
@@ -651,7 +664,11 @@
         <div class="header-card">
           <div class="topbar">
             <div class="eyebrow">研究開始日からCSVとガントを同時生成</div>
-            <button class="theme-toggle" type="button" data-theme-toggle aria-label="テーマ切替"></button>
+            <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+              <span class="paper-user" id="paperUser"></span>
+              <a class="btn btn-ghost" href="#" onclick="ResearchAuth.logout();return false;">ログアウト</a>
+              <button class="theme-toggle" type="button" data-theme-toggle aria-label="テーマ切替"></button>
+            </div>
           </div>
           <div>
             <h2 class="page-title">研究計画CSVを再計算し、ガントチャートまで可視化・保存できる単一HTMLツール</h2>

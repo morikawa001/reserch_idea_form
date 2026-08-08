@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ログイン｜研究アイデア支援システム</title>
+  <style>
+    :root {
+      --paper: #fdfcf8;
+      --bg: #efece3;
+      --line: #b8b0a0;
+      --ink: #1e3a5f;
+      --text: #26221b;
+      --sub: #6a6a50;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Yu Mincho', 'Hiragino Mincho ProN', 'MS Mincho', 'Yu Gothic', 'Meiryo', sans-serif;
+      color: var(--text);
+      background-color: var(--bg, #efeae1);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0 26px,
+        rgba(120, 100, 60, 0.045) 26px 27px
+      );
+      padding: 28px 16px;
+    }
+    .page {
+      width: min(840px, 100%);
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 30px rgba(30, 50, 10, 0.15);
+      padding: 52px 44px 46px;
+      position: relative;
+    }
+    /* 内枠（報告書の罫線風） */
+    .page::after {
+      content: '';
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(184, 176, 160, 0.8);
+      pointer-events: none;
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--ink);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .cover-top .doc {
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .cover-top .no {
+      color: var(--sub);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+    }
+
+    .title {
+      text-align: center;
+      margin: 52px 0 10px;
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      letter-spacing: 0.24em;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--sub);
+      letter-spacing: 0.12em;
+    }
+    .divider {
+      width: 88%;
+      border: 0;
+      border-top: 1px solid var(--line);
+      margin: 26px auto 28px;
+    }
+
+    /* 記入欄テーブル風 */
+    .fields {
+      border: 1px solid var(--line);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+    }
+    .row + .row { border-top: 1px solid var(--line); }
+    .cell {
+      padding: 13px 18px;
+    }
+    .cell:first-child {
+      border-right: 1px solid var(--line);
+      background: #f6f3ec;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+    }
+    .cell input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 1.05rem;
+      font-family: inherit;
+      letter-spacing: 0.05em;
+    }
+    .cell input:focus { outline: none; }
+    .cell.date { color: var(--text); font-size: 0.95rem; }
+
+    .note {
+      margin: 18px auto 0;
+      max-width: 640px;
+      font-size: 0.76rem;
+      color: var(--sub);
+      text-align: center;
+      letter-spacing: 0.05em;
+      line-height: 1.7;
+    }
+    .error {
+      margin: 10px auto 0;
+      max-width: 640px;
+      text-align: center;
+      color: #b3202e;
+      font-size: 0.8rem;
+      min-height: 1.2em;
+    }
+
+    .submit {
+      text-align: center;
+      margin-top: 34px;
+    }
+    .btn {
+      font-family: inherit;
+      letter-spacing: 0.18em;
+      font-size: 1.02rem;
+      padding: 13px 46px;
+      background: #fff;
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .cover-foot {
+      margin-top: 44px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      color: var(--sub);
+      letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 560px) {
+      .page { padding: 30px 20px 28px; }
+      .row { grid-template-columns: 120px 1fr; }
+      .cell { padding: 10px 12px; }
+      .title { letter-spacing: 0.12em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="cover-top">
+      <div class="doc">静岡県立静岡がんセンター　臨床研究支援センター</div>
+      <div class="no">様式　R－０１</div>
+    </div>
+
+    <h1 class="title">研究アイデア支援システム</h1>
+    <p class="subtitle">アイデアの整理から研究計画立案・統計解析計画までを支援する帳票</p>
+    <hr class="divider" />
+
+    <form id="loginForm" autocomplete="off">
+      <div class="fields">
+        <div class="row">
+          <div class="cell">氏名・所属</div>
+          <div class="cell"><input type="text" id="user" placeholder="記入してください（誰でも入室できます）" /></div>
+        </div>
+        <div class="row">
+          <div class="cell">利用日</div>
+          <div class="cell date" id="dateText"></div>
+        </div>
+      </div>
+
+      <div class="note">
+        本システムは院内の研究支援ツールとして、氏名・所属を任意入力して利用します。
+        <br />入力内容の照合は行いません（デモ用の簡易ログイン）。
+      </div>
+      <div class="error" id="errMsg"></div>
+
+      <div class="submit">
+        <button type="submit" class="btn">研 究 支 援 へ 入 る</button>
+      </div>
+    </form>
+
+    <div class="cover-foot">
+      <span>静岡県立静岡がんセンター 臨床研究推進部</span>
+      <span>本印刷物は院内利用のための集成画面です</span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var KEY = 'researchIdeaLogin';
+
+      function loadSaved() {
+        try {
+          var raw = localStorage.getItem(KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      }
+
+      // 前回の利用者情報をプリフィル
+      var saved = loadSaved();
+      if (saved && saved.user) {
+        var userInput = document.getElementById('user');
+        if (userInput) userInput.value = saved.user;
+        var affil = saved.affiliation;
+        if (affil && userInput && userInput.placeholder) {
+          userInput.placeholder = affil;
+        }
+      }
+
+      // 利用日（自動生成）
+      var now = new Date();
+      var dateText = document.getElementById('dateText');
+      if (dateText) {
+        dateText.textContent =
+          now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+      }
+
+      var form = document.getElementById('loginForm');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var user = document.getElementById('user').value.trim();
+        var err = document.getElementById('errMsg');
+        if (!user) {
+          if (err) err.textContent = '氏名・所属を入力してください。';
+          return;
+        }
+        if (err) err.textContent = '';
+
+        try {
+          localStorage.setItem(KEY, JSON.stringify({
+            user: user,
+            affiliation: '',
+            loggedAt: new Date().toISOString()
+          }));
+        } catch (ex) { /* ストレージ不可でも遷移 */ }
+
+        window.location.href = 'index.html';
+      });
+    })();
+  </script>
+</body>
+</html>
